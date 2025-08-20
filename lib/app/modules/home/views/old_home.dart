@@ -1,0 +1,894 @@
+import 'package:shimmer/shimmer.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:tontineflow/controllers/home_controller.dart';
+import 'package:tontineflow/models/tontine.dart';
+import 'package:tontineflow/models/user.dart';
+import 'package:tontineflow/models/contribution.dart';
+import 'package:tontineflow/services/storage_service.dart';
+import 'package:tontineflow/services/tontine_service.dart';
+import 'package:tontineflow/widgets/pot_visual.dart';
+import 'package:tontineflow/widgets/tontine_card.dart';
+import 'package:tontineflow/utils/formatters.dart';
+import 'package:tontineflow/utils/constants.dart';
+import 'package:tontineflow/routes.dart';
+import 'package:tontineflow/widgets/godly_vibrate_button.dart';
+
+class HomeScreen extends GetView<HomeController> {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      body: Obx(() => ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          _buildGreetingSection(theme),
+          const SizedBox(height: 32),
+          _buildQuickActionsSection(theme),
+          const SizedBox(height: 32),
+          _buildMyTontinesSection(theme),
+          const SizedBox(height: 32),
+          _buildRecentActivitiesSection(theme),
+        ],
+      )),
+    );
+  }
+
+  Widget _buildGreetingSection(ThemeData theme) {
+    return Obx(() {
+      final user = controller.currentUser.value;
+      return Container(
+          padding: const EdgeInsets.all(28),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+          Row(
+          children: [
+          // User initials avatar
+          if (user != null && user.name != null && user.name!.trim().isNotEmpty)
+      _AnimatedAvatar(
+        initials: user.name!.trim().split(' ').map((e) => e.isNotEmpty ? e[0].toUpperCase() : '').take(2).join(),
+        color: theme.colorScheme.primary,
+      )
+      else
+      Icon(Icons.account_circle, color: theme.colorScheme.primary.withOpacity(0.18), size: 48),
+// Animated avatar widget for bounce/rotate on tap
+      class _AnimatedAvatar extends StatefulWidget {
+      final String initials;
+      final Color color;
+      const _AnimatedAvatar({required this.initials, required this.color});
+
+      @override
+      State<_AnimatedAvatar> createState() => _AnimatedAvatarState();
+      }
+
+      class _AnimatedAvatarState extends State<_AnimatedAvatar> with SingleTickerProviderStateMixin {
+      late AnimationController _controller;
+      late Animation<double> _scale;
+      late Animation<double> _rotation;
+
+      @override
+      void initState() {
+      super.initState();
+      _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+      _scale = Tween<double>(begin: 1, end: 1.18).chain(CurveTween(curve: Curves.elasticOut)).animate(_controller);
+      _rotation = Tween<double>(begin: 0, end: 0.15).chain(CurveTween(curve: Curves.easeOut)).animate(_controller);
+      }
+
+      void _onTap() {
+      _controller.forward(from: 0).then((_) => _controller.reverse());
+      }
+
+      @override
+      void dispose() {
+      _controller.dispose();
+      super.dispose();
+      }
+
+      @override
+      Widget build(BuildContext context) {
+      return GestureDetector(
+      onTap: _onTap,
+      child: AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+      return Transform.rotate(
+      angle: _rotation.value,
+      child: Transform.scale(
+      scale: _scale.value,
+      child: child,
+      ),
+      );
+      },
+      child: Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+      color: widget.color.withOpacity(0.13),
+      shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Text(
+      widget.initials,
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+      color: widget.color,
+      fontWeight: FontWeight.bold,
+      fontSize: 22,
+      ),
+      ),
+      ),
+      ),
+      );
+      }
+      }
+      const SizedBox(width: 16),
+      Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      Text(
+      '${Formatters.getGreeting()},',
+      style: theme.textTheme.bodyLarge?.copyWith(
+      color: theme.colorScheme.primary,
+      fontWeight: FontWeight.w600,
+      fontSize: 18,
+      ),
+      ),
+      Text(
+      user?.name?.split(' ').first ?? 'Utilisateur',
+      style: theme.textTheme.headlineMedium?.copyWith(
+      fontWeight: FontWeight.w700,
+      color: theme.colorScheme.primary,
+      fontSize: 28,
+      ),
+      ),
+      ],
+      ),
+      ],
+      ),
+      const SizedBox(height: 14),
+      Text(
+      AppConstants.motivationalQuotes[
+      DateTime.now().day % AppConstants.motivationalQuotes.length
+      ],
+      style: theme.textTheme.bodyLarge?.copyWith(
+      color: theme.colorScheme.onSurface.withOpacity(0.7),
+      height: 1.4,
+      fontSize: 18,
+      ),
+      ),
+      if (user != null) ...[
+      const SizedBox(height: 22),
+      Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+      color: theme.colorScheme.primary.withOpacity(0.10),
+      borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+      children: [
+      Icon(
+      Icons.account_balance_wallet,
+      size: 28,
+      color: theme.colorScheme.primary,
+      ),
+      const SizedBox(width: 16),
+      Expanded(
+      child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+      Text(
+      'Épargne Totale',
+      style: theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.onSurface.withOpacity(0.6),
+      fontSize: 16,
+      ),
+      ),
+      Text(
+      controller.getTotalSavings(),
+      style: theme.textTheme.titleLarge?.copyWith(
+      fontWeight: FontWeight.bold,
+      color: theme.colorScheme.primary,
+      fontSize: 24,
+      ),
+      ),
+      ],
+      ),
+      ),
+      ],
+      ),
+      ),
+      ],
+      ],
+      ),
+      );
+    });
+  }
+  title: 'Historique',
+  icon: Icons.history,
+  color: Colors.purpleAccent,
+  onTap: () {},
+),
+_ActionButtonData(
+title: 'Paramètres',
+icon: Icons.settings,
+color: Colors.redAccent,
+onTap: () => Navigator.push(
+context,
+MaterialPageRoute(builder: (_) => const ProfileScreen()),
+),
+),
+_ActionButtonData(
+title: 'Aide',
+icon: Icons.help_outline,
+color: Colors.tealAccent,
+onTap: () {},
+),
+];
+
+return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+const SizedBox(height: 8),
+GridView.count(
+shrinkWrap: true,
+physics: const NeverScrollableScrollPhysics(),
+crossAxisCount: 3,
+childAspectRatio: 0.85,
+crossAxisSpacing: 20,
+mainAxisSpacing: 20,
+children: actions.map((action) => _buildActionButton(
+theme,
+action.title,
+action.icon,
+action.onTap,
+color: action.color,
+)).toList(),
+),
+],
+);
+}
+Text(
+'${currentUser?.sunuPoints ?? 0}',
+style: theme.textTheme.bodyMedium?.copyWith(
+Widget _buildMyTontinesSection() {
+final theme = Theme.of(context);
+return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Row(
+children: [
+Icon(Icons.group, color: theme.colorScheme.primary.withOpacity(0.18), size: 18),
+const SizedBox(width: 8),
+Text(
+'Mes Tontines',
+style: theme.textTheme.headlineSmall?.copyWith(
+fontWeight: FontWeight.w700,
+color: theme.colorScheme.primary,
+fontSize: 22,
+),
+),
+const Spacer(),
+if (userTontines.length > 3)
+TextButton(
+onPressed: () {},
+child: Text(
+'Tout voir',
+style: theme.textTheme.bodyLarge?.copyWith(
+color: theme.colorScheme.primary,
+fontWeight: FontWeight.bold,
+),
+),
+),
+],
+),
+const SizedBox(height: 22),
+if (controller.isLoadingTontines.value)
+Shimmer.fromColors(
+baseColor: theme.colorScheme.surface,
+highlightColor: theme.colorScheme.primary.withOpacity(0.08),
+child: Column(
+children: List.generate(2, (i) => Container(
+margin: const EdgeInsets.only(bottom: 18),
+height: 90,
+decoration: BoxDecoration(
+color: Colors.white,
+borderRadius: BorderRadius.circular(18),
+),
+)),
+),
+)
+else if (userTontines.isEmpty)
+Container(
+padding: const EdgeInsets.all(40),
+decoration: BoxDecoration(
+color: theme.colorScheme.surface,
+borderRadius: BorderRadius.circular(28),
+boxShadow: [
+BoxShadow(
+color: Colors.black.withOpacity(0.04),
+blurRadius: 16,
+offset: const Offset(0, 4),
+),
+],
+),
+child: Column(
+children: [
+Container(
+width: 90,
+height: 90,
+decoration: BoxDecoration(
+color: theme.colorScheme.primary.withOpacity(0.10),
+shape: BoxShape.circle,
+),
+child: Icon(
+Icons.account_balance_wallet,
+size: 44,
+color: theme.colorScheme.primary.withOpacity(0.6),
+),
+),
+const SizedBox(height: 18),
+Text(
+'Aucune tontine pour le moment',
+style: theme.textTheme.titleLarge?.copyWith(
+fontWeight: FontWeight.bold,
+color: theme.colorScheme.primary,
+fontSize: 22,
+),
+textAlign: TextAlign.center,
+),
+const SizedBox(height: 10),
+Text(
+'Créez votre première tontine ou rejoignez une tontine existante pour commencer à épargner',
+style: theme.textTheme.bodyLarge?.copyWith(
+color: theme.colorScheme.onSurface.withOpacity(0.6),
+height: 1.4,
+fontSize: 16,
+),
+textAlign: TextAlign.center,
+),
+],
+),
+)
+else
+...userTontines.take(3).toList().asMap().entries.map((entry) {
+final i = entry.key;
+final tontine = entry.value;
+return Padding(
+padding: const EdgeInsets.only(bottom: 18),
+child: TweenAnimationBuilder<double>(
+tween: Tween(begin: 0, end: 1),
+duration: Duration(milliseconds: 400 + i * 100),
+builder: (context, value, child) => Opacity(
+opacity: value,
+child: Transform.translate(
+offset: Offset(0, 30 * (1 - value)),
+child: child,
+),
+),
+child: TontineCard(
+tontine: tontine,
+onTap: () => Navigator.push(
+context,
+MaterialPageRoute(
+builder: (_) => TontineDetailScreen(tontineId: tontine.id),
+),
+),
+),
+),
+);
+}),
+],
+);
+}
+'Épargne Totale',
+style: theme.textTheme.bodySmall?.copyWith(
+color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+),
+),
+Text(
+_getTotalSavings(),
+style: theme.textTheme.titleLarge?.copyWith(
+fontWeight: FontWeight.bold,
+color: theme.colorScheme.primary,
+),
+),
+],
+),
+),
+],
+),
+),
+],
+],
+),
+);
+}
+
+// ...existing code...
+
+Widget _buildPrimaryTontineSection() {
+if (primaryTontine == null) return const SizedBox.shrink();
+
+Widget _buildMyTontinesSection(ThemeData theme) {
+final tontines = controller.userTontines;
+return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+children: [
+Text(
+'Mes Tontines',
+style: theme.textTheme.headlineSmall?.copyWith(
+fontWeight: FontWeight.w600,
+color: theme.colorScheme.onSurface,
+),
+),
+if (tontines.length > 3)
+TextButton(
+onPressed: () {},
+child: Text(
+'Tout voir',
+style: theme.textTheme.bodyMedium?.copyWith(
+color: theme.colorScheme.primary,
+fontWeight: FontWeight.w500,
+),
+),
+),
+],
+),
+const SizedBox(height: 16),
+if (tontines.isEmpty)
+Container(
+padding: const EdgeInsets.all(32),
+decoration: BoxDecoration(
+color: theme.colorScheme.surface,
+borderRadius: BorderRadius.circular(20),
+boxShadow: [
+BoxShadow(
+color: Colors.black.withValues(alpha: 0.05),
+blurRadius: 10,
+offset: const Offset(0, 2),
+),
+],
+),
+child: Column(
+children: [
+Container(
+width: 80,
+height: 80,
+decoration: BoxDecoration(
+color: theme.colorScheme.primary.withValues(alpha: 0.1),
+shape: BoxShape.circle,
+),
+child: Icon(
+Icons.account_balance_wallet,
+size: 40,
+color: theme.colorScheme.primary.withValues(alpha: 0.6),
+),
+),
+const SizedBox(height: 16),
+Text(
+'Aucune tontine pour le moment',
+style: theme.textTheme.titleLarge?.copyWith(
+fontWeight: FontWeight.w600,
+color: theme.colorScheme.onSurface,
+),
+textAlign: TextAlign.center,
+),
+const SizedBox(height: 8),
+Text(
+'Cr\u00e9ez votre premi\u00e8re tontine ou rejoignez une tontine existante pour commencer \u00e0 \u00e9pargner',
+style: theme.textTheme.bodyLarge?.copyWith(
+color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+height: 1.4,
+),
+textAlign: TextAlign.center,
+),
+],
+),
+)
+else
+...tontines.take(3).map((tontine) => Padding(
+padding: const EdgeInsets.only(bottom: 12),
+child: TontineCard(
+tontine: tontine,
+onTap: () => Get.toNamed(AppRoutes.detail, arguments: tontine.id),
+),
+)),
+],
+);
+}
+isWhite: true,
+),
+),
+const SizedBox(width: 12),
+Expanded(
+child: _buildInfoChip(
+theme,
+'Montant',
+Formatters.formatCurrency(primaryTontine!.contributionAmount),
+Icons.account_balance_wallet,
+isWhite: true,
+),
+),
+],
+),
+],
+),
+);
+}
+
+int _getUserPosition() {
+if (primaryTontine?.organizerId == currentUser?.id) return 1;
+return 5; // Sample position
+}
+
+Widget _buildInfoChip(ThemeData theme, String label, String value, IconData icon, {bool isWhite = false}) {
+return Container(
+padding: const EdgeInsets.all(12),
+decoration: BoxDecoration(
+color: isWhite
+? Colors.white.withValues(alpha: 0.15)
+    : theme.colorScheme.surface,
+borderRadius: BorderRadius.circular(12),
+border: isWhite
+? Border.all(color: Colors.white.withValues(alpha: 0.2))
+    : null,
+),
+child: Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Row(
+children: [
+Icon(
+icon,
+size: 16,
+color: isWhite ? Colors.white.withValues(alpha: 0.8) : theme.colorScheme.primary,
+),
+const SizedBox(width: 6),
+Expanded(
+child: Text(
+label,
+style: theme.textTheme.bodySmall?.copyWith(
+color: isWhite
+? Colors.white.withValues(alpha: 0.8)
+    : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+),
+maxLines: 1,
+overflow: TextOverflow.ellipsis,
+),
+),
+],
+),
+const SizedBox(height: 4),
+Text(
+value,
+style: theme.textTheme.bodyMedium?.copyWith(
+fontWeight: FontWeight.w600,
+color: isWhite ? Colors.white : theme.colorScheme.onSurface,
+),
+maxLines: 1,
+overflow: TextOverflow.ellipsis,
+),
+],
+),
+);
+}
+
+Widget _buildQuickActionsSection(ThemeData theme) {
+return Obx(() {
+final actions = controller.quickActions;
+return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+const SizedBox(height: 8),
+GridView.count(
+shrinkWrap: true,
+physics: const NeverScrollableScrollPhysics(),
+crossAxisCount: 3,
+childAspectRatio: 0.85,
+crossAxisSpacing: 20,
+mainAxisSpacing: 20,
+children: actions.map((action) => _buildActionButton(
+theme,
+action.title,
+action.icon,
+action.onTap,
+color: action.color,
+)).toList(),
+),
+],
+);
+});
+}
+
+Widget _buildActionButton(
+Widget _buildMyTontinesSection(ThemeData theme) {
+return Obx(() {
+final tontines = controller.userTontines;
+return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+children: [
+Text(
+'Mes Tontines',
+style: theme.textTheme.headlineSmall?.copyWith(
+fontWeight: FontWeight.w600,
+color: theme.colorScheme.onSurface,
+),
+),
+if (tontines.length > 3)
+TextButton(
+onPressed: () {},
+child: Text(
+'Tout voir',
+style: theme.textTheme.bodyMedium?.copyWith(
+color: theme.colorScheme.primary,
+fontWeight: FontWeight.w500,
+),
+),
+),
+],
+),
+const SizedBox(height: 16),
+if (tontines.isEmpty)
+Container(
+padding: const EdgeInsets.all(32),
+decoration: BoxDecoration(
+color: theme.colorScheme.surface,
+borderRadius: BorderRadius.circular(20),
+boxShadow: [
+BoxShadow(
+color: Colors.black.withValues(alpha: 0.05),
+blurRadius: 10,
+offset: const Offset(0, 2),
+),
+],
+),
+child: Column(
+children: [
+Container(
+width: 80,
+height: 80,
+decoration: BoxDecoration(
+color: theme.colorScheme.primary.withValues(alpha: 0.1),
+shape: BoxShape.circle,
+),
+child: Icon(
+Icons.account_balance_wallet,
+size: 40,
+color: theme.colorScheme.primary.withValues(alpha: 0.6),
+),
+),
+const SizedBox(height: 16),
+Text(
+'Aucune tontine pour le moment',
+style: theme.textTheme.titleLarge?.copyWith(
+fontWeight: FontWeight.w600,
+color: theme.colorScheme.onSurface,
+),
+textAlign: TextAlign.center,
+),
+const SizedBox(height: 8),
+Text(
+'Créez votre première tontine ou rejoignez une tontine existante pour commencer à épargner',
+style: theme.textTheme.bodyLarge?.copyWith(
+color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+height: 1.4,
+),
+textAlign: TextAlign.center,
+),
+],
+),
+)
+else
+...tontines.take(3).map((tontine) => Padding(
+padding: const EdgeInsets.only(bottom: 12),
+child: TontineCard(
+tontine: tontine,
+onTap: () => Get.toNamed(AppRoutes.detail, arguments: tontine.id),
+),
+)),
+],
+);
+});
+}
+// All business logic, dialogs, and state are now handled by the controller using Rx variables and methods.
+// The screen is now a 'dumb' reactive view.
+final activities = [
+{
+'icon': Icons.payment,
+'text': 'Paiement 25,000 FCFA',
+'subtitle': 'Tontine Famille (+10 pts)',
+'time': '2h'
+},
+{
+'icon': Icons.celebration,
+'text': 'Tirage gagné',
+'subtitle': 'Moussa gagne 125,000 FCFA',
+'time': '1j'
+},
+{
+'icon': Icons.schedule,
+'text': 'Rappel cotisation',
+'subtitle': 'Demain à 14h00',
+'time': '2j'
+},
+{
+'icon': Icons.group_add,
+'text': 'Nouveau membre',
+'subtitle': 'Fatou a rejoint Tontine Amis',
+'time': '3j'
+},
+];
+
+return activities.map((activity) => Container(
+margin: const EdgeInsets.only(bottom: 12),
+padding: const EdgeInsets.all(16),
+decoration: BoxDecoration(
+color: theme.colorScheme.surface,
+borderRadius: BorderRadius.circular(16),
+boxShadow: [
+BoxShadow(
+color: Colors.black.withValues(alpha: 0.05),
+blurRadius: 8,
+offset: const Offset(0, 2),
+),
+],
+),
+child: Row(
+children: [
+Container(
+width: 48,
+height: 48,
+decoration: BoxDecoration(
+color: theme.colorScheme.primary.withValues(alpha: 0.1),
+shape: BoxShape.circle,
+),
+child: Icon(
+activity['icon'] as IconData,
+size: 20,
+color: theme.colorScheme.primary,
+),
+),
+const SizedBox(width: 16),
+Expanded(
+child: Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Text(
+activity['text'] as String,
+style: theme.textTheme.bodyLarge?.copyWith(
+fontWeight: FontWeight.w600,
+color: theme.colorScheme.onSurface,
+),
+),
+const SizedBox(height: 2),
+Text(
+activity['subtitle'] as String,
+style: theme.textTheme.bodyMedium?.copyWith(
+color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+),
+),
+],
+),
+),
+Text(
+activity['time'] as String,
+style: theme.textTheme.bodySmall?.copyWith(
+color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+fontWeight: FontWeight.w500,
+),
+),
+],
+),
+)).toList();
+}
+
+Widget _buildMyTontinesSection() {
+final theme = Theme.of(context);
+return Column(
+crossAxisAlignment: CrossAxisAlignment.start,
+children: [
+Row(
+mainAxisAlignment: MainAxisAlignment.spaceBetween,
+children: [
+Text(
+'Mes Tontines',
+style: theme.textTheme.headlineSmall?.copyWith(
+fontWeight: FontWeight.w600,
+color: theme.colorScheme.onSurface,
+),
+),
+if (userTontines.length > 3)
+TextButton(
+onPressed: () {},
+child: Text(
+'Tout voir',
+style: theme.textTheme.bodyMedium?.copyWith(
+color: theme.colorScheme.primary,
+fontWeight: FontWeight.w500,
+),
+),
+),
+],
+),
+const SizedBox(height: 16),
+if (userTontines.isEmpty)
+Container(
+padding: const EdgeInsets.all(32),
+decoration: BoxDecoration(
+color: theme.colorScheme.surface,
+borderRadius: BorderRadius.circular(20),
+boxShadow: [
+BoxShadow(
+color: Colors.black.withValues(alpha: 0.05),
+blurRadius: 10,
+offset: const Offset(0, 2),
+),
+],
+),
+child: Column(
+children: [
+Container(
+width: 80,
+height: 80,
+decoration: BoxDecoration(
+color: theme.colorScheme.primary.withValues(alpha: 0.1),
+shape: BoxShape.circle,
+),
+child: Icon(
+Icons.account_balance_wallet,
+size: 40,
+color: theme.colorScheme.primary.withValues(alpha: 0.6),
+),
+),
+const SizedBox(height: 16),
+Text(
+'Aucune tontine pour le moment',
+style: theme.textTheme.titleLarge?.copyWith(
+fontWeight: FontWeight.w600,
+color: theme.colorScheme.onSurface,
+),
+textAlign: TextAlign.center,
+),
+const SizedBox(height: 8),
+Text(
+'Créez votre première tontine ou rejoignez une tontine existante pour commencer à épargner',
+style: theme.textTheme.bodyLarge?.copyWith(
+color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+height: 1.4,
+),
+textAlign: TextAlign.center,
+),
+],
+),
+)
+else
+...userTontines.take(3).map((tontine) => Padding(
+padding: const EdgeInsets.only(bottom: 12),
+child: TontineCard(
+tontine: tontine,
+onTap: () => Get.toNamed(AppRoutes.detail, arguments: tontine.id),
+),
+)),
+],
+);
+}
+}
