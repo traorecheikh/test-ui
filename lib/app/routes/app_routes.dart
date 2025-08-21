@@ -16,6 +16,7 @@ abstract class Routes {
   static const login = _Paths.login;
   static const otp = _Paths.otp;
   static const register = _Paths.register;
+  static const history = _Paths.history;
 }
 
 abstract class _Paths {
@@ -33,4 +34,5 @@ abstract class _Paths {
   static const login = '/login';
   static const otp = '/otp';
   static const register = '/register';
+  static const history = '/history';
 }

@@ -5,6 +5,8 @@ import 'package:snt_ui_test/app/modules/auth/views/otp_screen.dart';
 import 'package:snt_ui_test/app/modules/auth/views/register_step_screen.dart';
 import 'package:snt_ui_test/app/modules/tontines/views/my_tontines_view.dart';
 
+import '../modules/history/bindings/history_binding.dart';
+import '../modules/history/views/history_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/home/views/onboarding_screen.dart';
@@ -95,6 +97,12 @@ class AppPages {
       name: Routes.otp,
       page: () => const OtpScreen(),
       binding: AuthBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: _Paths.history,
+      page: () => const HistoryView(),
+      binding: HistoryBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

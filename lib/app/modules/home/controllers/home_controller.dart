@@ -130,11 +130,7 @@ class HomeController extends GetxController {
       color: Color(0xFFFFC107),
       onTap: () {
         VibrationService.softVibrate();
-        CustomSnackbar.show(
-          title: 'Historique',
-          message: 'Fonctionnalité à venir !',
-          success: false,
-        );
+        Get.toNamed(Routes.history);
       },
     ),
     _ActionButtonData(
