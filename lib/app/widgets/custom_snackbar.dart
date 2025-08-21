@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 
 class CustomSnackbar {
   static void show({
@@ -18,12 +17,12 @@ class CustomSnackbar {
       duration: duration,
       messageText: Row(
         children: [
-          Lottie.asset(
-            success ? 'assets/lottie/success.json' : 'assets/lottie/error.json',
-            width: 44,
-            height: 44,
-            repeat: false,
-          ),
+          // Lottie.asset(
+          //   success ? 'assets/lottie/success.json' : 'assets/lottie/error.json',
+          //   width: 44,
+          //   height: 44,
+          //   repeat: false,
+          // ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -40,10 +39,7 @@ class CustomSnackbar {
                   ),
                 Text(
                   message,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Colors.black87,
-                  ),
+                  style: const TextStyle(fontSize: 15, color: Colors.black87),
                 ),
               ],
             ),
