@@ -118,7 +118,7 @@ class JoinScannerScreen extends GetView<JoinScannerController> {
                         style: theme.textTheme.titleLarge?.copyWith(
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 18,
                           letterSpacing: 0.3,
                         ),
                       ),
