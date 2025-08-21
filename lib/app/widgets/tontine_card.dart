@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../data/models/tontine.dart';
@@ -6,113 +7,91 @@ import '../utils/formatters.dart';
 class TontineCard extends StatelessWidget {
   final Tontine tontine;
   final VoidCallback? onTap;
-  final bool isSelected;
   final Widget? trailing;
 
-  const TontineCard({
-    super.key,
-    required this.tontine,
-    this.onTap,
-    this.isSelected = false,
-    this.trailing,
-  });
+  const TontineCard(
+      {super.key, required this.tontine, this.onTap, this.trailing});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    return Card(
-      elevation: isSelected ? 8 : 2,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: isSelected
-            ? BorderSide(color: theme.colorScheme.primary, width: 2)
-            : BorderSide.none,
-      ),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(theme),
-              const SizedBox(height: 12),
-              _buildContent(theme),
-              const SizedBox(height: 12),
-              _buildFooter(theme),
-            ],
-          ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 4),
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context, theme),
+            const SizedBox(height: 16),
+            Text(
+              tontine.description,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                height: 1.5,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 20),
+            _buildInfoRow(theme),
+            const SizedBox(height: 16),
+            _buildProgressBar(theme),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(ThemeData theme) {
+  Widget _buildHeader(BuildContext context, ThemeData theme) {
     return Row(
       children: [
         Container(
-          width: 50,
-          height: 50,
+          width: 52,
+          height: 52,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            image: tontine.imageUrl != null
-                ? DecorationImage(
-                    image: NetworkImage(tontine.imageUrl!),
-                    fit: BoxFit.cover,
-                  )
-                : null,
-            color: tontine.imageUrl == null
-                ? theme.colorScheme.primaryContainer
-                : null,
+            color: theme.colorScheme.primary.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(18),
           ),
-          child: tontine.imageUrl == null
-              ? Icon(
-                  Icons.groups,
-                  color: theme.colorScheme.onPrimaryContainer,
-                  size: 24,
-                )
-              : null,
+          child: Icon(
+            CupertinoIcons.group_solid,
+            color: theme.colorScheme.primary,
+            size: 28,
+          ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                tontine.name,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                tontine.description,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          child: Text(
+            tontine.name,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        if (trailing != null) trailing!,
+        if (trailing != null) ...[const SizedBox(width: 12), trailing!],
+        const SizedBox(width: 12),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: _getStatusColor(theme),
+            color: _getStatusColor(theme).withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             tontine.status.label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: _getStatusColor(theme),
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -120,107 +99,96 @@ class TontineCard extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(ThemeData theme) {
+  Widget _buildInfoRow(ThemeData theme) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: _buildInfoItem(
-            theme,
-            'Contribution',
-            Formatters.formatCurrency(tontine.contributionAmount),
-            Icons.account_balance_wallet,
-          ),
+        _buildInfoItem(
+          theme,
+          CupertinoIcons.money_dollar_circle_fill,
+          'Contribution',
+          Formatters.formatCurrency(tontine.contributionAmount),
         ),
-        Expanded(
-          child: _buildInfoItem(
-            theme,
-            'Participants',
-            '${tontine.participantIds.length}/${tontine.maxParticipants}',
-            Icons.group,
-          ),
+        _buildInfoItem(
+          theme,
+          CupertinoIcons.person_2_fill,
+          'Membres',
+          '${tontine.participantIds.length}/${tontine.maxParticipants}',
         ),
-        Expanded(
-          child: _buildInfoItem(
-            theme,
-            'Fréquence',
-            tontine.frequency.label,
-            Icons.schedule,
-          ),
+        _buildInfoItem(
+          theme,
+          CupertinoIcons.calendar,
+          'Prochain tour',
+          tontine.nextContributionDate != null
+              ? Formatters.formatDate(tontine.nextContributionDate!)
+              : 'N/A',
         ),
       ],
     );
   }
 
   Widget _buildInfoItem(
-    ThemeData theme,
-    String label,
-    String value,
-    IconData icon,
-  ) {
+      ThemeData theme, IconData icon, String label, String value) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: theme.colorScheme.primary, size: 20),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-          textAlign: TextAlign.center,
+        Row(
+          children: [
+            Icon(icon, color: theme.colorScheme.primary, size: 18),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 2),
-        Text(
-          value,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.only(left: 24),
+          child: Text(
+            value,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     );
   }
 
-  Widget _buildFooter(ThemeData theme) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildProgressBar(ThemeData theme) {
+    final progress = tontine.currentRound / tontine.totalRounds;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(
-              Icons.calendar_today,
-              size: 16,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-            const SizedBox(width: 4),
             Text(
-              tontine.status == TontineStatus.active &&
-                      tontine.nextContributionDate != null
-                  ? 'Prochain: ${Formatters.formatDate(tontine.nextContributionDate!)}'
-                  : 'Créée: ${Formatters.formatDate(tontine.createdAt)}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              'Progression',
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w600),
+            ),
+            Text(
+              '${tontine.currentRound} / ${tontine.totalRounds} tours',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
           ],
         ),
-        if (tontine.status == TontineStatus.active)
-          Row(
-            children: [
-              Text(
-                'Tour ${tontine.currentRound}/${tontine.totalRounds}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Icon(
-                Icons.trending_up,
-                size: 16,
-                color: theme.colorScheme.primary,
-              ),
-            ],
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: 10,
+            backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+            valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
           ),
+        ),
       ],
     );
   }
@@ -232,9 +200,9 @@ class TontineCard extends StatelessWidget {
       case TontineStatus.pending:
         return Colors.orange;
       case TontineStatus.completed:
-        return Colors.blue;
+        return theme.colorScheme.primary;
       case TontineStatus.cancelled:
-        return Colors.red;
+        return theme.colorScheme.error;
     }
   }
 }
