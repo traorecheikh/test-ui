@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SettingsController extends GetxController {
@@ -12,4 +13,6 @@ class SettingsController extends GetxController {
   void showLanguageDialog() {
     // TODO: Implement language selection dialog
   }
+
+  ThemeMode get themeMode => darkMode.value ? ThemeMode.dark : ThemeMode.light;
 }

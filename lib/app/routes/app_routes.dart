@@ -10,9 +10,12 @@ abstract class Routes {
   static const join = _Paths.join;
   static const profile = _Paths.profile;
   static const detail = _Paths.detail;
-  static const myTontine = _Paths.myTontine;
+  static const myTontine = _Paths.my_tontine;
   static const settings = _Paths.settings;
   static const joinScanner = _Paths.joinScanner;
+  static const login = _Paths.login;
+  static const otp = _Paths.otp;
+  static const register = _Paths.register;
 }
 
 abstract class _Paths {
@@ -27,4 +30,7 @@ abstract class _Paths {
   static const detail = '/detail';
   static const settings = '/settings';
   static const joinScanner = '/join-scanner';
+  static const login = '/login';
+  static const otp = '/otp';
+  static const register = '/register';
 }

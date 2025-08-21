@@ -1,0 +1,1002 @@
+{
+  "info": {
+    "_postman_id": "a8a0c4c8-7c6e-4b8a-8f2a-3e1e3e1e3e1f",
+    "name": "SunuTontine API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Registration",
+          "item": [
+            {
+              "name": "Request Registration OTP (SMS)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identifier\": \"+221771234567\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/request-registration-otp-sms",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "request-registration-otp-sms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Request Registration OTP (Email)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identifier\": \"test@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/request-registration-otp-email",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "request-registration-otp-email"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Register User",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"phoneNumber\": \"+221771234567\",\n  \"email\": \"test@example.com\",\n  \"otpCode\": \"123456\",\n  \"fullName\": \"Cheikh Fall\",\n  \"preferredLanguage\": \"FR\",\n  \"profilePictureUrl\": \"https://example.com/profile.jpg\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "item": [
+            {
+              "name": "Request Login OTP (SMS)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identifier\": \"+221771234567\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/request-login-otp-sms",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "request-login-otp-sms"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Request Login OTP (Email)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identifier\": \"test@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/request-login-otp-email",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "request-login-otp-email"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login User",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"identifier\": \"+221771234567\",\n  \"otpCode\": \"123456\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+            "name": "Token",
+            "item": [
+                {
+                  "name": "Refresh Access Token",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/api/v1/auth/refresh",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "auth",
+                        "refresh"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+            ]
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/user/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Cheikh Anta Diop\",\n  \"email\": \"cheikh@example.com\",\n  \"preferredLanguage\": \"WO\",\n  \"city\": \"Dakar\",\n  \"region\": \"Dakar\",\n  \"country\": \"SN\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/user/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "user",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tontine",
+      "item": [
+        {
+          "name": "Create Tontine",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tontine de test\",\n  \"description\": \"Une tontine pour tester l'api\",\n  \"contributionAmount\": 10000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"maxParticipants\": 12,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"FIXED\",\n  \"category\": \"REGULAR\",\n  \"organizerParticipates\": true,\n  \"organizerNumberOfHands\": 1,\n  \"penaltySettings\": {\n    \"gracePeriodDays\": 5,\n    \"penaltyRate\": 10.5,\n    \"maxPenaltyPercent\": 50\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create Tontine Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Tontine de test\",\n  \"description\": \"Une tontine pour tester l'api\",\n  \"contributionAmount\": 10000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"maxParticipants\": 12,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"FIXED\",\n  \"organizerParticipates\": true,\n  \"organizerNumberOfHands\": 1,\n  \"penaltySettings\": {\n    \"gracePeriodDays\": 5,\n    \"penaltyRate\": 10.5,\n    \"maxPenaltyPercent\": 50\n  }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/tontines",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "tontines"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Tontine de test\",\n  \"description\": \"Une tontine pour tester l'api\",\n  \"joinCode\": \"ABCDEF\",\n  \"status\": \"PENDING\",\n  \"contributionAmount\": 10000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"numberOfRounds\": 12,\n  \"currentRound\": 0,\n  \"maxParticipants\": 12,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"FIXED\",\n  \"category\": \"REGULAR\",\n  \"currentParticipants\": 1,\n  \"designatedWinner\": null,\n  \"nextDrawingDate\": null,\n  \"organizer\": {\n    \"id\": 101,\n    \"fullName\": \"Cheikh Fall\",\n    \"phoneNumber\": \"+221771234567\"\n  },\n  \"participants\": [],\n  \"penaltyConfiguration\": {\n    \"enabled\": true,\n    \"gracePeriodDays\": 5,\n    \"penaltyRate\": 10.5,\n    \"maxPenaltyPercent\": 50\n  },\n  \"financialSummary\": {\n    \"totalExpected\": 120000,\n    \"totalCollected\": 0,\n    \"totalDistributed\": 0,\n    \"totalPenalties\": 0,\n    \"currentBalance\": 0,\n    \"completionPercentage\": 0\n  },\n  \"createdAt\": \"2025-08-13T10:00:00Z\",\n  \"updatedAt\": \"2025-08-13T10:00:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Cagnotte (Special Collection)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cagnotte pour bébé de Fatou\",\n  \"description\": \"Contribution collective pour célébrer la naissance du bébé de Fatou. L'organisateur recevra l'argent pour le donner à Fatou.\",\n  \"contributionAmount\": 5000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"maxParticipants\": 10,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"FIXED\",\n  \"category\": \"CAGNOTTE\",\n  \"organizerParticipates\": true,\n  \"organizerNumberOfHands\": 1,\n  \"penaltySettings\": {\n    \"gracePeriodDays\": 3,\n    \"penaltyRate\": 5,\n    \"maxPenaltyPercent\": 50\n  },\n  \"_comment\": \"Note: designatedWinnerId is not needed for CAGNOTTE as the organizer is automatically set as the winner\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create Cagnotte Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Cagnotte pour bébé de Fatou\",\n  \"description\": \"Contribution collective pour célébrer la naissance du bébé de Fatou. L'organisateur recevra l'argent pour le donner à Fatou.\",\n  \"contributionAmount\": 5000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"maxParticipants\": 10,\n  \"category\": \"CAGNOTTE\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/tontines",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "tontines"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"id\": 2,\n  \"name\": \"Cagnotte pour bébé de Fatou\",\n  \"description\": \"Contribution collective pour célébrer la naissance du bébé de Fatou. L'organisateur recevra l'argent pour le donner à Fatou.\",\n  \"joinCode\": \"BABY01\",\n  \"status\": \"DRAFT\",\n  \"contributionAmount\": 5000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"numberOfRounds\": 1,\n  \"currentRound\": 0,\n  \"maxParticipants\": 10,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"FIXED\",\n  \"category\": \"CAGNOTTE\",\n  \"currentParticipants\": 1,\n  \"designatedWinner\": {\n    \"id\": 101,\n    \"fullName\": \"Cheikh Fall\",\n    \"phoneNumber\": \"+221771234567\",\n    \"_note\": \"For CAGNOTTE, the organizer is automatically set as the designated winner\"\n  },\n  \"nextDrawingDate\": null,\n  \"organizer\": {\n    \"id\": 101,\n    \"fullName\": \"Cheikh Fall\",\n    \"phoneNumber\": \"+221771234567\"\n  },\n  \"participants\": [],\n  \"penaltyConfiguration\": {\n    \"enabled\": true,\n    \"gracePeriodDays\": 3,\n    \"penaltyRate\": 5,\n    \"maxPenaltyPercent\": 50\n  },\n  \"financialSummary\": {\n    \"totalExpected\": 50000,\n    \"totalCollected\": 0,\n    \"totalDistributed\": 0,\n    \"totalPenalties\": 0,\n    \"currentBalance\": 0,\n    \"completionPercentage\": 0\n  },\n  \"createdAt\": \"2025-08-13T10:00:00Z\",\n  \"updatedAt\": \"2025-08-13T10:00:00Z\",\n  \"_businessLogic\": {\n    \"note\": \"For CAGNOTTE category, the organizer is always the designated winner who will collect and distribute the funds to the intended recipient (Fatou in this case)\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get User Tontines",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines?status=ACTIVE&page=0&size=10&sortBy=name&sortDir=asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "ACTIVE"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name"
+                },
+                {
+                  "key": "sortDir",
+                  "value": "asc"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get User Tontines Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/tontines?status=ACTIVE&page=0&size=10&sortBy=name&sortDir=asc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "tontines"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "ACTIVE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    },
+                    {
+                      "key": "sortBy",
+                      "value": "name"
+                    },
+                    {
+                      "key": "sortDir",
+                      "value": "asc"
+                    }
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[{\n  \"id\": 1,\n  \"name\": \"Tontine de test 1\",\n  \"description\": \"Une tontine pour tester l'api\",\n  \"joinCode\": \"ABCDEF\",\n  \"status\": \"ACTIVE\",\n  \"contributionAmount\": 10000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"numberOfRounds\": 12,\n  \"currentRound\": 1,\n  \"maxParticipants\": 12,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"FIXED\",\n  \"nextDrawingDate\": \"2025-09-13T10:00:00Z\",\n  \"organizer\": {\n    \"id\": 101,\n    \"fullName\": \"Cheikh Fall\",\n    \"phoneNumber\": \"+221771234567\"\n  },\n  \"participants\": [\n    {\n      \"id\": 201,\n      \"userId\": 101,\n      \"fullName\": \"Cheikh Fall\",\n      \"phoneNumber\": \"+221771234567\",\n      \"numberOfHands\": 1,\n      \"status\": \"ACTIVE\",\n      \"totalContributed\": 10000,\n      \"totalReceived\": 0,\n      \"missedPayments\": 0,\n      \"joinedAt\": \"2025-08-13T10:00:00Z\"\n    }\n  ],\n  \"penaltyConfiguration\": {\n    \"enabled\": true,\n    \"gracePeriodDays\": 5,\n    \"penaltyRate\": 10.5,\n    \"maxPenaltyPercent\": 50\n  },\n  \"financialSummary\": {\n    \"totalExpected\": 120000,\n    \"totalCollected\": 10000,\n    \"totalDistributed\": 0,\n    \"totalPenalties\": 0,\n    \"currentBalance\": 10000,\n    \"completionPercentage\": 8.33\n  },\n  \"createdAt\": \"2025-08-13T10:00:00Z\",\n  \"updatedAt\": \"2025-08-13T10:10:00Z\"\n},{\n  \"id\": 2,\n  \"name\": \"Tontine de test 2\",\n  \"description\": \"Une autre tontine pour tester l'api\",\n  \"joinCode\": \"GHIJKL\",\n  \"status\": \"PENDING\",\n  \"contributionAmount\": 5000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"WEEKLY\",\n  \"numberOfRounds\": 10,\n  \"currentRound\": 0,\n  \"maxParticipants\": 10,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"RANDOM\",\n  \"nextDrawingDate\": null,\n  \"organizer\": {\n    \"id\": 101,\n    \"fullName\": \"Cheikh Fall\",\n    \"phoneNumber\": \"+221771234567\"\n  },\n  \"participants\": [],\n  \"penaltyConfiguration\": {\n    \"enabled\": false,\n    \"gracePeriodDays\": null,\n    \"penaltyRate\": null,\n    \"maxPenaltyPercent\": null\n  },\n  \"financialSummary\": {\n    \"totalExpected\": 50000,\n    \"totalCollected\": 0,\n    \"totalDistributed\": 0,\n    \"totalPenalties\": 0,\n    \"currentBalance\": 0,\n    \"completionPercentage\": 0\n  },\n  \"createdAt\": \"2025-08-13T11:00:00Z\",\n  \"updatedAt\": \"2025-08-13T11:00:00Z\"\n}]"
+            }
+          ]
+        },
+        {
+          "name": "Get Tontine Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get Tontine Details Success",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/tontines/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "tontines",
+                    "1"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Tontine de test\",\n  \"description\": \"Une tontine pour tester l'api\",\n  \"joinCode\": \"ABCDEF\",\n  \"status\": \"ACTIVE\",\n  \"contributionAmount\": 10000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"numberOfRounds\": 12,\n  \"currentRound\": 1,\n  \"maxParticipants\": 12,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"FIXED\",\n  \"nextDrawingDate\": null,\n  \"organizer\": {\n    \"id\": 101,\n    \"fullName\": \"Cheikh Fall\",\n    \"phoneNumber\": \"+221771234567\"\n  },\n  \"participants\": [\n    {\n      \"id\": 201,\n      \"userId\": 101,\n      \"fullName\": \"Cheikh Fall\",\n      \"phoneNumber\": \"+221771234567\",\n      \"numberOfHands\": 1,\n      \"status\": \"ACTIVE\",\n      \"totalContributed\": 10000,\n      \"totalReceived\": 0,\n      \"missedPayments\": 0,\n      \"joinedAt\": \"2025-08-13T10:00:00Z\"\n    },\n    {\n      \"id\": 202,\n      \"userId\": 102,\n      \"fullName\": \"Fatou Diop\",\n      \"phoneNumber\": \"+221779876543\",\n      \"numberOfHands\": 1,\n      \"status\": \"ACTIVE\",\n      \"totalContributed\": 10000,\n      \"totalReceived\": 0,\n      \"missedPayments\": 0,\n      \"joinedAt\": \"2025-08-13T10:05:00Z\"\n    }\n  ],\n  \"penaltyConfiguration\": {\n    \"enabled\": true,\n    \"gracePeriodDays\": 5,\n    \"penaltyRate\": 10.5,\n    \"maxPenaltyPercent\": 50\n  },\n  \"financialSummary\": {\n    \"totalExpected\": 120000,\n    \"totalCollected\": 20000,\n    \"totalDistributed\": 0,\n    \"totalPenalties\": 0,\n    \"currentBalance\": 20000,\n    \"completionPercentage\": 16.67\n  },\n  \"createdAt\": \"2025-08-13T10:00:00Z\",\n  \"updatedAt\": \"2025-08-13T10:10:00Z\"}"
+            }]},
+        {
+          "name": "Update Tontine",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nouveau nom de tontine\",\n  \"description\": \"Nouvelle description de la tontine\",\n  \"maxParticipants\": 15,\n  \"drawingOrderType\": \"RANDOM\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Update Tontine Success",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Nouveau nom de tontine\",\n  \"description\": \"Nouvelle description de la tontine\",\n  \"maxParticipants\": 15,\n  \"drawingOrderType\": \"RANDOM\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/tontines/1",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "tontines",
+                    "1"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Nouveau nom de tontine\",\n  \"description\": \"Nouvelle description de la tontine\",\n  \"joinCode\": \"ABCDEF\",\n  \"status\": \"PENDING\",\n  \"contributionAmount\": 10000,\n  \"currency\": \"XOF\",\n  \"frequency\": \"MONTHLY\",\n  \"numberOfRounds\": 12,\n  \"currentRound\": 0,\n  \"maxParticipants\": 15,\n  \"maxHandsPerParticipant\": 1,\n  \"drawingOrderType\": \"RANDOM\",\n  \"nextDrawingDate\": null,\n  \"organizer\": {\n    \"id\": 101,\n    \"fullName\": \"Cheikh Fall\",\n    \"phoneNumber\": \"+221771234567\"\n  },\n  \"participants\": [],\n  \"penaltyConfiguration\": {\n    \"enabled\": true,\n    \"gracePeriodDays\": 5,\n    \"penaltyRate\": 10.5,\n    \"maxPenaltyPercent\": 50\n  },\n  \"financialSummary\": {\n    \"totalExpected\": 150000,\n    \"totalCollected\": 0,\n    \"totalDistributed\": 0,\n    \"totalPenalties\": 0,\n    \"currentBalance\": 0,\n    \"completionPercentage\": 0\n  },\n  \"createdAt\": \"2025-08-13T10:00:00Z\",\n  \"updatedAt\": \"2025-08-13T10:15:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Tontine",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate Tontine",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1/activate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1",
+                "activate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Join Tontine",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"joinCode\": \"YOUR_JOIN_CODE\",\n  \"numberOfHands\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/join",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "join"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Leave Tontine",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1/leave",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1",
+                "leave"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Contribute to Tontine",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 10000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1/contribute",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1",
+                "contribute"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Tontine Drawing Order",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1/drawing-order",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1",
+                "drawing-order"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Start First Round",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1/rounds/start",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1",
+                "rounds",
+                "start"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Round Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1/rounds/current",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1",
+                "rounds",
+                "current"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Conduct Drawing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1/rounds/draw",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1",
+                "rounds",
+                "draw"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Force Advance Drawing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tontines/1/rounds/force-advance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tontines",
+                "1",
+                "rounds",
+                "force-advance"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    }
+  ]
+}

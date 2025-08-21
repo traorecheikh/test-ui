@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../data/models/tontine.dart';
-import '../../../utils/formatters.dart';
-import '../../../widgets/godly_vibrate_button.dart';
 import '../controllers/create_tontine_controller.dart';
 
+/// Modern, step-by-step Create Tontine UI following best UX/UI practices.
 class CreateTontineScreen extends GetView<CreateTontineController> {
   const CreateTontineScreen({super.key});
 
@@ -24,396 +21,303 @@ class CreateTontineScreen extends GetView<CreateTontineController> {
         ),
         backgroundColor: theme.colorScheme.surface,
         elevation: 0,
-        actions: [
-          Obx(
-            () => controller.isLoading.value
-                ? const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  )
-                : const SizedBox(),
-          ),
-        ],
       ),
-      body: Form(
-        key: controller.formKey,
-        child: CustomScrollView(
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  _buildBasicInfoSection(theme),
-                  const SizedBox(height: 32),
-                  _buildFinancialSection(theme),
-                  const SizedBox(height: 32),
-                  _buildParticipantsSection(theme),
-                  const SizedBox(height: 32),
-                  _buildScheduleSection(theme),
-                  const SizedBox(height: 32),
-                  _buildImageSection(theme),
-                  const SizedBox(height: 32),
-                  _buildRulesSection(theme),
-                  const SizedBox(height: 40),
-                ]),
-              ),
+      body: Obx(
+        () => Stepper(
+          type: StepperType.vertical,
+          currentStep: controller.currentStep.value,
+          onStepContinue: controller.nextStep,
+          onStepCancel: controller.previousStep,
+          controlsBuilder: (context, details) {
+            return Row(
+              children: [
+                if (controller.currentStep.value > 0)
+                  OutlinedButton(
+                    onPressed: details.onStepCancel,
+                    child: const Text('Retour'),
+                  ),
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: details.onStepContinue,
+                  child: Text(
+                    controller.isLastStep ? 'Créer la Tontine' : 'Suivant',
+                  ),
+                ),
+              ],
+            );
+          },
+          steps: [
+            Step(
+              title: const Text('Informations de Base'),
+              content: _buildBasicInfoSection(theme),
+              isActive: controller.currentStep.value == 0,
+            ),
+            Step(
+              title: const Text('Configuration Financière'),
+              content: _buildFinancialSection(theme),
+              isActive: controller.currentStep.value == 1,
+            ),
+            Step(
+              title: const Text('Participants & Organisation'),
+              content: _buildParticipantsSection(theme),
+              isActive: controller.currentStep.value == 2,
+            ),
+            Step(
+              title: const Text('Règles & Pénalités'),
+              content: _buildRulesSection(theme),
+              isActive: controller.currentStep.value == 3,
+            ),
+            Step(
+              title: const Text('Aperçu & Confirmation'),
+              content: _buildPreviewSection(theme),
+              isActive: controller.currentStep.value == 4,
             ),
           ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          border: Border(
-            top: BorderSide(color: theme.colorScheme.outline.withOpacity(0.08)),
-          ),
-        ),
-        child: SafeArea(
-          child: Row(
-            children: [
-              Expanded(
-                child: GodlyVibrateButton(
-                  onTap: controller.isLoading.value ? null : () => Get.back(),
-                  child: OutlinedButton(
-                    onPressed: controller.isLoading.value
-                        ? null
-                        : () => Get.back(),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                    ),
-                    child: const Text(
-                      'Annuler',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 18),
-              Expanded(
-                flex: 2,
-                child: GodlyVibrateButton(
-                  onTap: controller.isLoading.value
-                      ? null
-                      : controller.createTontine,
-                  child: ElevatedButton(
-                    onPressed: controller.isLoading.value
-                        ? null
-                        : controller.createTontine,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: theme.colorScheme.onPrimary,
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    child: Obx(
-                      () => controller.isLoading.value
-                          ? const SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white,
-                                ),
-                              ),
-                            )
-                          : const Text('Créer la Tontine'),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
   }
 
+  /// Step 1: Basic Info
   Widget _buildBasicInfoSection(ThemeData theme) {
-    return _buildSection(theme, 'Informations de Base', [
-      TextFormField(
-        controller: controller.nameController,
-        decoration: const InputDecoration(
-          labelText: 'Nom de la tontine *',
-          hintText: 'Ex: Tontine Famille',
-          prefixIcon: Icon(Icons.group),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          controller: controller.nameController,
+          decoration: const InputDecoration(
+            labelText: 'Nom de la tontine *',
+            hintText: 'Ex: Tontine Famille',
+            prefixIcon: Icon(Icons.group),
+            helperText: 'Le nom doit être unique et descriptif.',
+          ),
+          validator: controller.nameValidator,
         ),
-        validator: controller.nameValidator,
-      ),
-      const SizedBox(height: 16),
-      TextFormField(
-        controller: controller.descriptionController,
-        decoration: const InputDecoration(
-          labelText: 'Description *',
-          hintText: 'Décrivez l\'objectif de votre tontine',
-          prefixIcon: Icon(Icons.description),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: controller.descriptionController,
+          decoration: const InputDecoration(
+            labelText: 'Description *',
+            hintText: 'Décrivez l\'objectif de votre tontine',
+            prefixIcon: Icon(Icons.description),
+            helperText: 'Expliquez le but et les règles principales.',
+          ),
+          maxLines: 3,
+          validator: controller.descriptionValidator,
         ),
-        maxLines: 3,
-        validator: controller.descriptionValidator,
-      ),
-    ]);
+      ],
+    );
   }
 
+  /// Step 2: Financials
   Widget _buildFinancialSection(ThemeData theme) {
-    return _buildSection(theme, 'Configuration Financière', [
-      TextFormField(
-        controller: controller.amountController,
-        decoration: const InputDecoration(
-          labelText: 'Montant de contribution (FCFA) *',
-          hintText: '25000',
-          prefixIcon: Icon(Icons.account_balance_wallet),
-          suffixText: 'FCFA',
-        ),
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        validator: controller.amountValidator,
-      ),
-      const SizedBox(height: 16),
-      Obx(
-        () => DropdownButtonFormField<TontineFrequency>(
-          value: controller.selectedFrequency.value,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          controller: controller.amountController,
           decoration: const InputDecoration(
-            labelText: 'Fréquence des contributions',
-            prefixIcon: Icon(Icons.schedule),
+            labelText: 'Montant de contribution (FCFA) *',
+            hintText: '25000',
+            prefixIcon: Icon(Icons.account_balance_wallet),
+            suffixText: 'FCFA',
+            helperText:
+                'Le montant que chaque participant doit verser à chaque tour.',
           ),
-          items: TontineFrequency.values.map((frequency) {
-            return DropdownMenuItem(
-              value: frequency,
-              child: Text(frequency.label),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) controller.selectedFrequency.value = value;
-          },
+          keyboardType: TextInputType.number,
+          validator: controller.amountValidator,
         ),
-      ),
-      const SizedBox(height: 16),
-      TextFormField(
-        controller: controller.penaltyController,
-        decoration: const InputDecoration(
-          labelText: 'Pénalité de retard (%)',
-          hintText: '5',
-          prefixIcon: Icon(Icons.warning),
-          suffixText: '%',
-        ),
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*$')),
-        ],
-        validator: controller.penaltyValidator,
-      ),
-    ]);
-  }
-
-  Widget _buildParticipantsSection(ThemeData theme) {
-    return _buildSection(theme, 'Configuration des Participants', [
-      TextFormField(
-        controller: controller.maxParticipantsController,
-        decoration: const InputDecoration(
-          labelText: 'Nombre maximum de participants',
-          hintText: '12',
-          prefixIcon: Icon(Icons.people),
-          helperText: '2 à 50 participants',
-        ),
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        validator: controller.maxParticipantsValidator,
-      ),
-      const SizedBox(height: 16),
-      Obx(
-        () => DropdownButtonFormField<TontineDrawOrder>(
-          value: controller.selectedDrawOrder.value,
-          decoration: const InputDecoration(
-            labelText: 'Ordre de distribution',
-            prefixIcon: Icon(Icons.shuffle),
-          ),
-          items: TontineDrawOrder.values.map((order) {
-            return DropdownMenuItem(value: order, child: Text(order.label));
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) controller.selectedDrawOrder.value = value;
-          },
-        ),
-      ),
-    ]);
-  }
-
-  Widget _buildScheduleSection(ThemeData theme) {
-    return _buildSection(theme, 'Planification', [
-      Obx(
-        () => ListTile(
-          leading: const Icon(Icons.calendar_today),
-          title: const Text('Date de début'),
-          subtitle: Text(Formatters.formatDate(controller.startDate.value)),
-          onTap: controller.selectStartDate,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: BorderSide(
-              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+        const SizedBox(height: 16),
+        Obx(
+          () => DropdownButtonFormField(
+            value: controller.selectedFrequency.value,
+            decoration: const InputDecoration(
+              labelText: 'Fréquence des contributions',
+              prefixIcon: Icon(Icons.schedule),
+              helperText: 'Choisissez la fréquence des versements.',
             ),
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget _buildImageSection(ThemeData theme) {
-    return _buildSection(theme, 'Image de la Tontine (Optionnel)', [
-      const Text(
-        'Choisissez une image pour votre tontine:',
-        style: TextStyle(fontSize: 14),
-      ),
-      const SizedBox(height: 12),
-      Obx(
-        () => SizedBox(
-          height: 80,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.sampleImages.length + 1,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return GestureDetector(
-                  onTap: () => controller.selectedImageUrl.value = null,
-                  child: Container(
-                    width: 80,
-                    margin: const EdgeInsets.only(right: 8),
-                    decoration: BoxDecoration(
-                      color: controller.selectedImageUrl.value == null
-                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                          : theme.colorScheme.outline.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: controller.selectedImageUrl.value == null
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.outline.withValues(alpha: 0.3),
-                        width: 2,
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.close,
-                      color: controller.selectedImageUrl.value == null
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.outline,
-                    ),
-                  ),
-                );
-              }
-              final imageUrl = controller.sampleImages[index - 1];
-              return GestureDetector(
-                onTap: () => controller.selectedImageUrl.value = imageUrl,
-                child: Container(
-                  width: 80,
-                  margin: const EdgeInsets.only(right: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: controller.selectedImageUrl.value == imageUrl
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.outline.withValues(alpha: 0.3),
-                      width: 2,
-                    ),
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              );
+            items: controller.frequencyOptions,
+            onChanged: (value) {
+              if (value != null) controller.selectedFrequency.value = value;
             },
           ),
         ),
-      ),
-    ]);
-  }
-
-  Widget _buildRulesSection(ThemeData theme) {
-    return _buildSection(theme, 'Règles de la Tontine', [
-      const Text(
-        'Règles par défaut (vous pouvez les modifier):',
-        style: TextStyle(fontSize: 14),
-      ),
-      const SizedBox(height: 8),
-      Obx(
-        () => Column(
-          children: controller.rules.asMap().entries.map((entry) {
-            final index = entry.key;
-            final rule = entry.value;
-            return Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 20,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(rule)),
-                  IconButton(
-                    icon: const Icon(Icons.edit, size: 16),
-                    onPressed: () => controller.editRule(index),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
+        const SizedBox(height: 16),
+        Obx(
+          () => DropdownButtonFormField(
+            value: controller.selectedCurrency.value,
+            decoration: const InputDecoration(
+              labelText: 'Devise',
+              prefixIcon: Icon(Icons.attach_money),
+              helperText: 'Sélectionnez la devise utilisée.',
+            ),
+            items: controller.currencyOptions,
+            onChanged: (value) {
+              if (value != null) controller.selectedCurrency.value = value;
+            },
+          ),
         ),
-      ),
-      TextButton.icon(
-        onPressed: controller.addRule,
-        icon: const Icon(Icons.add),
-        label: const Text('Ajouter une règle'),
-      ),
-    ]);
+      ],
+    );
   }
 
-  Widget _buildSection(ThemeData theme, String title, List<Widget> children) {
+  /// Step 3: Participants & Organisation
+  Widget _buildParticipantsSection(ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Icon(
-              Icons.circle,
-              color: theme.colorScheme.primary.withOpacity(0.18),
-              size: 18,
+            Expanded(
+              child: TextFormField(
+                controller: controller.maxParticipantsController,
+                decoration: const InputDecoration(
+                  labelText: 'Nombre max. de participants',
+                  prefixIcon: Icon(Icons.people),
+                  helperText: 'Limite le nombre de membres dans la tontine.',
+                ),
+                keyboardType: TextInputType.number,
+                validator: controller.maxParticipantsValidator,
+              ),
             ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-                fontSize: 22,
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                controller: controller.maxHandsController,
+                decoration: const InputDecoration(
+                  labelText: 'Mains max. par participant',
+                  prefixIcon: Icon(Icons.pan_tool),
+                  helperText: 'Nombre de parts qu\'un membre peut prendre.',
+                ),
+                keyboardType: TextInputType.number,
+                validator: controller.maxHandsValidator,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 18),
-        ...children,
+        const SizedBox(height: 16),
+        Obx(
+          () => SwitchListTile(
+            title: const Text('L\'organisateur participe'),
+            value: controller.organizerParticipates.value,
+            onChanged: (value) =>
+                controller.organizerParticipates.value = value,
+          ),
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: controller.organizerHandsController,
+          decoration: const InputDecoration(
+            labelText: 'Nombre de mains de l\'organisateur',
+            prefixIcon: Icon(Icons.pan_tool_alt),
+            helperText: 'Combien de parts l\'organisateur prend.',
+          ),
+          keyboardType: TextInputType.number,
+          validator: controller.organizerHandsValidator,
+        ),
       ],
+    );
+  }
+
+  /// Step 4: Rules & Penalties
+  Widget _buildRulesSection(ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: controller.gracePeriodController,
+                decoration: InputDecoration(
+                  labelText: 'Délai de grâce (jours)',
+                  prefixIcon: const Icon(Icons.timer),
+                  suffixIcon: Tooltip(
+                    message:
+                        'Nombre de jours avant qu\'une pénalité soit appliquée.',
+                    child: const Icon(Icons.info_outline),
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                validator: controller.gracePeriodValidator,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextFormField(
+                controller: controller.penaltyRateController,
+                decoration: InputDecoration(
+                  labelText: 'Taux de pénalité (%)',
+                  prefixIcon: const Icon(Icons.percent),
+                  suffixIcon: Tooltip(
+                    message: 'Pourcentage appliqué en cas de retard.',
+                    child: const Icon(Icons.info_outline),
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                validator: controller.penaltyRateValidator,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        TextFormField(
+          controller: controller.maxPenaltyController,
+          decoration: InputDecoration(
+            labelText: 'Pénalité max. (%)',
+            prefixIcon: const Icon(Icons.warning),
+            suffixIcon: Tooltip(
+              message: 'Pourcentage maximum de pénalité cumulée.',
+              child: const Icon(Icons.info_outline),
+            ),
+          ),
+          keyboardType: TextInputType.number,
+          validator: controller.maxPenaltyValidator,
+        ),
+      ],
+    );
+  }
+
+  /// Step 5: Preview & Confirmation
+  Widget _buildPreviewSection(ThemeData theme) {
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.all(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Aperçu de la Tontine', style: theme.textTheme.titleLarge),
+            const SizedBox(height: 12),
+            Text('Nom: ${controller.nameController.text}'),
+            Text('Description: ${controller.descriptionController.text}'),
+            Text(
+              'Montant:  {controller.amountController.text}  {controller.selectedCurrency.value ?? '
+              '}',
+            ),
+            Text(
+              'Fréquence:  {controller.selectedFrequency.value ?? '
+              '}',
+            ),
+            Text(
+              'Participants max: ${controller.maxParticipantsController.text}',
+            ),
+            Text('Mains max: ${controller.maxHandsController.text}'),
+            Text(
+              'Organisateur participe: ${controller.organizerParticipates.value ? 'Oui' : 'Non'}',
+            ),
+            Text(
+              'Mains organisateur: ${controller.organizerHandsController.text}',
+            ),
+            Text(
+              'Délai de grâce: ${controller.gracePeriodController.text} jours',
+            ),
+            Text('Taux de pénalité: ${controller.penaltyRateController.text}%'),
+            Text('Pénalité max: ${controller.maxPenaltyController.text}%'),
+          ],
+        ),
+      ),
     );
   }
 }

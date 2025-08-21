@@ -1,4 +1,8 @@
 import 'package:get/get.dart';
+import 'package:snt_ui_test/app/modules/auth/bindings/auth_binding.dart';
+import 'package:snt_ui_test/app/modules/auth/views/login_screen.dart';
+import 'package:snt_ui_test/app/modules/auth/views/otp_screen.dart';
+import 'package:snt_ui_test/app/modules/auth/views/register_step_screen.dart';
 import 'package:snt_ui_test/app/modules/tontines/views/my_tontines_view.dart';
 
 import '../modules/home/bindings/home_binding.dart';
@@ -69,6 +73,24 @@ class AppPages {
       name: Routes.joinScanner,
       page: () => const JoinScannerScreen(),
       binding: JoinScannerBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.login,
+      page: () => const LoginScreen(),
+      binding: AuthBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.register,
+      page: () => const RegisterStepScreen(),
+      binding: AuthBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.otp,
+      page: () => const OtpScreen(),
+      binding: AuthBinding(),
       transition: Transition.rightToLeft,
     ),
   ];
