@@ -33,6 +33,7 @@ class AppPages {
       name: _Paths.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
+      transition: Transition.rightToLeft,
     ),
     GetPage(name: Routes.onboarding, page: () => const OnboardingScreen()),
     GetPage(name: Routes.home, page: () => HomeView(), binding: HomeBinding()),
@@ -40,11 +41,13 @@ class AppPages {
       name: Routes.create,
       page: () => const CreateTontineScreen(),
       binding: CreateTontineBinding(),
+      transition: Transition.rightToLeft,
     ),
     GetPage(
       name: Routes.join,
       page: () => const JoinTontineScreen(),
       binding: JoinTontineBinding(),
+      transition: Transition.rightToLeft,
     ),
     GetPage(
       name: Routes.profile,
@@ -56,6 +59,7 @@ class AppPages {
       name: Routes.detail,
       page: () => TontineDetailScreen(tontineId: Get.arguments),
       binding: TontineDetailBinding(),
+      transition: Transition.rightToLeft,
     ),
     GetPage(
       name: Routes.myTontine,

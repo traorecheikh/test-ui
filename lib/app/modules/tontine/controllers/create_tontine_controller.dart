@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-/// Controller for CreateTontineScreen. Manages form state, validation, and stepper logic.
 class CreateTontineController extends GetxController {
+  // PageView controller
+  late final PageController pageController;
+
   // Stepper state
   final currentStep = 0.obs;
-  int get stepCount => 5;
+  int get stepCount => 5; // We have 5 steps now
   bool get isLastStep => currentStep.value == stepCount - 1;
 
   // Form controllers
@@ -23,70 +25,108 @@ class CreateTontineController extends GetxController {
   final selectedFrequency = Rxn<String>();
   final selectedCurrency = Rxn<String>();
   final organizerParticipates = false.obs;
+  final penaltiesEnabled = false.obs;
 
   // Options (should be loaded from config/service in real app)
   final frequencyOptions = [
-    DropdownMenuItem(value: 'MONTHLY', child: Text('Mensuel')),
-    DropdownMenuItem(value: 'WEEKLY', child: Text('Hebdomadaire')),
-    DropdownMenuItem(value: 'DAILY', child: Text('Quotidien')),
+    const DropdownMenuItem(value: 'MONTHLY', child: Text('Mensuel')),
+    const DropdownMenuItem(value: 'WEEKLY', child: Text('Hebdomadaire')),
+    const DropdownMenuItem(value: 'DAILY', child: Text('Quotidien')),
   ];
   final currencyOptions = [
-    DropdownMenuItem(value: 'XOF', child: Text('XOF')), // Franc CFA
-    DropdownMenuItem(value: 'USD', child: Text('USD')),
-    DropdownMenuItem(value: 'EUR', child: Text('EUR')),
+    const DropdownMenuItem(value: 'XOF', child: Text('XOF (Franc CFA)')),
+    const DropdownMenuItem(value: 'USD', child: Text('USD (US Dollar)')),
+    const DropdownMenuItem(value: 'EUR', child: Text('EUR (Euro)')),
   ];
 
   // Validation
   String? nameValidator(String? value) =>
-      (value == null || value.isEmpty) ? 'Nom requis' : null;
+      (value == null || value.isEmpty) ? 'Le nom est requis' : null;
   String? descriptionValidator(String? value) =>
-      (value == null || value.isEmpty) ? 'Description requise' : null;
+      (value == null || value.isEmpty) ? 'La description est requise' : null;
   String? amountValidator(String? value) =>
       (value == null || double.tryParse(value) == null)
-      ? 'Montant valide requis'
-      : null;
+          ? 'Un montant valide est requis'
+          : null;
   String? maxParticipantsValidator(String? value) =>
       (value == null || int.tryParse(value) == null)
-      ? 'Nombre valide requis'
-      : null;
+          ? 'Un nombre valide est requis'
+          : null;
   String? maxHandsValidator(String? value) =>
       (value == null || int.tryParse(value) == null)
-      ? 'Nombre valide requis'
-      : null;
+          ? 'Un nombre valide est requis'
+          : null;
   String? organizerHandsValidator(String? value) =>
       (value == null || int.tryParse(value) == null)
-      ? 'Nombre valide requis'
-      : null;
+          ? 'Un nombre valide est requis'
+          : null;
   String? gracePeriodValidator(String? value) =>
       (value == null || int.tryParse(value) == null)
-      ? 'Nombre valide requis'
-      : null;
+          ? 'Un nombre valide est requis'
+          : null;
   String? penaltyRateValidator(String? value) =>
       (value == null || double.tryParse(value) == null)
-      ? 'Taux valide requis'
-      : null;
+          ? 'Un taux valide est requis'
+          : null;
   String? maxPenaltyValidator(String? value) =>
       (value == null || double.tryParse(value) == null)
-      ? 'Taux valide requis'
-      : null;
+          ? 'Un taux valide est requis'
+          : null;
 
-  /// Stepper navigation
+  @override
+  void onInit() {
+    super.onInit();
+    pageController = PageController();
+    // Set default values for dropdowns
+    selectedCurrency.value = 'XOF';
+    selectedFrequency.value = 'MONTHLY';
+  }
+
+  /// Page navigation
   void nextStep() {
     if (isLastStep) {
-      // TODO: Submit logic
-      // Validate all fields before submission
-      // Call API, handle errors, show success
+      submitTontine();
     } else {
       currentStep.value++;
+      pageController.nextPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
+      );
     }
   }
 
   void previousStep() {
-    if (currentStep.value > 0) currentStep.value--;
+    if (currentStep.value > 0) {
+      currentStep.value--;
+      pageController.previousPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
+  /// Submits the tontine creation request.
+  void submitTontine() {
+    // TODO: Implement API call and error handling
+    // Validate all fields before submission
+    // Show loading indicator, handle success/error, navigate on success
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Tontine Créée'),
+        content: const Text('La logique de soumission est à implémenter.'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void onClose() {
+    pageController.dispose();
     nameController.dispose();
     descriptionController.dispose();
     amountController.dispose();
