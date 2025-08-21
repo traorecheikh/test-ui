@@ -19,7 +19,7 @@ class Tontine {
   final int currentRound;
   final DateTime? nextContributionDate;
   final String? currentWinnerId;
-  
+
   const Tontine({
     required this.id,
     required this.name,
@@ -42,11 +42,21 @@ class Tontine {
     this.nextContributionDate,
     this.currentWinnerId,
   });
-  
+
   int get totalRounds => participantIds.length;
   double get totalPot => contributionAmount * participantIds.length;
   bool get isComplete => currentRound >= totalRounds;
-  
+
+  String get formattedNextPaymentDate => nextContributionDate != null
+      ? '${nextContributionDate!.day}/${nextContributionDate!.month}/${nextContributionDate!.year}'
+      : 'N/A';
+
+  get progress => participantIds.isEmpty
+      ? 0.0
+      : (currentRound / totalRounds).clamp(0.0, 1.0);
+
+  get members => participantIds.length;
+
   Tontine copyWith({
     String? id,
     String? name,
@@ -98,7 +108,7 @@ enum TontineFrequency {
   biweekly('Bimensuel'),
   monthly('Mensuel'),
   quarterly('Trimestriel');
-  
+
   const TontineFrequency(this.label);
   final String label;
 }
@@ -108,7 +118,7 @@ enum TontineDrawOrder {
   random('Tirage aléatoire'),
   merit('Ordre au mérite'),
   hybrid('Hybride');
-  
+
   const TontineDrawOrder(this.label);
   final String label;
 }
@@ -118,7 +128,7 @@ enum TontineStatus {
   active('Active'),
   completed('Terminée'),
   cancelled('Annulée');
-  
+
   const TontineStatus(this.label);
   final String label;
 }

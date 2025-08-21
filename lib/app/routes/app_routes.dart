@@ -11,6 +11,9 @@ abstract class Routes {
   static const join = _Paths.join;
   static const profile = _Paths.profile;
   static const detail = _Paths.detail;
+  static const myTontine = _Paths.my_tontine;
+  static const settings = _Paths.settings;
+  static const joinScanner = _Paths.joinScanner;
 }
 
 abstract class _Paths {
@@ -21,6 +24,9 @@ abstract class _Paths {
   static const home = '/';
   static const create = '/create';
   static const join = '/join';
+  static const my_tontine = '/my-tontine';
   static const profile = '/profile';
   static const detail = '/detail';
+  static const settings = '/settings';
+  static const joinScanner = '/join-scanner';
 }

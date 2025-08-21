@@ -19,6 +19,19 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    currentUser.value = AppUser(
+      id: '0',
+      name: "cheikh",
+      phone: "781706184",
+      createdAt: DateTime.parse('2025-10-02'),
+      preferences: UserPreferences(
+        darkMode: false,
+        language: 'fr',
+        soundEnabled: true,
+        notificationsEnabled: true,
+        currencyFormat: 'FCFA',
+      ),
+    );
     _loadData();
   }
 
@@ -34,7 +47,6 @@ class HomeController extends GetxController {
       userTontines.clear();
     }
     isLoading.value = false;
-    // Show celebration if first tontine created
     if (previousCount == 0 && userTontines.isNotEmpty) {
       Future.delayed(const Duration(milliseconds: 300), () {
         final context = Get.context;
@@ -46,9 +58,36 @@ class HomeController extends GetxController {
         }
       });
     }
+    currentUser.value = AppUser(
+      id: '0',
+      name: "cheikh",
+      phone: "781706184",
+      createdAt: DateTime.parse('2025-10-02'),
+      preferences: UserPreferences(
+        darkMode: false,
+        language: 'fr',
+        soundEnabled: true,
+        notificationsEnabled: true,
+        currencyFormat: 'FCFA',
+      ),
+    );
   }
 
   String getTotalSavings() {
+    currentUser.value = AppUser(
+      id: '0',
+      name: "cheikh",
+      phone: "781706184",
+      createdAt: DateTime.parse('2025-10-02'),
+      preferences: UserPreferences(
+        darkMode: false,
+        language: 'fr',
+        soundEnabled: true,
+        notificationsEnabled: true,
+        currencyFormat: 'FCFA',
+      ),
+    );
+
     double total = 0;
     for (final tontine in userTontines) {
       total += tontine.contributionAmount * tontine.participantIds.length;
@@ -72,13 +111,23 @@ class HomeController extends GetxController {
       color: Colors.blueAccent,
       onTap: () {
         VibrationService.godlyVibrate();
-        Get.toNamed(Routes.join);
+        Get.toNamed(Routes.joinScanner);
+        print('Rejoindre Tontine');
+      },
+    ),
+    _ActionButtonData(
+      title: 'Mes Tontines',
+      icon: Icons.group_add,
+      color: Colors.indigo,
+      onTap: () {
+        VibrationService.godlyVibrate();
+        Get.toNamed(Routes.myTontine);
       },
     ),
     _ActionButtonData(
       title: 'Historique',
       icon: Icons.history,
-      color: Colors.purpleAccent,
+      color: Color(0xFFFFC107),
       onTap: () {
         VibrationService.softVibrate();
         CustomSnackbar.show(
@@ -89,23 +138,27 @@ class HomeController extends GetxController {
       },
     ),
     _ActionButtonData(
-      title: 'Paramètres',
-      icon: Icons.settings,
-      color: Colors.redAccent,
-      onTap: () {
-        VibrationService.softVibrate();
-        Get.toNamed(Routes.profile);
-      },
-    ),
-    _ActionButtonData(
-      title: 'Aide',
-      icon: Icons.help_outline,
-      color: Colors.tealAccent,
+      title: 'Sunu Points',
+      icon: Icons.stars,
+      color: Color(0xFFFF9800),
       onTap: () {
         VibrationService.softVibrate();
         CustomSnackbar.show(
-          title: 'Aide',
-          message: 'Contactez le support si besoin.',
+          title: 'Sunu Points',
+          message: 'Fonctionnalité à venir !',
+          success: true,
+        );
+      },
+    ),
+    _ActionButtonData(
+      title: 'Rapports',
+      icon: Icons.trending_up,
+      color: Colors.purple,
+      onTap: () {
+        VibrationService.softVibrate();
+        CustomSnackbar.show(
+          title: 'Rapports',
+          message: 'Fonctionnalité à venir !',
           success: true,
         );
       },
