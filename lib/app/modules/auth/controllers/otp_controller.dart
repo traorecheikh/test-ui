@@ -5,6 +5,7 @@ import '../../../services/vibration_service.dart';
 import '../../../widgets/custom_snackbar.dart';
 
 class OtpController extends GetxController {
+  String identifier = '';
   final otpController = TextEditingController();
   final RxString otpError = RxString('');
   final RxBool isValid = false.obs;
@@ -15,6 +16,7 @@ class OtpController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    identifier = Get.arguments as String? ?? '';
     _startResendTimer();
   }
 

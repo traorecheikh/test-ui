@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
 import '../../../services/vibration_service.dart';
 import '../../../widgets/custom_snackbar.dart';
 
 class RegisterStepController extends GetxController {
+  late final PageController pageController;
+
   final RxInt currentStep = 0.obs;
   final int totalSteps = 3;
 
@@ -30,6 +33,7 @@ class RegisterStepController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    pageController = PageController();
     _validateStep();
     nameController.addListener(_validateStep);
     emailController.addListener(_validateStep);
@@ -40,7 +44,7 @@ class RegisterStepController extends GetxController {
 
   void onNameChanged(String value) {
     if (value.trim().length < 3) {
-      nameError.value = 'Nom trop court';
+      nameError.value = 'Le nom doit contenir au moins 3 caractères';
     } else {
       nameError.value = '';
     }
@@ -48,8 +52,8 @@ class RegisterStepController extends GetxController {
   }
 
   void onEmailChanged(String value) {
-    if (value.isNotEmpty && !value.contains('@')) {
-      emailError.value = 'Email invalide';
+    if (value.isNotEmpty && !GetUtils.isEmail(value)) {
+      emailError.value = 'Adresse email invalide';
     } else {
       emailError.value = '';
     }
@@ -59,6 +63,10 @@ class RegisterStepController extends GetxController {
   void onPickProfilePicture() {
     // Simulate picking a picture
     profilePicturePath.value = 'assets/profile_placeholder.png';
+    CustomSnackbar.show(
+      title: 'Photo de profil',
+      message: 'Photo sélectionnée (simulation)!',
+    );
     _validateStep();
   }
 
@@ -69,7 +77,7 @@ class RegisterStepController extends GetxController {
 
   void onCityChanged(String value) {
     if (value.trim().isEmpty) {
-      cityError.value = 'Champ requis';
+      cityError.value = 'La ville est requise';
     } else {
       cityError.value = '';
     }
@@ -78,7 +86,7 @@ class RegisterStepController extends GetxController {
 
   void onRegionChanged(String value) {
     if (value.trim().isEmpty) {
-      regionError.value = 'Champ requis';
+      regionError.value = 'La région est requise';
     } else {
       regionError.value = '';
     }
@@ -87,7 +95,7 @@ class RegisterStepController extends GetxController {
 
   void onCountryChanged(String value) {
     if (value.trim().isEmpty) {
-      countryError.value = 'Champ requis';
+      countryError.value = 'Le pays est requis';
     } else {
       countryError.value = '';
     }
@@ -97,12 +105,12 @@ class RegisterStepController extends GetxController {
   void _validateStep() {
     switch (currentStep.value) {
       case 0:
-        isStepValid.value =
-            nameController.text.trim().length >= 3 && nameError.value.isEmpty;
+        isStepValid.value = nameController.text.trim().length >= 3 &&
+            nameError.value.isEmpty &&
+            emailError.value.isEmpty;
         break;
       case 1:
-        isStepValid.value =
-            cityController.text.trim().isNotEmpty &&
+        isStepValid.value = cityController.text.trim().isNotEmpty &&
             regionController.text.trim().isNotEmpty &&
             countryController.text.trim().isNotEmpty &&
             cityError.value.isEmpty &&
@@ -118,25 +126,35 @@ class RegisterStepController extends GetxController {
   }
 
   void onNext() {
+    if (!isStepValid.value) return;
+
     if (currentStep.value < totalSteps - 1) {
       currentStep.value++;
+      pageController.nextPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
+      );
       VibrationService.softVibrate();
       _validateStep();
     } else {
       // Registration complete
       VibrationService.godlyVibrate();
       CustomSnackbar.show(
-        title: 'Bienvenue',
+        title: 'Bienvenue, ${nameController.text}!',
         message: 'Inscription terminée avec succès !',
         success: true,
       );
-      Get.offAllNamed('/home');
+      Get.offAllNamed(Routes.HOME);
     }
   }
 
   void onBack() {
     if (currentStep.value > 0) {
       currentStep.value--;
+      pageController.previousPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
+      );
       VibrationService.softVibrate();
       _validateStep();
     }
@@ -144,6 +162,7 @@ class RegisterStepController extends GetxController {
 
   @override
   void onClose() {
+    pageController.dispose();
     nameController.dispose();
     emailController.dispose();
     cityController.dispose();
