@@ -69,13 +69,11 @@ class OtpScreen extends GetView<OtpController> {
           ),
         ),
         const SizedBox(height: 8),
-        Obx(
-          () => Text(
-            'Entrez le code à 6 chiffres envoyé au ${controller.identifier}',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
-              height: 1.5,
-            ),
+        Text(
+          'Entrez le code à 6 chiffres envoyé au ${controller.identifier}',
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            height: 1.5,
           ),
         ),
       ],
@@ -95,7 +93,10 @@ class OtpScreen extends GetView<OtpController> {
             maxLength: 6,
             autofocus: true,
             onChanged: controller.onOtpChanged,
-            decoration: const InputDecoration(border: InputBorder.none, counterText: ''),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              counterText: '',
+            ),
           ),
         ),
         // This is the visible row of OTP boxes
@@ -103,49 +104,52 @@ class OtpScreen extends GetView<OtpController> {
           onTap: () {
             // You might need to request focus here if it's lost
           },
-          child: Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(6, (index) {
-                final isFilled = controller.otpController.text.length > index;
-                final isFocused =
-                    controller.otpController.text.length == index;
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 52,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: isFilled
-                        ? theme.colorScheme.primary.withOpacity(0.1)
-                        : theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(
-                      color: isFocused
-                          ? theme.colorScheme.primary
-                          : Colors.grey.withOpacity(0.2),
-                      width: 2,
+          child: GetX<OtpController>(
+            builder: (controller) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(6, (index) {
+                  final isFilled = controller.otpValue.value.length > index;
+                  final isFocused =
+                      controller.otpValue.value.length == index;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 52,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: isFilled
+                          ? theme.colorScheme.primary.withOpacity(0.1)
+                          : theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: isFocused
+                            ? theme.colorScheme.primary
+                            : Colors.grey.withOpacity(0.2),
+                        width: 2,
+                      ),
+                      boxShadow: isFocused
+                          ? [
+                              BoxShadow(
+                                color: theme.colorScheme.primary
+                                    .withOpacity(0.1),
+                                blurRadius: 10,
+                              ),
+                            ]
+                          : [],
                     ),
-                    boxShadow: isFocused
-                        ? [
-                            BoxShadow(
-                              color: theme.colorScheme.primary.withOpacity(0.1),
-                              blurRadius: 10,
-                            )
-                          ]
-                        : [],
-                  ),
-                  alignment: Alignment.center,
-                  child: isFilled
-                      ? Text(
-                          controller.otpController.text[index],
-                          style: theme.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : const SizedBox(),
-                );
-              }),
-            ),
+                    alignment: Alignment.center,
+                    child: isFilled
+                        ? Text(
+                            controller.otpValue.value[index],
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : const SizedBox(),
+                  );
+                }),
+              );
+            },
           ),
         ),
       ],
@@ -182,14 +186,13 @@ class OtpScreen extends GetView<OtpController> {
                   children: const [
                     Text(
                       'Valider le code',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(width: 12),
-                    Icon(
-                      CupertinoIcons.check_mark_circled,
-                      size: 22,
-                    ),
+                    Icon(CupertinoIcons.check_mark_circled, size: 22),
                   ],
                 ),
         ),
@@ -204,14 +207,15 @@ class OtpScreen extends GetView<OtpController> {
           onPressed: controller.canResend.value ? controller.onResendOtp : null,
           child: controller.canResend.value
               ? const Text('Renvoyer le code')
-              : Text(
-                  'Renvoyer dans ${controller.resendSeconds.value}s',
-                ),
+              : Text('Renvoyer dans ${controller.resendSeconds.value}s'),
           style: TextButton.styleFrom(
             foregroundColor: controller.canResend.value
                 ? theme.colorScheme.primary
                 : theme.colorScheme.onSurface.withOpacity(0.5),
-            textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),

@@ -7,6 +7,7 @@ import '../../../widgets/custom_snackbar.dart';
 class OtpController extends GetxController {
   String identifier = '';
   final otpController = TextEditingController();
+  final otpValue = ''.obs;
   final RxString otpError = RxString('');
   final RxBool isValid = false.obs;
   final RxBool isLoading = false.obs;
@@ -21,6 +22,7 @@ class OtpController extends GetxController {
   }
 
   void onOtpChanged(String value) {
+    otpValue.value = value;
     if (value.length != 6) {
       otpError.value = 'Code incomplet';
       isValid.value = false;
