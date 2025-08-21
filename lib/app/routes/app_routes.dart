@@ -4,14 +4,13 @@ part of 'app_pages.dart';
 abstract class Routes {
   Routes._();
   static const HOME = _Paths.HOME;
-  static const splash = _Paths.splash;
   static const onboarding = _Paths.onboarding;
   static const home = _Paths.home;
   static const create = _Paths.create;
   static const join = _Paths.join;
   static const profile = _Paths.profile;
   static const detail = _Paths.detail;
-  static const myTontine = _Paths.my_tontine;
+  static const myTontine = _Paths.myTontine;
   static const settings = _Paths.settings;
   static const joinScanner = _Paths.joinScanner;
 }
@@ -19,7 +18,6 @@ abstract class Routes {
 abstract class _Paths {
   _Paths._();
   static const HOME = '/home';
-  static const splash = '/splash';
   static const onboarding = '/onboarding';
   static const home = '/';
   static const create = '/create';

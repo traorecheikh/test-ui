@@ -4,7 +4,6 @@ import 'package:snt_ui_test/app/modules/tontines/views/my_tontines_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/home/views/onboarding_screen.dart';
-import '../modules/home/views/splash_screen.dart';
 import '../modules/join/bindings/join_scanner_binding.dart';
 import '../modules/join/views/join_scanner_screen.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -31,7 +30,6 @@ class AppPages {
       page: () => const HomeView(),
       binding: HomeBinding(),
     ),
-    GetPage(name: Routes.splash, page: () => const SplashScreen()),
     GetPage(name: Routes.onboarding, page: () => const OnboardingScreen()),
     GetPage(name: Routes.home, page: () => HomeView(), binding: HomeBinding()),
     GetPage(
