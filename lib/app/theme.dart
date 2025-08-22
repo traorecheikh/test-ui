@@ -163,6 +163,16 @@ class AppIconSizes {
   static final superExtraLarge = 96.sp;
 }
 
+//<------------------- ACTION COLORS ------------------->
+class AppActionColors {
+  static const create = Color(0xFF34C759); // Vibrant green
+  static const join = Color(0xFF007AFF); // Bright blue
+  static const myTontines = Color(0xFFAF52DE); // Friendly purple
+  static const history = Color(0xFFFF9500); // Bold orange
+  static const sunuPoints = Color(0xFFFF2D55); // Vivid pink/red
+  static const reports = Color(0xFF5AC8FA); // Light blue
+}
+
 //<------------------- THEMES ------------------->
 ThemeData get lightTheme => ThemeData(
   useMaterial3: true,
