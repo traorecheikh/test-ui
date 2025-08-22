@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:snt_ui_test/app/theme.dart';
 
-import '../../../data/models/tontine.dart';
 import '../../../routes/app_pages.dart';
 import '../../../utils/formatters.dart';
 import '../controllers/home_controller.dart';
@@ -42,16 +41,15 @@ class HomeView extends GetView<HomeController> {
                         color: theme.colorScheme.primary.withOpacity(0.18),
                         size: 48,
                       ),
-                const SizedBox(width: 12),
+                AppSpacing.smallWidthSpacerWidget,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '${Formatters.getGreeting()}, ${user?.name.split(' ').first ?? 'Utilisateur'}',
-                      style: theme.textTheme.bodyMedium?.copyWith(
+                      style: theme.textTheme.titleLarge?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,
-                        fontSize: 20,
                       ),
                     ),
                   ],
@@ -135,8 +133,6 @@ class HomeView extends GetView<HomeController> {
                 'Épargne Totale',
                 style: theme.textTheme.headlineMedium?.copyWith(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
                 ),
               ),
             ],
@@ -144,45 +140,38 @@ class HomeView extends GetView<HomeController> {
           const SizedBox(height: 12),
           Text(
             totalSavings,
-            style: theme.textTheme.displayMedium?.copyWith(
+            style: theme.textTheme.headlineLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: Colors.white,
-              fontSize: 32,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 18),
+          AppSpacing.mediumHeightSpacer,
           Row(
             children: [
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 8,
-                  ),
+                  padding: AppPaddings.cardContent,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.10),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Prochain paiement',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
-                          fontSize: 14,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 4),
+                      AppSpacings.small,
                       Text(
                         nextPaymentDate,
-                        style: theme.textTheme.titleMedium?.copyWith(
+                        style: theme.textTheme.titleSmall?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -190,36 +179,30 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              AppSpacings.cardGap,
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 8,
-                  ),
+                  padding: AppPaddings.cardContent,
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.10),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Montant à payer',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
-                          fontSize: 14,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 4),
+                      AppSpacings.small,
                       Text(
                         nextPaymentAmount,
-                        style: theme.textTheme.titleMedium?.copyWith(
+                        style: theme.textTheme.titleSmall?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -234,180 +217,179 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Widget _buildPrimaryTontineSection(ThemeData theme) {
-    final primaryTontine = controller.userTontines.isNotEmpty
-        ? controller.userTontines.first
-        : null;
+  // Widget _buildPrimaryTontineSection(ThemeData theme) {
+  //   final primaryTontine = controller.userTontines.isNotEmpty
+  //       ? controller.userTontines.first
+  //       : null;
+  //
+  //   if (primaryTontine == null) return const SizedBox.shrink();
+  //
+  //   return GestureDetector(
+  //     onTap: () => Get.toNamed(Routes.detail, arguments: primaryTontine.id),
+  //     child: Container(
+  //       padding: const EdgeInsets.all(20),
+  //       decoration: BoxDecoration(
+  //         color: theme.colorScheme.primary,
+  //         borderRadius: BorderRadius.circular(28),
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: theme.colorScheme.primary.withOpacity(0.3),
+  //             blurRadius: AppSpacing.large,
+  //             offset: const Offset(0, 8),
+  //           ),
+  //         ],
+  //       ),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             primaryTontine.name,
+  //             style: theme.textTheme.headlineSmall?.copyWith(
+  //               fontWeight: FontWeight.bold,
+  //               color: Colors.white,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 12),
+  //           AppSpacing.largeWidthSpacer,
+  //           Row(
+  //             mainAxisAlignment:
+  //                 MainAxisAlignment.spaceBetween, // Ensures even spacing
+  //             crossAxisAlignment:
+  //                 CrossAxisAlignment.center, // Vertically centers content
+  //             children: [
+  //               Text(
+  //                 '${(primaryTontine.progress * 100).toStringAsFixed(0)}% complété',
+  //                 style: theme.textTheme.bodyMedium?.copyWith(
+  //                   color: Colors.white.withOpacity(0.8),
+  //                 ),
+  //               ),
+  //               Text(
+  //                 '${primaryTontine.members} membres',
+  //                 style: theme.textTheme.bodyMedium?.copyWith(
+  //                   color: Colors.white,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           const SizedBox(
+  //             height: 12,
+  //           ), // Consistent spacing before progress bar
+  //           ClipRRect(
+  //             borderRadius: BorderRadius.circular(10),
+  //             child: LinearProgressIndicator(
+  //               value: primaryTontine.progress,
+  //               backgroundColor: Colors.white.withOpacity(0.2),
+  //               valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+  //               minHeight: 10,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 24), // More space before next section
+  //           Row(
+  //             children: [
+  //               Expanded(
+  //                 child: _buildInfoChip(
+  //                   theme,
+  //                   'Prochain Tirage',
+  //                   primaryTontine.formattedNextPaymentDate,
+  //                   Icons.calendar_today,
+  //                   isWhite: true,
+  //                 ),
+  //               ),
+  //               const SizedBox(width: 12),
+  //               Expanded(
+  //                 child: _buildInfoChip(
+  //                   theme,
+  //                   'Ma Position',
+  //                   '#${_getUserPosition(primaryTontine)}',
+  //                   Icons.person_pin_circle,
+  //                   isWhite: true,
+  //                 ),
+  //               ),
+  //               const SizedBox(width: 12),
+  //               Expanded(
+  //                 child: _buildInfoChip(
+  //                   theme,
+  //                   'Montant',
+  //                   Formatters.formatCurrency(
+  //                     primaryTontine.contributionAmount,
+  //                   ),
+  //                   Icons.account_balance_wallet,
+  //                   isWhite: true,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-    if (primaryTontine == null) return const SizedBox.shrink();
-
-    return GestureDetector(
-      onTap: () => Get.toNamed(Routes.detail, arguments: primaryTontine.id),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primary,
-          borderRadius: BorderRadius.circular(28),
-          boxShadow: [
-            BoxShadow(
-              color: theme.colorScheme.primary.withOpacity(0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              primaryTontine.name,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(
-              height: 12,
-            ), // Increased spacing for better separation
-            Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween, // Ensures even spacing
-              crossAxisAlignment:
-                  CrossAxisAlignment.center, // Vertically centers content
-              children: [
-                Text(
-                  '${(primaryTontine.progress * 100).toStringAsFixed(0)}% complété',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.8),
-                  ),
-                ),
-                Text(
-                  '${primaryTontine.members} membres',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 12,
-            ), // Consistent spacing before progress bar
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: LinearProgressIndicator(
-                value: primaryTontine.progress,
-                backgroundColor: Colors.white.withOpacity(0.2),
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                minHeight: 10,
-              ),
-            ),
-            const SizedBox(height: 24), // More space before next section
-            Row(
-              children: [
-                Expanded(
-                  child: _buildInfoChip(
-                    theme,
-                    'Prochain Tirage',
-                    primaryTontine.formattedNextPaymentDate,
-                    Icons.calendar_today,
-                    isWhite: true,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildInfoChip(
-                    theme,
-                    'Ma Position',
-                    '#${_getUserPosition(primaryTontine)}',
-                    Icons.person_pin_circle,
-                    isWhite: true,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildInfoChip(
-                    theme,
-                    'Montant',
-                    Formatters.formatCurrency(
-                      primaryTontine.contributionAmount,
-                    ),
-                    Icons.account_balance_wallet,
-                    isWhite: true,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  int _getUserPosition(Tontine tontine) {
-    if (tontine.organizerId == controller.currentUser.value?.id) return 1;
-    return 5; // Sample position
-  }
-
-  Widget _buildInfoChip(
-    ThemeData theme,
-    String label,
-    String value,
-    IconData icon, {
-    bool isWhite = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: isWhite
-            ? Colors.white.withOpacity(0.15)
-            : theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: isWhite
-            ? Border.all(color: Colors.white.withOpacity(0.2))
-            : null,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                size: 16,
-                color: isWhite
-                    ? Colors.white.withOpacity(0.8)
-                    : theme.colorScheme.primary,
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  label,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: isWhite
-                        ? Colors.white.withOpacity(0.8)
-                        : theme.colorScheme.onSurface.withOpacity(0.7),
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: isWhite ? Colors.white : theme.colorScheme.onSurface,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
+  // int _getUserPosition(Tontine tontine) {
+  //   if (tontine.organizerId == controller.currentUser.value?.id) return 1;
+  //   return 5; // Sample position
+  // }
+  //
+  // Widget _buildInfoChip(
+  //   ThemeData theme,
+  //   String label,
+  //   String value,
+  //   IconData icon, {
+  //   bool isWhite = false,
+  // }) {
+  //   return Container(
+  //     padding: const EdgeInsets.all(12),
+  //     decoration: BoxDecoration(
+  //       color: isWhite
+  //           ? Colors.white.withOpacity(0.15)
+  //           : theme.colorScheme.surface,
+  //       borderRadius: BorderRadius.circular(12),
+  //       border: isWhite
+  //           ? Border.all(color: Colors.white.withOpacity(0.2))
+  //           : null,
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           children: [
+  //             Icon(
+  //               icon,
+  //               size: 16,
+  //               color: isWhite
+  //                   ? Colors.white.withOpacity(0.8)
+  //                   : theme.colorScheme.primary,
+  //             ),
+  //             const SizedBox(width: 6),
+  //             Expanded(
+  //               child: Text(
+  //                 label,
+  //                 style: theme.textTheme.bodySmall?.copyWith(
+  //                   color: isWhite
+  //                       ? Colors.white.withOpacity(0.8)
+  //                       : theme.colorScheme.onSurface.withOpacity(0.7),
+  //                 ),
+  //                 maxLines: 1,
+  //                 overflow: TextOverflow.ellipsis,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         const SizedBox(height: 4),
+  //         Text(
+  //           value,
+  //           style: theme.textTheme.bodyMedium?.copyWith(
+  //             fontWeight: FontWeight.w600,
+  //             color: isWhite ? Colors.white : theme.colorScheme.onSurface,
+  //           ),
+  //           maxLines: 1,
+  //           overflow: TextOverflow.ellipsis,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildQuickActionsSection(ThemeData theme) {
     return LayoutBuilder(
@@ -430,8 +412,8 @@ class HomeView extends GetView<HomeController> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          width: 64,
-                          height: 64,
+                          width: AppSpacing.superExtraLarge,
+                          height: AppSpacing.superExtraLargeH,
                           decoration: BoxDecoration(
                             color: action.color.withOpacity(0.18),
                             shape: BoxShape.circle,
@@ -506,7 +488,6 @@ class HomeView extends GetView<HomeController> {
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: theme.colorScheme.primary,
-                fontSize: 22,
               ),
             ),
           ],
@@ -522,7 +503,7 @@ class HomeView extends GetView<HomeController> {
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
+                  blurRadius: AppSpacing.small,
                   offset: const Offset(0, 2),
                 ),
               ],
@@ -530,15 +511,15 @@ class HomeView extends GetView<HomeController> {
             child: Row(
               children: [
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: AppSpacing.extraBitLarge,
+                  height: AppSpacing.extraBitLargeH,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     activity['icon'] as IconData,
-                    size: 20,
+                    size: AppIconSizes.medium,
                     color: theme.colorScheme.primary,
                   ),
                 ),
@@ -644,8 +625,8 @@ class _AnimatedAvatarState extends State<_AnimatedAvatar>
           );
         },
         child: Container(
-          width: 48,
-          height: 48,
+          width: AppSpacing.extraBitLarge,
+          height: AppSpacing.extraBitLargeH,
           decoration: BoxDecoration(
             color: widget.color.withOpacity(0.13),
             shape: BoxShape.circle,
@@ -656,24 +637,10 @@ class _AnimatedAvatarState extends State<_AnimatedAvatar>
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               color: widget.color,
               fontWeight: FontWeight.bold,
-              fontSize: 22,
             ),
           ),
         ),
       ),
     );
   }
-}
-
-class _ActionButtonData {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-  _ActionButtonData({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
 }
