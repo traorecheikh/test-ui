@@ -138,6 +138,12 @@ class AppShadows {
 //<------------------- PADDINGS ------------------->
 class AppPaddings {
   static const cardContent = EdgeInsets.symmetric(vertical: 10, horizontal: 8);
+  static final pageHome = EdgeInsets.only(
+    top: 32.h,
+    left: 20.w,
+    right: 20.w,
+    bottom: 20.h,
+  );
 }
 
 //<------------------- SPACINGS ------------------->

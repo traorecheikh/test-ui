@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:snt_ui_test/app/theme.dart';
 
@@ -16,12 +17,7 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.only(
-            top: 32,
-            left: 20,
-            right: 20,
-            bottom: 20,
-          ),
+          padding: AppPaddings.pageHome,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,7 +35,7 @@ class HomeView extends GetView<HomeController> {
                     : Icon(
                         Icons.account_circle,
                         color: theme.colorScheme.primary.withOpacity(0.18),
-                        size: 48,
+                        size: AppIconSizes.extraBitLarge,
                       ),
                 AppSpacing.smallWidthSpacerWidget,
                 Column(
@@ -69,12 +65,12 @@ class HomeView extends GetView<HomeController> {
                   tooltip: 'Recharger les tontines',
                 ),   c
               * */
-                const SizedBox(width: 8),
+                AppSpacing.smallWidthSpacerWidget,
                 IconButton(
                   icon: Icon(
                     Icons.settings,
                     color: theme.colorScheme.primary,
-                    size: 32,
+                    size: AppIconSizes.large,
                   ),
                   onPressed: () {
                     Get.toNamed(Routes.settings);
@@ -116,7 +112,7 @@ class HomeView extends GetView<HomeController> {
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.primary.withOpacity(0.08),
-            blurRadius: 18,
+            blurRadius: 18.sp,
             offset: const Offset(0, 4),
           ),
         ],
@@ -137,7 +133,7 @@ class HomeView extends GetView<HomeController> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.sp),
           Text(
             totalSavings,
             style: theme.textTheme.headlineLarge?.copyWith(
@@ -394,10 +390,10 @@ class HomeView extends GetView<HomeController> {
   Widget _buildQuickActionsSection(ThemeData theme) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final itemWidth = (constraints.maxWidth - 32) / 3;
+        final itemWidth = (constraints.maxWidth - 32.sp) / 3;
         return Wrap(
-          spacing: 16,
-          runSpacing: 16,
+          spacing: 16.sp,
+          runSpacing: 16.sp,
           children: controller.quickActions
               .map(
                 (action) => SizedBox(
@@ -421,7 +417,7 @@ class HomeView extends GetView<HomeController> {
                           child: Icon(
                             action.icon,
                             color: action.color,
-                            size: 32,
+                            size: AppIconSizes.large,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -480,7 +476,7 @@ class HomeView extends GetView<HomeController> {
             Icon(
               Icons.history,
               color: theme.colorScheme.primary.withOpacity(0.8),
-              size: 22,
+              size: AppIconSizes.medium,
             ),
             const SizedBox(width: 8),
             Text(
@@ -535,7 +531,7 @@ class HomeView extends GetView<HomeController> {
                           color: theme.colorScheme.onSurface,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2.sp),
                       Text(
                         activity['subtitle'] as String,
                         style: theme.textTheme.bodyMedium?.copyWith(
