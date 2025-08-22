@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'dart:math' as math;
 
 import '../../../utils/constants.dart';
 import '../../../utils/formatters.dart';
@@ -15,7 +17,23 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        return Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(
+                  'Chargement de votre tontine...',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       }
       if (controller.tontine.value == null) {
         return Scaffold(
@@ -25,72 +43,103 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
       }
       final theme = Theme.of(context);
       return Scaffold(
+        backgroundColor: theme.colorScheme.background,
         body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
-            _buildAppBar(theme),
-            SliverFillRemaining(
+            _buildTerangaHeroHeader(theme),
+            SliverToBoxAdapter(
               child: Column(
                 children: [
-                  _buildTabBar(theme),
-                  Expanded(
-                    child: TabBarView(
-                      controller: controller.tabController,
-                      children: [
-                        _buildOverviewTab(context),
-                        _buildParticipantsTab(context),
-                        _buildHistoryTab(context),
-                        _buildSettingsTab(context),
-                      ],
-                    ),
-                  ),
+                  _buildProgressCardRow(theme).animate().slideY(begin: 0.3, delay: 200.ms),
+                  _buildPrimaryActionZone(theme).animate().slideY(begin: 0.4, delay: 400.ms),
+                  _buildSmartDetailsExpansion(theme).animate().slideY(begin: 0.5, delay: 600.ms),
+                  const SizedBox(height: 100), // Space for FAB
                 ],
               ),
             ),
           ],
         ),
-        floatingActionButton: _buildFloatingActionButton(theme),
+        floatingActionButton: _buildTerangaFloatingAction(theme),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       );
     });
   }
 
-  Widget _buildAppBar(ThemeData theme) {
+  Widget _buildTerangaHeroHeader(ThemeData theme) {
     final tontine = controller.tontine.value!;
     final paidCount = controller.currentRoundContributions
         .where((c) => c.isPaid)
         .length;
     final currentAmount = paidCount * tontine.contributionAmount;
+    final progress = currentAmount / tontine.totalPot;
+
     return SliverAppBar(
-      expandedHeight: 320,
+      expandedHeight: 380,
       pinned: true,
-      backgroundColor: theme.colorScheme.primary,
+      backgroundColor: _getTerangaGradientStart(progress),
       elevation: 0,
       flexibleSpace: FlexibleSpaceBar(
-        title: Row(
-          children: [
-            Icon(Icons.account_balance_wallet, color: Colors.white, size: 26),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                tontine.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 22,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+         /*
+         *  decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.black.withOpacity(0.6),
+                Colors.black.withOpacity(0.3),
+              ],
             ),
-          ],
-        ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+         *
+         * */
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              /*
+              Icon(
+                _getTerangaTitleIcon(progress),
+                color: Colors.white,
+                size: 20,
+              ),
+
+            *
+            *   const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  tontine.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 18,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 3,
+                        color: Colors.black54,
+                      ),
+                    ],
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            *
+            * */
+            ],
+          ),
+        ).animate().slideY(begin: -0.3, delay: 100.ms),
         background: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.85),
+                _getTerangaGradientStart(progress),
+                _getTerangaGradientMiddle(progress),
+                _getTerangaGradientEnd(progress),
               ],
+              stops: const [0.0, 0.6, 1.0],
             ),
           ),
           child: SafeArea(
@@ -98,38 +147,97 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
               padding: const EdgeInsets.fromLTRB(24, 70, 24, 20),
               child: Column(
                 children: [
+                  // Enhanced pot visual with cultural elements
                   Expanded(
+                    flex: 3,
                     child: PotVisualWidget(
                       currentAmount: currentAmount,
                       targetAmount: tontine.totalPot,
                       paidParticipants: paidCount,
                       totalParticipants: tontine.participantIds.length,
+                    ).animate().scale(delay: 300.ms, duration: 600.ms),
+                  ),
+                  const SizedBox(height: 20),
+                  // Cultural stats row with enhanced design
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white.withOpacity(0.2),
+                          Colors.white.withOpacity(0.1),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildHeaderStat(
-                        theme,
-                        'Tour',
-                        '${tontine.currentRound}/${tontine.totalRounds}',
-                        Icons.trending_up,
-                      ),
-                      _buildHeaderStat(
-                        theme,
-                        'Statut',
-                        tontine.status.label,
-                        Icons.info,
-                      ),
-                      _buildHeaderStat(
-                        theme,
-                        'Participants',
-                        '${tontine.participantIds.length}/${tontine.maxParticipants}',
-                        Icons.group,
-                      ),
-                    ],
-                  ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildTerangaHeaderStat(
+                          theme,
+                          'Tour',
+                          '${tontine.currentRound}/${tontine.totalRounds}',
+                          Icons.loop,
+                          _getStatColor(0),
+                        ),
+                        Container(
+                          height: 30,
+                          width: 1,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.white.withOpacity(0.5),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+                        _buildTerangaHeaderStat(
+                          theme,
+                          'Membres',
+                          '${tontine.participantIds.length}/${tontine.maxParticipants}',
+                          Icons.groups,
+                          _getStatColor(1),
+                        ),
+                        Container(
+                          height: 30,
+                          width: 1,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Colors.white.withOpacity(0.5),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+                        _buildTerangaHeaderStat(
+                          theme,
+                          'Statut',
+                          tontine.status.label,
+                          _getStatusIcon(tontine.status.name),
+                          _getStatColor(2),
+                        ),
+                      ],
+                    ),
+                  ).animate().slideY(begin: 0.2, delay: 500.ms),
                 ],
               ),
             ),
@@ -137,64 +245,95 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
         ),
       ),
       actions: [
-        if (controller.isOrganizer.value)
-          IconButton(
-            icon: const Icon(Icons.share, color: Colors.white),
-            onPressed: controller.showInviteDialog,
+        Container(
+          margin: const EdgeInsets.only(right: 8),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12),
           ),
-        IconButton(
-          icon: const Icon(Icons.more_vert, color: Colors.white),
-          onPressed: controller.showOptionsMenu,
+          child: IconButton(
+            icon: const Icon(Icons.share_rounded, color: Colors.white),
+            onPressed: controller.showInviteDialog,
+            tooltip: 'Partager',
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(right: 16),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+            onPressed: controller.showOptionsMenu,
+            tooltip: 'Options',
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildHeaderStat(
+  Widget _buildTerangaHeaderStat(
     ThemeData theme,
     String label,
     String value,
     IconData icon,
+    Color accentColor,
   ) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, color: Colors.white, size: 20),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                accentColor.withOpacity(0.3),
+                accentColor.withOpacity(0.1),
+              ],
+            ),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.white.withOpacity(0.4),
+              width: 1,
+            ),
+          ),
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: 18,
+          ),
         ),
+        const SizedBox(height: 6),
+        Text(
+          label.toUpperCase(),
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.8,
+          ),
+        ),
+        const SizedBox(height: 2),
         Text(
           value,
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                offset: Offset(0, 1),
+                blurRadius: 2,
+                color: Colors.black26,
+              ),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildTabBar(ThemeData theme) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          bottom: BorderSide(color: theme.colorScheme.outline.withOpacity(0.2)),
-        ),
-      ),
-      child: TabBar(
-        controller: controller.tabController,
-        tabs: const [
-          Tab(text: 'Vue d\'ensemble'),
-          Tab(text: 'Participants'),
-          Tab(text: 'Historique'),
-          Tab(text: 'Paramètres'),
-        ],
-      ),
-    );
-  }
 
   Widget _buildOverviewTab(BuildContext context) {
     final theme = Theme.of(context);
@@ -817,5 +956,529 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
 
   Widget? _buildFloatingActionButton(ThemeData theme) {
     return controller.buildFloatingActionButton(theme);
+  }
+
+  // Missing methods implementation with Senegalese cultural design
+
+  Widget _buildProgressCardRow(ThemeData theme) {
+    final tontine = controller.tontine.value!;
+    final paidCount = controller.currentRoundContributions
+        .where((c) => c.isPaid)
+        .length;
+    final currentAmount = paidCount * tontine.contributionAmount;
+    final progress = currentAmount / tontine.totalPot;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Row(
+        children: [
+          // Progress indicator with cultural elements
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    theme.colorScheme.primaryContainer,
+                    theme.colorScheme.primaryContainer.withOpacity(0.7),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.trending_up,
+                        color: theme.colorScheme.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Progrès du Tour',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    '${(progress * 100).toInt()}% complété',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.white.withOpacity(0.3),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      theme.colorScheme.primary,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '$paidCount/${tontine.participantIds.length} membres ont contribué',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onPrimaryContainer.withOpacity(0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          // Amount display
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    theme.colorScheme.secondaryContainer,
+                    theme.colorScheme.secondaryContainer.withOpacity(0.7),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.secondary.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.account_balance_wallet,
+                        color: theme.colorScheme.secondary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          'Collecté',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.secondary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    Formatters.formatCurrency(currentAmount),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSecondaryContainer,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'sur ${Formatters.formatCurrency(tontine.totalPot)}',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSecondaryContainer.withOpacity(0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrimaryActionZone(ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      child: Column(
+        children: [
+          // Main action buttons
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: GodlyVibrateButton(
+                  onTap: () => controller.showPaymentDialog(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.green.shade600,
+                          Colors.green.shade500,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.green.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.payment,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Payer Ma Part',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Text(
+                              Formatters.formatCurrency(controller.tontine.value!.contributionAmount),
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: GodlyVibrateButton(
+                  onTap: () => controller.showTransactionHistory(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: theme.colorScheme.primary,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      color: theme.colorScheme.surface,
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.history,
+                          color: theme.colorScheme.primary,
+                          size: 28,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Historique',
+                          style: TextStyle(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Secondary actions
+          Row(
+            children: [
+              Expanded(
+                child: GodlyVibrateButton(
+                  onTap: () => controller.showInviteDialog(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: theme.colorScheme.secondary.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.person_add,
+                          color: theme.colorScheme.secondary,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Inviter',
+                          style: TextStyle(
+                            color: theme.colorScheme.secondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: GodlyVibrateButton(
+                  onTap: () => controller.showOptionsMenu(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceVariant,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: theme.colorScheme.outline.withOpacity(0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          color: theme.colorScheme.onSurfaceVariant,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Messages',
+                          style: TextStyle(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSmartDetailsExpansion(ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      child: ExpansionTile(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withOpacity(0.2),
+          ),
+        ),
+        collapsedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withOpacity(0.2),
+          ),
+        ),
+        backgroundColor: theme.colorScheme.surface,
+        collapsedBackgroundColor: theme.colorScheme.surface,
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            Icons.info_outline,
+            color: theme.colorScheme.primary,
+            size: 20,
+          ),
+        ),
+        title: Text(
+          'Détails de la Tontine',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          'Informations, règles et participants',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(0.7),
+          ),
+        ),
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              ),
+            ),
+            child: DefaultTabController(
+              length: 4,
+              child: Column(
+                children: [
+                  TabBar(
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    labelColor: theme.colorScheme.primary,
+                    unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.6),
+                    indicatorColor: theme.colorScheme.primary,
+                    dividerColor: Colors.transparent,
+                    tabs: const [
+                      Tab(text: 'Vue d\'ensemble'),
+                      Tab(text: 'Participants'),
+                      Tab(text: 'Historique'),
+                      Tab(text: 'Paramètres'),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 400,
+                    child: Builder(
+                      builder: (context) => TabBarView(
+                        children: [
+                          _buildOverviewTab(context),
+                          _buildParticipantsTab(context),
+                          _buildHistoryTab(context),
+                          _buildSettingsTab(context),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTerangaFloatingAction(ThemeData theme) {
+    final tontine = controller.tontine.value!;
+    final hasUnpaidContribution = controller.currentRoundContributions
+        .any((c) => !c.isPaid && c.participantId == controller.currentUserId);
+
+    if (!hasUnpaidContribution) return const SizedBox.shrink();
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.orange.shade600,
+            Colors.orange.shade500,
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withOpacity(0.4),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: FloatingActionButton.extended(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        onPressed: () => controller.showPaymentDialog(),
+        icon: const Icon(
+          Icons.payment,
+          color: Colors.white,
+        ),
+        label: const Text(
+          'Contribution Due',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ).animate().slideY(begin: 1, delay: 800.ms).then().shimmer(
+      duration: 2000.ms,
+      color: Colors.white.withOpacity(0.3),
+    );
+  }
+
+  // Helper methods for Senegalese cultural theming
+  Color _getTerangaGradientStart(double progress) {
+    if (progress < 0.3) return const Color(0xFF8B4513); // Saddle brown - earth
+    if (progress < 0.7) return const Color(0xFF4A90E2); // Light blue - progress
+    return const Color(0xFF228B22); // Forest green - success
+  }
+
+  Color _getTerangaGradientMiddle(double progress) {
+    if (progress < 0.3) return const Color(0xFFCD853F); // Peru - warm earth
+    if (progress < 0.7) return const Color(0xFF87CEEB); // Sky blue - hope
+    return const Color(0xFF32CD32); // Lime green - abundance
+  }
+
+  Color _getTerangaGradientEnd(double progress) {
+    if (progress < 0.3) return const Color(0xFFF4A460); // Sandy brown - hospitality
+    if (progress < 0.7) return const Color(0xFFE6F3FF); // Light blue - peace
+    return const Color(0xFF98FB98); // Pale green - prosperity
+  }
+
+  IconData _getTerangaTitleIcon(double progress) {
+    if (progress < 0.3) return Icons.hourglass_empty;
+    if (progress < 0.7) return Icons.trending_up;
+    return Icons.celebration;
+  }
+
+  Color _getStatColor(int index) {
+    const colors = [
+      Color(0xFF4A90E2), // Light blue
+      Color(0xFF34C759), // Green
+      Color(0xFFFF9500), // Orange
+    ];
+    return colors[index % colors.length];
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status.toLowerCase()) {
+      case 'active':
+      case 'actif':
+        return Icons.play_circle_filled;
+      case 'completed':
+      case 'terminé':
+        return Icons.check_circle;
+      case 'pending':
+      case 'en_attente':
+        return Icons.hourglass_empty;
+      default:
+        return Icons.info;
+    }
   }
 }

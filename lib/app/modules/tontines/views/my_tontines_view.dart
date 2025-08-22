@@ -59,7 +59,7 @@ class MyTontinesView extends GetView<HomeController> {
           padding: const EdgeInsets.only(bottom: 16),
           child: TontineCard(
             tontine: tontine,
-            onTap: () => Get.toNamed(Routes.myTontine, arguments: tontine.id),
+            onTap: () => Get.toNamed(Routes.detail, arguments: tontine.id),
           ),
         );
       },

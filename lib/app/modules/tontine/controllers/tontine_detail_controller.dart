@@ -17,6 +17,9 @@ class TontineDetailController extends GetxController
   final RxBool isOrganizer = false.obs;
   late TabController tabController;
   List<Contribution> currentRoundContributions = [];
+  
+  // Current user ID (in a real app, this would come from a storage service)
+  String get currentUserId => 'user_1';
 
   // Initialization
   @override
@@ -39,8 +42,6 @@ class TontineDetailController extends GetxController
     tontine.value = t;
     if (t != null) {
       // Organizer check (replace with real user check)
-      final currentUserId =
-          'user_1'; // Replace with StorageService.getCurrentUser()?.id
       isOrganizer.value = t.organizerId == currentUserId;
       currentRoundContributions = TontineService.getTontineContributions(
         t.id,
@@ -176,6 +177,12 @@ class TontineDetailController extends GetxController
         ],
       ),
     );
+  }
+
+  // Show transaction history
+  void showTransactionHistory() {
+    VibrationService.softVibrate();
+    Get.toNamed('/transaction-history', arguments: tontine.value?.id);
   }
 
   // Show payment dialog

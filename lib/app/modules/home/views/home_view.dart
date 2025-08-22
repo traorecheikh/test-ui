@@ -240,9 +240,11 @@ class HomeView extends GetView<HomeController> {
 
     if (primaryTontine == null) return const SizedBox.shrink();
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
+    return GestureDetector(
+      onTap: () => Get.toNamed(Routes.detail, arguments: primaryTontine.id),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
         color: theme.colorScheme.primary,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
@@ -331,7 +333,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   int _getUserPosition(Tontine tontine) {
