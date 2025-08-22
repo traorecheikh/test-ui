@@ -109,19 +109,29 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
               ),
             ),
             const SizedBox(width: 16),
-            Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(16),
+            ElevatedButton.icon(
+              onPressed: controller.showQRScanner,
+              icon: Icon(
+                Icons.qr_code_scanner,
+                color: theme.colorScheme.onPrimary,
+                size: 20,
               ),
-              child: IconButton(
-                onPressed: controller.showQRScanner,
-                icon: Icon(
-                  Icons.qr_code_scanner,
-                  color: theme.colorScheme.primary,
-                  size: 28,
+              label: Text(
+                'Scanner',
+                style: TextStyle(
+                  color: theme.colorScheme.onPrimary,
+                  fontWeight: FontWeight.w600,
                 ),
-                tooltip: 'Scanner QR Code',
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
               ),
             ),
           ],

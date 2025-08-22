@@ -110,7 +110,7 @@ class JoinScannerScreen extends GetView<JoinScannerController> {
                     horizontal: 24,
                     vertical: 16,
                   ),
-                  child: Row(
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
@@ -120,6 +120,41 @@ class JoinScannerScreen extends GetView<JoinScannerController> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                           letterSpacing: 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        width: double.infinity,
+                        constraints: const BoxConstraints(maxWidth: 300),
+                        child: OutlinedButton.icon(
+                          onPressed: () => Get.toNamed('/join'),
+                          icon: Icon(
+                            Icons.keyboard,
+                            color: theme.colorScheme.primary,
+                            size: 20,
+                          ),
+                          label: Text(
+                            'Entrer le code manuellement',
+                            style: TextStyle(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white.withOpacity(0.95),
+                            side: BorderSide(
+                              color: theme.colorScheme.primary,
+                              width: 2,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 14,
+                              horizontal: 20,
+                            ),
+                          ),
                         ),
                       ),
                     ],
