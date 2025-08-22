@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -22,23 +23,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settingsController = Get.find<SettingsController>();
-    return Obx(
-      () => GetMaterialApp(
-        title: AppConstants.appName,
-        debugShowCheckedModeBanner: false,
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: settingsController.themeMode,
-        initialRoute: Routes.login,
-        getPages: AppPages.routes,
-        builder: (context, child) {
-          // Ensure text scaling and accessibility
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: child!,
-          );
-        },
-      ),
+    return ScreenUtilInit(
+      designSize: kDesignSize,
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return Obx(
+          () => GetMaterialApp(
+            title: AppConstants.appName,
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: settingsController.themeMode,
+            initialRoute: Routes.home,
+            getPages: AppPages.routes,
+            builder: (context, child) {
+              // Ensure text scaling and accessibility
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                child: child!,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

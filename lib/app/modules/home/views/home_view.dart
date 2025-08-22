@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:snt_ui_test/app/theme.dart';
 
 import '../../../data/models/tontine.dart';
 import '../../../routes/app_pages.dart';
@@ -56,7 +57,7 @@ class HomeView extends GetView<HomeController> {
                   ],
                 ),
                 const Spacer(),
-              /*
+                /*
               *
               *   IconButton(
                   icon: Icon(
@@ -84,13 +85,13 @@ class HomeView extends GetView<HomeController> {
                 ),
               ],
             ),
-            const SizedBox(height: 32),
+
+            AppSpacing.extraLargeHeightSpacerWidget,
             _buildFinanceDataCard(theme),
-            const SizedBox(height: 0),
-            _buildPrimaryTontineSection(theme),
-            const SizedBox(height: 32),
+            // _buildPrimaryTontineSection(theme),
+            AppSpacing.extraLargeHeightSpacerWidget,
             _buildQuickActionsSection(theme),
-            const SizedBox(height: 32),
+            AppSpacing.extraLargeHeightSpacerWidget,
             _buildRecentActivitiesSection(theme),
           ],
         ),
@@ -129,7 +130,7 @@ class HomeView extends GetView<HomeController> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.account_balance_wallet, size: 32, color: Colors.white),
-              const SizedBox(width: 12),
+              AppSpacing.extraLargeHeightSpacerWidget,
               Text(
                 'Épargne Totale',
                 style: theme.textTheme.headlineMedium?.copyWith(
@@ -245,95 +246,102 @@ class HomeView extends GetView<HomeController> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            primaryTontine.name,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          color: theme.colorScheme.primary,
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: theme.colorScheme.primary.withOpacity(0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
-          ),
-          const SizedBox(height: 12), // Increased spacing for better separation
-          Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Ensures even spacing
-            crossAxisAlignment:
-                CrossAxisAlignment.center, // Vertically centers content
-            children: [
-              Text(
-                '${(primaryTontine.progress * 100).toStringAsFixed(0)}% complété',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white.withOpacity(0.8),
-                ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              primaryTontine.name,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-              Text(
-                '${primaryTontine.members} membres',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12), // Consistent spacing before progress bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: primaryTontine.progress,
-              backgroundColor: Colors.white.withOpacity(0.2),
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-              minHeight: 10,
             ),
-          ),
-          const SizedBox(height: 24), // More space before next section
-          Row(
-            children: [
-              Expanded(
-                child: _buildInfoChip(
-                  theme,
-                  'Prochain Tirage',
-                  primaryTontine.formattedNextPaymentDate,
-                  Icons.calendar_today,
-                  isWhite: true,
+            const SizedBox(
+              height: 12,
+            ), // Increased spacing for better separation
+            Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween, // Ensures even spacing
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, // Vertically centers content
+              children: [
+                Text(
+                  '${(primaryTontine.progress * 100).toStringAsFixed(0)}% complété',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.white.withOpacity(0.8),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildInfoChip(
-                  theme,
-                  'Ma Position',
-                  '#${_getUserPosition(primaryTontine)}',
-                  Icons.person_pin_circle,
-                  isWhite: true,
+                Text(
+                  '${primaryTontine.members} membres',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+              ],
+            ),
+            const SizedBox(
+              height: 12,
+            ), // Consistent spacing before progress bar
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: LinearProgressIndicator(
+                value: primaryTontine.progress,
+                backgroundColor: Colors.white.withOpacity(0.2),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                minHeight: 10,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildInfoChip(
-                  theme,
-                  'Montant',
-                  Formatters.formatCurrency(primaryTontine.contributionAmount),
-                  Icons.account_balance_wallet,
-                  isWhite: true,
+            ),
+            const SizedBox(height: 24), // More space before next section
+            Row(
+              children: [
+                Expanded(
+                  child: _buildInfoChip(
+                    theme,
+                    'Prochain Tirage',
+                    primaryTontine.formattedNextPaymentDate,
+                    Icons.calendar_today,
+                    isWhite: true,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildInfoChip(
+                    theme,
+                    'Ma Position',
+                    '#${_getUserPosition(primaryTontine)}',
+                    Icons.person_pin_circle,
+                    isWhite: true,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildInfoChip(
+                    theme,
+                    'Montant',
+                    Formatters.formatCurrency(
+                      primaryTontine.contributionAmount,
+                    ),
+                    Icons.account_balance_wallet,
+                    isWhite: true,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   int _getUserPosition(Tontine tontine) {

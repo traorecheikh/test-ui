@@ -1,6 +1,12 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+//<------------------- CONSTANTS ------------------->
+const Size kDesignSize = Size(390, 844);
+
+//<------------------- COLORS ------------------->
 class LightModeColors {
   static const lightPrimary = Color(0xFF1B365D); // Dark blue
   static const lightOnPrimary = Color(0xFFFFFFFF);
@@ -43,244 +49,316 @@ class DarkModeColors {
   static const darkAppBarBackground = Color(0xFF1C1C1E);
 }
 
-class FontSizes {
-  static const double displayLarge = 57.0;
-  static const double displayMedium = 45.0;
-  static const double displaySmall = 36.0;
-  static const double headlineLarge = 32.0;
-  static const double headlineMedium = 24.0;
-  static const double headlineSmall = 22.0;
-  static const double titleLarge = 22.0;
-  static const double titleMedium = 18.0;
-  static const double titleSmall = 16.0;
-  static const double labelLarge = 16.0;
-  static const double labelMedium = 14.0;
-  static const double labelSmall = 12.0;
-  static const double bodyLarge = 16.0;
-  static const double bodyMedium = 14.0;
-  static const double bodySmall = 12.0;
+//<------------------- SPACING ------------------->
+class AppSpacing {
+  static final double small = 8.w;
+  static final double medium = 16.w;
+  static final double large = 24.w;
+  static final double extraLarge = 32.w;
+
+  // Responsive height spacers (SizedBox)
+  static SizedBox get smallHeightSpacer => SizedBox(height: small);
+  static SizedBox get mediumHeightSpacer => SizedBox(height: medium);
+  static SizedBox get largeHeightSpacer => SizedBox(height: large);
+  static SizedBox get extraLargeHeightSpacer => SizedBox(height: extraLarge);
+
+  // Responsive width spacers (SizedBox)
+  static SizedBox get smallWidthSpacer => SizedBox(width: small);
+  static SizedBox get mediumWidthSpacer => SizedBox(width: medium);
+  static SizedBox get largeWidthSpacer => SizedBox(width: large);
+  static SizedBox get extraLargeWidthSpacer => SizedBox(width: extraLarge);
+
+  // Responsive height spacer widgets (for direct use as Widgets)
+  static Widget get smallHeightSpacerWidget => SizedBox(height: small);
+  static Widget get mediumHeightSpacerWidget => SizedBox(height: medium);
+  static Widget get largeHeightSpacerWidget => SizedBox(height: large);
+  static Widget get extraLargeHeightSpacerWidget => SizedBox(height: extraLarge);
+
+  // Responsive width spacer widgets (for direct use as Widgets)
+  static Widget get smallWidthSpacerWidget => SizedBox(width: small);
+  static Widget get mediumWidthSpacerWidget => SizedBox(width: medium);
+  static Widget get largeWidthSpacerWidget => SizedBox(width: large);
+  static Widget get extraLargeWidthSpacerWidget => SizedBox(width: extraLarge);
 }
 
+//<------------------- RADIUS ------------------->
+class AppRadius {
+  static final double small = 8.r;
+  static final double medium = 16.r;
+  static final double large = 24.r;
+  static final double extraLarge = 32.r;
+}
+
+//<------------------- FONT SIZES ------------------->
+class AppFontSize {
+  static final double displayLarge = 57.sp;
+  static final double displayMedium = 45.sp;
+  static final double displaySmall = 36.sp;
+  static final double headlineLarge = 32.sp;
+  static final double headlineMedium = 24.sp;
+  static final double headlineSmall = 22.sp;
+  static final double titleLarge = 22.sp;
+  static final double titleMedium = 18.sp;
+  static final double titleSmall = 16.sp;
+  static final double labelLarge = 16.sp;
+  static final double labelMedium = 14.sp;
+  static final double labelSmall = 12.sp;
+  static final double bodyLarge = 16.sp;
+  static final double bodyMedium = 14.sp;
+  static final double bodySmall = 12.sp;
+}
+
+//<------------------- SHADOWS ------------------->
+class AppShadows {
+  static final BoxShadow small = BoxShadow(
+    color: LightModeColors.lightShadow.withOpacity(0.1),
+    blurRadius: 8.r,
+    offset: Offset(0, 4.h),
+  );
+  static final BoxShadow medium = BoxShadow(
+    color: LightModeColors.lightShadow.withOpacity(0.15),
+    blurRadius: 16.r,
+    offset: Offset(0, 8.h),
+  );
+  static final BoxShadow large = BoxShadow(
+    color: LightModeColors.lightShadow.withOpacity(0.2),
+    blurRadius: 24.r,
+    offset: Offset(0, 12.h),
+  );
+}
+
+//<------------------- THEMES ------------------->
 ThemeData get lightTheme => ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.light(
-    primary: LightModeColors.lightPrimary,
-    onPrimary: LightModeColors.lightOnPrimary,
-    primaryContainer: LightModeColors.lightPrimaryContainer,
-    onPrimaryContainer: LightModeColors.lightOnPrimaryContainer,
-    secondary: LightModeColors.lightSecondary,
-    onSecondary: LightModeColors.lightOnSecondary,
-    tertiary: LightModeColors.lightTertiary,
-    onTertiary: LightModeColors.lightOnTertiary,
-    error: LightModeColors.lightError,
-    onError: LightModeColors.lightOnError,
-    errorContainer: LightModeColors.lightErrorContainer,
-    onErrorContainer: LightModeColors.lightOnErrorContainer,
-    inversePrimary: LightModeColors.lightInversePrimary,
-    shadow: LightModeColors.lightShadow,
-    surface: LightModeColors.lightSurface,
-    background: LightModeColors.lightBackground,
-    onSurface: LightModeColors.lightOnSurface,
-  ),
-  brightness: Brightness.light,
-  scaffoldBackgroundColor: LightModeColors.lightBackground,
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Colors.white,
-    foregroundColor: LightModeColors.lightPrimary,
-    elevation: 0,
-    surfaceTintColor: Colors.transparent,
-    iconTheme: IconThemeData(color: LightModeColors.lightPrimary),
-    titleTextStyle: TextStyle(
-      color: LightModeColors.lightPrimary,
-      fontWeight: FontWeight.bold,
-      fontSize: 22,
-    ),
-  ),
-  cardTheme: CardThemeData(
-    color: LightModeColors.lightSurface,
-    elevation: 3,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-    margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-  ),
-  textTheme: TextTheme(
-    displayLarge: GoogleFonts.inter(
-      fontSize: FontSizes.displayLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    displayMedium: GoogleFonts.inter(
-      fontSize: FontSizes.displayMedium,
-      fontWeight: FontWeight.normal,
-    ),
-    displaySmall: GoogleFonts.inter(
-      fontSize: FontSizes.displaySmall,
-      fontWeight: FontWeight.w600,
-    ),
-    headlineLarge: GoogleFonts.inter(
-      fontSize: FontSizes.headlineLarge + 2,
-      fontWeight: FontWeight.normal,
-    ),
-    headlineMedium: GoogleFonts.inter(
-      fontSize: FontSizes.headlineMedium + 2,
-      fontWeight: FontWeight.w500,
-    ),
-    headlineSmall: GoogleFonts.inter(
-      fontSize: FontSizes.headlineSmall + 2,
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: GoogleFonts.inter(
-      fontSize: FontSizes.titleLarge + 2,
-      fontWeight: FontWeight.w500,
-    ),
-    titleMedium: GoogleFonts.inter(
-      fontSize: FontSizes.titleMedium + 2,
-      fontWeight: FontWeight.w500,
-    ),
-    titleSmall: GoogleFonts.inter(
-      fontSize: FontSizes.titleSmall + 2,
-      fontWeight: FontWeight.w500,
-    ),
-    labelLarge: GoogleFonts.inter(
-      fontSize: FontSizes.labelLarge + 2,
-      fontWeight: FontWeight.w500,
-    ),
-    labelMedium: GoogleFonts.inter(
-      fontSize: FontSizes.labelMedium + 2,
-      fontWeight: FontWeight.w500,
-    ),
-    labelSmall: GoogleFonts.inter(
-      fontSize: FontSizes.labelSmall + 2,
-      fontWeight: FontWeight.w500,
-    ),
-    bodyLarge: GoogleFonts.inter(
-      fontSize: FontSizes.bodyLarge + 2,
-      fontWeight: FontWeight.normal,
-    ),
-    bodyMedium: GoogleFonts.inter(
-      fontSize: FontSizes.bodyMedium + 2,
-      fontWeight: FontWeight.normal,
-    ),
-    bodySmall: GoogleFonts.inter(
-      fontSize: FontSizes.bodySmall + 2,
-      fontWeight: FontWeight.normal,
-    ),
-  ),
-  inputDecorationTheme: const InputDecorationTheme(
-    contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(18)),
-    ),
-  ),
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ButtonStyle(
-      padding: MaterialStatePropertyAll(
-        EdgeInsets.symmetric(vertical: 18, horizontal: 32),
+      useMaterial3: true,
+      colorScheme: ColorScheme.light(
+        primary: LightModeColors.lightPrimary,
+        onPrimary: LightModeColors.lightOnPrimary,
+        primaryContainer: LightModeColors.lightPrimaryContainer,
+        onPrimaryContainer: LightModeColors.lightOnPrimaryContainer,
+        secondary: LightModeColors.lightSecondary,
+        onSecondary: LightModeColors.lightOnSecondary,
+        tertiary: LightModeColors.lightTertiary,
+        onTertiary: LightModeColors.lightOnTertiary,
+        error: LightModeColors.lightError,
+        onError: LightModeColors.lightOnError,
+        errorContainer: LightModeColors.lightErrorContainer,
+        onErrorContainer: LightModeColors.lightOnErrorContainer,
+        inversePrimary: LightModeColors.lightInversePrimary,
+        shadow: LightModeColors.lightShadow,
+        surface: LightModeColors.lightSurface,
+        background: LightModeColors.lightBackground,
+        onSurface: LightModeColors.lightOnSurface,
       ),
-      shape: MaterialStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(18)),
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: LightModeColors.lightBackground,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.white,
+        foregroundColor: LightModeColors.lightPrimary,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: LightModeColors.lightPrimary),
+        titleTextStyle: TextStyle(
+          color: LightModeColors.lightPrimary,
+          fontWeight: FontWeight.bold,
+          fontSize: AppFontSize.headlineSmall,
         ),
       ),
-      textStyle: MaterialStatePropertyAll(
-        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      cardTheme: CardThemeData(
+        color: LightModeColors.lightSurface,
+        elevation: 3,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.large)),
+        margin: EdgeInsets.symmetric(
+            vertical: AppSpacing.medium, horizontal: AppSpacing.small),
       ),
-    ),
-  ),
-);
+      textTheme: TextTheme(
+        displayLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.displayLarge,
+          fontWeight: FontWeight.normal,
+        ),
+        displayMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.displayMedium,
+          fontWeight: FontWeight.normal,
+        ),
+        displaySmall: GoogleFonts.inter(
+          fontSize: AppFontSize.displaySmall,
+          fontWeight: FontWeight.w600,
+        ),
+        headlineLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.headlineLarge,
+          fontWeight: FontWeight.normal,
+        ),
+        headlineMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.headlineMedium,
+          fontWeight: FontWeight.w500,
+        ),
+        headlineSmall: GoogleFonts.inter(
+          fontSize: AppFontSize.headlineSmall,
+          fontWeight: FontWeight.bold,
+        ),
+        titleLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.titleLarge,
+          fontWeight: FontWeight.w500,
+        ),
+        titleMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.titleMedium,
+          fontWeight: FontWeight.w500,
+        ),
+        titleSmall: GoogleFonts.inter(
+          fontSize: AppFontSize.titleSmall,
+          fontWeight: FontWeight.w500,
+        ),
+        labelLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.labelLarge,
+          fontWeight: FontWeight.w500,
+        ),
+        labelMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.labelMedium,
+          fontWeight: FontWeight.w500,
+        ),
+        labelSmall: GoogleFonts.inter(
+          fontSize: AppFontSize.labelSmall,
+          fontWeight: FontWeight.w500,
+        ),
+        bodyLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.bodyLarge,
+          fontWeight: FontWeight.normal,
+        ),
+        bodyMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.bodyMedium,
+          fontWeight: FontWeight.normal,
+        ),
+        bodySmall: GoogleFonts.inter(
+          fontSize: AppFontSize.bodySmall,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        contentPadding: EdgeInsets.symmetric(
+            vertical: AppSpacing.medium, horizontal: AppSpacing.medium),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(AppRadius.medium)),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          padding: MaterialStatePropertyAll(
+            EdgeInsets.symmetric(
+                vertical: AppSpacing.medium, horizontal: AppSpacing.extraLarge),
+          ),
+          shape: MaterialStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(AppRadius.medium)),
+            ),
+          ),
+          textStyle: MaterialStatePropertyAll(
+            TextStyle(
+                fontSize: AppFontSize.titleMedium, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
 
 ThemeData get darkTheme => ThemeData(
-  useMaterial3: true,
-  colorScheme: ColorScheme.dark(
-    primary: DarkModeColors.darkPrimary,
-    onPrimary: DarkModeColors.darkOnPrimary,
-    primaryContainer: DarkModeColors.darkPrimaryContainer,
-    onPrimaryContainer: DarkModeColors.darkOnPrimaryContainer,
-    secondary: DarkModeColors.darkSecondary,
-    onSecondary: DarkModeColors.darkOnSecondary,
-    tertiary: DarkModeColors.darkTertiary,
-    onTertiary: DarkModeColors.darkOnTertiary,
-    error: DarkModeColors.darkError,
-    onError: DarkModeColors.darkOnError,
-    errorContainer: DarkModeColors.darkErrorContainer,
-    onErrorContainer: DarkModeColors.darkOnErrorContainer,
-    inversePrimary: DarkModeColors.darkInversePrimary,
-    shadow: DarkModeColors.darkShadow,
-    surface: DarkModeColors.darkSurface,
-    background: DarkModeColors.darkBackground,
-    onSurface: DarkModeColors.darkOnSurface,
-  ),
-  brightness: Brightness.dark,
-  scaffoldBackgroundColor: DarkModeColors.darkBackground,
-  appBarTheme: const AppBarTheme(
-    backgroundColor: Colors.transparent,
-    foregroundColor: DarkModeColors.darkPrimary,
-    elevation: 0,
-    surfaceTintColor: Colors.transparent,
-  ),
-  cardTheme: CardThemeData(
-    color: DarkModeColors.darkSurface,
-    elevation: 2,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-  ),
-  textTheme: TextTheme(
-    displayLarge: GoogleFonts.inter(
-      fontSize: FontSizes.displayLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    displayMedium: GoogleFonts.inter(
-      fontSize: FontSizes.displayMedium,
-      fontWeight: FontWeight.normal,
-    ),
-    displaySmall: GoogleFonts.inter(
-      fontSize: FontSizes.displaySmall,
-      fontWeight: FontWeight.w600,
-    ),
-    headlineLarge: GoogleFonts.inter(
-      fontSize: FontSizes.headlineLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    headlineMedium: GoogleFonts.inter(
-      fontSize: FontSizes.headlineMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    headlineSmall: GoogleFonts.inter(
-      fontSize: FontSizes.headlineSmall,
-      fontWeight: FontWeight.bold,
-    ),
-    titleLarge: GoogleFonts.inter(
-      fontSize: FontSizes.titleLarge,
-      fontWeight: FontWeight.w500,
-    ),
-    titleMedium: GoogleFonts.inter(
-      fontSize: FontSizes.titleMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    titleSmall: GoogleFonts.inter(
-      fontSize: FontSizes.titleSmall,
-      fontWeight: FontWeight.w500,
-    ),
-    labelLarge: GoogleFonts.inter(
-      fontSize: FontSizes.labelLarge,
-      fontWeight: FontWeight.w500,
-    ),
-    labelMedium: GoogleFonts.inter(
-      fontSize: FontSizes.labelMedium,
-      fontWeight: FontWeight.w500,
-    ),
-    labelSmall: GoogleFonts.inter(
-      fontSize: FontSizes.labelSmall,
-      fontWeight: FontWeight.w500,
-    ),
-    bodyLarge: GoogleFonts.inter(
-      fontSize: FontSizes.bodyLarge,
-      fontWeight: FontWeight.normal,
-    ),
-    bodyMedium: GoogleFonts.inter(
-      fontSize: FontSizes.bodyMedium,
-      fontWeight: FontWeight.normal,
-    ),
-    bodySmall: GoogleFonts.inter(
-      fontSize: FontSizes.bodySmall,
-      fontWeight: FontWeight.normal,
-    ),
-  ),
-);
+      useMaterial3: true,
+      colorScheme: ColorScheme.dark(
+        primary: DarkModeColors.darkPrimary,
+        onPrimary: DarkModeColors.darkOnPrimary,
+        primaryContainer: DarkModeColors.darkPrimaryContainer,
+        onPrimaryContainer: DarkModeColors.darkOnPrimaryContainer,
+        secondary: DarkModeColors.darkSecondary,
+        onSecondary: DarkModeColors.darkOnSecondary,
+        tertiary: DarkModeColors.darkTertiary,
+        onTertiary: DarkModeColors.darkOnTertiary,
+        error: DarkModeColors.darkError,
+        onError: DarkModeColors.darkOnError,
+        errorContainer: DarkModeColors.darkErrorContainer,
+        onErrorContainer: DarkModeColors.darkOnErrorContainer,
+        inversePrimary: DarkModeColors.darkInversePrimary,
+        shadow: DarkModeColors.darkShadow,
+        surface: DarkModeColors.darkSurface,
+        background: DarkModeColors.darkBackground,
+        onSurface: DarkModeColors.darkOnSurface,
+      ),
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: DarkModeColors.darkBackground,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        foregroundColor: DarkModeColors.darkPrimary,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        titleTextStyle: TextStyle(
+          color: DarkModeColors.darkPrimary,
+          fontWeight: FontWeight.bold,
+          fontSize: AppFontSize.headlineSmall,
+        ),
+      ),
+      cardTheme: CardThemeData(
+        color: DarkModeColors.darkSurface,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.medium)),
+      ),
+      textTheme: TextTheme(
+        displayLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.displayLarge,
+          fontWeight: FontWeight.normal,
+        ),
+        displayMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.displayMedium,
+          fontWeight: FontWeight.normal,
+        ),
+        displaySmall: GoogleFonts.inter(
+          fontSize: AppFontSize.displaySmall,
+          fontWeight: FontWeight.w600,
+        ),
+        headlineLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.headlineLarge,
+          fontWeight: FontWeight.normal,
+        ),
+        headlineMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.headlineMedium,
+          fontWeight: FontWeight.w500,
+        ),
+        headlineSmall: GoogleFonts.inter(
+          fontSize: AppFontSize.headlineSmall,
+          fontWeight: FontWeight.bold,
+        ),
+        titleLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.titleLarge,
+          fontWeight: FontWeight.w500,
+        ),
+        titleMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.titleMedium,
+          fontWeight: FontWeight.w500,
+        ),
+        titleSmall: GoogleFonts.inter(
+          fontSize: AppFontSize.titleSmall,
+          fontWeight: FontWeight.w500,
+        ),
+        labelLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.labelLarge,
+          fontWeight: FontWeight.w500,
+        ),
+        labelMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.labelMedium,
+          fontWeight: FontWeight.w500,
+        ),
+        labelSmall: GoogleFonts.inter(
+          fontSize: AppFontSize.labelSmall,
+          fontWeight: FontWeight.w500,
+        ),
+        bodyLarge: GoogleFonts.inter(
+          fontSize: AppFontSize.bodyLarge,
+          fontWeight: FontWeight.normal,
+        ),
+        bodyMedium: GoogleFonts.inter(
+          fontSize: AppFontSize.bodyMedium,
+          fontWeight: FontWeight.normal,
+        ),
+        bodySmall: GoogleFonts.inter(
+          fontSize: AppFontSize.bodySmall,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
+    );
