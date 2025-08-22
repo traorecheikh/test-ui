@@ -4,12 +4,14 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'app/modules/settings/controllers/settings_controller.dart';
 import 'app/routes/app_pages.dart';
+import 'app/services/tontine_service.dart';
 import 'app/theme.dart';
 import 'app/utils/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('fr_FR', null);
+  await TontineService.init();
   Get.put(SettingsController());
   runApp(const MyApp());
 }
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: settingsController.themeMode,
-        initialRoute: Routes.home,
+        initialRoute: Routes.login,
         getPages: AppPages.routes,
         builder: (context, child) {
           // Ensure text scaling and accessibility

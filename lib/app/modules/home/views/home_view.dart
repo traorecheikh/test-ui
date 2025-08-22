@@ -56,6 +56,21 @@ class HomeView extends GetView<HomeController> {
                   ],
                 ),
                 const Spacer(),
+              /*
+              *
+              *   IconButton(
+                  icon: Icon(
+                    Icons.refresh,
+                    color: theme.colorScheme.secondary,
+                    size: 28,
+                  ),
+                  onPressed: () {
+                    controller.refreshTontines();
+                  },
+                  tooltip: 'Recharger les tontines',
+                ),   c
+              * */
+                const SizedBox(width: 8),
                 IconButton(
                   icon: Icon(
                     Icons.settings,
@@ -262,7 +277,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               Text(
-                '${primaryTontine.members.length} membres',
+                '${primaryTontine.members} membres',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

@@ -49,8 +49,9 @@ class MyTontinesView extends GetView<HomeController> {
   }
 
   Widget _buildTontineList(ThemeData theme) {
+    print('User Tontines: ${controller.userTontines.length}');
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       itemCount: controller.userTontines.length,
       itemBuilder: (context, i) {
         final tontine = controller.userTontines[i];
@@ -67,18 +68,22 @@ class MyTontinesView extends GetView<HomeController> {
 
   Widget _buildLoadingState(ThemeData theme) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[200]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: theme.brightness == Brightness.dark 
+          ? Colors.grey[800]! 
+          : Colors.grey[200]!,
+      highlightColor: theme.brightness == Brightness.dark 
+          ? Colors.grey[700]! 
+          : Colors.grey[100]!,
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         itemCount: 5,
         itemBuilder: (context, index) {
           return Container(
             margin: const EdgeInsets.only(bottom: 16),
-            height: 220, // Approximate height of the new TontineCard
+            height: 200, // Adjusted height for optimized TontineCard
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(28),
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(24),
             ),
           );
         },

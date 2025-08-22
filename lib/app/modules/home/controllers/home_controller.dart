@@ -32,19 +32,36 @@ class HomeController extends GetxController {
         currencyFormat: 'FCFA',
       ),
     );
+    
+    _initializeAndLoadData();
+  }
+
+  void _initializeAndLoadData() async {
+    // Initialiser StorageService et sauvegarder l'utilisateur
+    await StorageService.init();
+    await StorageService.saveUser(currentUser.value!);
+    
     _loadData();
   }
 
-  void _loadData() {
+  void _loadData() async {
     isLoading.value = true;
+    
+    // S'assurer que le TontineService est initialisé
+    await TontineService.init();
+    
     currentUser.value = StorageService.getCurrentUser();
+    print('DEBUG: Current user from storage: ${currentUser.value?.id}');
+    
     final previousCount = userTontines.length;
     if (currentUser.value != null) {
       userTontines.value = TontineService.getUserTontines(
         currentUser.value!.id,
       );
+      print('DEBUG: Found ${userTontines.length} tontines for user ${currentUser.value!.id}');
     } else {
       userTontines.clear();
+      print('DEBUG: No current user found');
     }
     isLoading.value = false;
     if (previousCount == 0 && userTontines.isNotEmpty) {
@@ -93,6 +110,11 @@ class HomeController extends GetxController {
       total += tontine.contributionAmount * tontine.participantIds.length;
     }
     return Formatters.formatCurrency(total);
+  }
+
+  // Méthode pour recharger les données manuellement
+  void refreshTontines() {
+    _loadData();
   }
 
   List<dynamic> get quickActions => [
