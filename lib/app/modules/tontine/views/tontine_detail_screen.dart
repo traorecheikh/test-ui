@@ -150,12 +150,16 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
                   // Enhanced pot visual with cultural elements
                   Expanded(
                     flex: 3,
-                    child: PotVisualWidget(
-                      currentAmount: currentAmount,
-                      targetAmount: tontine.totalPot,
-                      paidParticipants: paidCount,
-                      totalParticipants: tontine.participantIds.length,
-                    ).animate().scale(delay: 300.ms, duration: 600.ms),
+                    child: GestureDetector(
+                      onTap: () => Get.toNamed('/pot-visual', arguments: {'tontineId': tontineId}),
+                      child: PotVisualWidget(
+                        currentAmount: currentAmount,
+                        targetAmount: tontine.totalPot,
+                        paidParticipants: paidCount,
+                        totalParticipants: tontine.participantIds.length,
+                        onTap: () => Get.toNamed('/pot-visual', arguments: {'tontineId': tontineId}),
+                      ).animate().scale(delay: 300.ms, duration: 600.ms),
+                    ),
                   ),
                   const SizedBox(height: 20),
                   // Cultural stats row with enhanced design

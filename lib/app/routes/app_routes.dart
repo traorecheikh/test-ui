@@ -17,6 +17,7 @@ abstract class Routes {
   static const otp = _Paths.otp;
   static const register = _Paths.register;
   static const history = _Paths.history;
+  static const potVisual = _Paths.potVisual;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const otp = '/otp';
   static const register = '/register';
   static const history = '/history';
+  static const potVisual = '/pot-visual';
 }
