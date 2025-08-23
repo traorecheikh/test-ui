@@ -1,5 +1,5 @@
 class Tontine {
-  final String id;
+  final int? id;
   final String name;
   final String description;
   final String? imageUrl;
@@ -10,15 +10,15 @@ class Tontine {
   final int maxParticipants;
   final TontineDrawOrder drawOrder;
   final double penaltyPercentage;
-  final String organizerId;
+  final int organizerId;
   final TontineStatus status;
-  final List<String> participantIds;
+  final List<int> participantIds;
   final List<String> rules;
   final String inviteCode;
   final DateTime createdAt;
   final int currentRound;
   final DateTime? nextContributionDate;
-  final String? currentWinnerId;
+  final int? currentWinnerId;
 
   const Tontine({
     required this.id,
@@ -58,7 +58,7 @@ class Tontine {
   get members => participantIds.length;
 
   Tontine copyWith({
-    String? id,
+    int? id,
     String? name,
     String? description,
     String? imageUrl,
@@ -69,15 +69,15 @@ class Tontine {
     int? maxParticipants,
     TontineDrawOrder? drawOrder,
     double? penaltyPercentage,
-    String? organizerId,
+    int? organizerId,
     TontineStatus? status,
-    List<String>? participantIds,
+    List<int>? participantIds,
     List<String>? rules,
     String? inviteCode,
     DateTime? createdAt,
     int? currentRound,
     DateTime? nextContributionDate,
-    String? currentWinnerId,
+    int? currentWinnerId,
   }) => Tontine(
     id: id ?? this.id,
     name: name ?? this.name,

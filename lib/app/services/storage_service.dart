@@ -49,7 +49,7 @@ class StorageService {
 
     final Map<String, dynamic> data = json.decode(userData);
     return AppUser(
-      id: data['id'],
+      id: data['id'] as int?,
       name: data['name'],
       phone: data['phone'],
       email: data['email'],
@@ -58,8 +58,8 @@ class StorageService {
       level: UserLevel.values.firstWhere((l) => l.name == data['level']),
       sunuPoints: data['sunuPoints'] ?? 0,
       reliabilityScore: data['reliabilityScore']?.toDouble() ?? 5.0,
-      tontineIds: List<String>.from(data['tontineIds'] ?? []),
-      organizedTontineIds: List<String>.from(data['organizedTontineIds'] ?? []),
+      tontineIds: List<int>.from(data['tontineIds'] ?? []),
+      organizedTontineIds: List<int>.from(data['organizedTontineIds'] ?? []),
       preferences: UserPreferences(
         darkMode: data['preferences']['darkMode'] ?? false,
         language: data['preferences']['language'] ?? 'fr',
@@ -111,7 +111,7 @@ class StorageService {
     return data
         .map(
           (t) => Tontine(
-            id: t['id'],
+            id: t['id'] as int?,
             name: t['name'],
             description: t['description'],
             imageUrl: t['imageUrl'],
@@ -126,11 +126,11 @@ class StorageService {
               (d) => d.name == t['drawOrder'],
             ),
             penaltyPercentage: t['penaltyPercentage']?.toDouble() ?? 0.0,
-            organizerId: t['organizerId'],
+            organizerId: t['organizerId'] as int,
             status: TontineStatus.values.firstWhere(
               (s) => s.name == t['status'],
             ),
-            participantIds: List<String>.from(t['participantIds'] ?? []),
+            participantIds: List<int>.from(t['participantIds'] ?? []),
             rules: List<String>.from(t['rules'] ?? []),
             inviteCode: t['inviteCode'],
             createdAt: DateTime.parse(t['createdAt']),
@@ -138,7 +138,7 @@ class StorageService {
             nextContributionDate: t['nextContributionDate'] != null
                 ? DateTime.parse(t['nextContributionDate'])
                 : null,
-            currentWinnerId: t['currentWinnerId'],
+            currentWinnerId: t['currentWinnerId'] as int?,
           ),
         )
         .toList();
@@ -177,9 +177,9 @@ class StorageService {
     return data
         .map(
           (c) => Contribution(
-            id: c['id'],
-            tontineId: c['tontineId'],
-            participantId: c['participantId'],
+            id: c['id'] as int?,
+            tontineId: c['tontineId'] as int,
+            participantId: c['participantId'] as int,
             round: c['round'],
             amount: c['amount']?.toDouble() ?? 0.0,
             dueDate: DateTime.parse(c['dueDate']),

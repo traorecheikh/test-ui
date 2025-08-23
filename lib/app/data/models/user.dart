@@ -1,5 +1,5 @@
 class AppUser {
-  final String id;
+  final int? id;
   final String name;
   final String phone;
   final String? email;
@@ -8,8 +8,8 @@ class AppUser {
   final UserLevel level;
   final int sunuPoints;
   final double reliabilityScore;
-  final List<String> tontineIds;
-  final List<String> organizedTontineIds;
+  final List<int> tontineIds;
+  final List<int> organizedTontineIds;
   final UserPreferences preferences;
   final List<Achievement> achievements;
 
@@ -33,7 +33,7 @@ class AppUser {
   int get totalTontines => tontineIds.length;
 
   AppUser copyWith({
-    String? id,
+    int? id,
     String? name,
     String? phone,
     String? email,
@@ -42,8 +42,8 @@ class AppUser {
     UserLevel? level,
     int? sunuPoints,
     double? reliabilityScore,
-    List<String>? tontineIds,
-    List<String>? organizedTontineIds,
+    List<int>? tontineIds,
+    List<int>? organizedTontineIds,
     UserPreferences? preferences,
     List<Achievement>? achievements,
   }) =>
@@ -108,7 +108,7 @@ class UserPreferences {
 }
 
 class Achievement {
-  final String id;
+  final int? id;
   final String name;
   final String description;
   final String iconUrl;

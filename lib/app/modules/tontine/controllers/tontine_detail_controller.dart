@@ -19,7 +19,7 @@ class TontineDetailController extends GetxController
   List<Contribution> currentRoundContributions = [];
   
   // Current user ID (in a real app, this would come from a storage service)
-  String get currentUserId => 'user_1';
+  int get currentUserId => 1;
 
   // Initialization
   @override
@@ -32,7 +32,7 @@ class TontineDetailController extends GetxController
   void _loadTontineData() {
     isLoading.value = true;
     // In a real app, tontineId would come from arguments
-    final tontineId = Get.arguments as String?;
+    final tontineId = Get.arguments as int?;
     if (tontineId == null) {
       tontine.value = null;
       isLoading.value = false;
@@ -43,10 +43,12 @@ class TontineDetailController extends GetxController
     if (t != null) {
       // Organizer check (replace with real user check)
       isOrganizer.value = t.organizerId == currentUserId;
-      currentRoundContributions = TontineService.getTontineContributions(
-        t.id,
-        round: t.currentRound,
-      );
+      if (t.id != null) {
+        currentRoundContributions = TontineService.getTontineContributions(
+          t.id!,
+          round: t.currentRound,
+        );
+      }
     }
     isLoading.value = false;
   }
@@ -55,7 +57,10 @@ class TontineDetailController extends GetxController
   List<Contribution> getRoundContributions(int round) {
     final t = tontine.value;
     if (t == null) return [];
-    return TontineService.getTontineContributions(t.id, round: round);
+    if (t.id != null) {
+      return TontineService.getTontineContributions(t.id!, round: round);
+    }
+    return [];
   }
 
   // Floating action button builder

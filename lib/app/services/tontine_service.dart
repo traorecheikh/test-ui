@@ -16,7 +16,7 @@ class TontineService {
   }
 
   // Create a new tontine
-  static Future<String> createTontine({
+  static Future<int?> createTontine({
     required String name,
     required String description,
     String? imageUrl,
@@ -26,7 +26,7 @@ class TontineService {
     required int maxParticipants,
     required TontineDrawOrder drawOrder,
     required double penaltyPercentage,
-    required String organizerId,
+    required int organizerId,
     List<String> rules = const [],
   }) async {
     final tontine = Tontine(
@@ -54,7 +54,7 @@ class TontineService {
   }
 
   // Join a tontine
-  static Future<bool> joinTontine(String tontineId, String userId) async {
+  static Future<bool> joinTontine(int tontineId, int userId) async {
     final tontineIndex = _tontines.indexWhere((t) => t.id == tontineId);
     if (tontineIndex == -1) return false;
 
@@ -72,17 +72,17 @@ class TontineService {
   }
 
   // Get tontines for a user
-  static List<Tontine> getUserTontines(String userId) {
+  static List<Tontine> getUserTontines(int userId) {
     return _tontines.where((t) => t.participantIds.contains(userId)).toList();
   }
 
   // Get organized tontines
-  static List<Tontine> getOrganizedTontines(String userId) {
+  static List<Tontine> getOrganizedTontines(int userId) {
     return _tontines.where((t) => t.organizerId == userId).toList();
   }
 
   // Get tontine by ID
-  static Tontine? getTontine(String tontineId) {
+  static Tontine? getTontine(int tontineId) {
     try {
       return _tontines.firstWhere((t) => t.id == tontineId);
     } catch (e) {
@@ -100,7 +100,7 @@ class TontineService {
   }
 
   // Start a tontine
-  static Future<bool> startTontine(String tontineId) async {
+  static Future<bool> startTontine(int tontineId) async {
     final tontineIndex = _tontines.indexWhere((t) => t.id == tontineId);
     if (tontineIndex == -1) return false;
 
@@ -124,7 +124,7 @@ class TontineService {
 
   // Get contributions for a tontine and round
   static List<Contribution> getTontineContributions(
-    String tontineId, {
+    int tontineId, {
     int? round,
   }) {
     return _contributions
@@ -136,13 +136,13 @@ class TontineService {
   }
 
   // Get user contributions
-  static List<Contribution> getUserContributions(String userId) {
+  static List<Contribution> getUserContributions(int userId) {
     return _contributions.where((c) => c.participantId == userId).toList();
   }
 
   // Mark contribution as paid
   static Future<bool> markContributionPaid(
-    String contributionId,
+    int contributionId,
     String paymentReference,
   ) async {
     final contributionIndex = _contributions.indexWhere(
@@ -163,14 +163,14 @@ class TontineService {
   }
 
   // Check if round is complete and can proceed to next
-  static bool isRoundComplete(String tontineId, int round) {
+  static bool isRoundComplete(int tontineId, int round) {
     final roundContributions = getTontineContributions(tontineId, round: round);
     return roundContributions.isNotEmpty &&
         roundContributions.every((c) => c.status == ContributionStatus.paid);
   }
 
   // Get pot filling percentage for current round
-  static double getPotFillingPercentage(String tontineId, int round) {
+  static double getPotFillingPercentage(int tontineId, int round) {
     final roundContributions = getTontineContributions(tontineId, round: round);
     if (roundContributions.isEmpty) return 0.0;
 
@@ -179,9 +179,9 @@ class TontineService {
   }
 
   // Private helper methods
-  static String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() +
-        Random().nextInt(1000).toString();
+  static int _generateId() {
+    return DateTime.now().millisecondsSinceEpoch +
+        Random().nextInt(1000);
   }
 
   static String _generateInviteCode() {
@@ -220,7 +220,7 @@ class TontineService {
         .map(
           (participantId) => Contribution(
             id: _generateId(),
-            tontineId: tontine.id,
+            tontineId: tontine.id ?? 0,
             participantId: participantId,
             round: round,
             amount: tontine.contributionAmount,
@@ -249,7 +249,7 @@ class TontineService {
 
     // 1. Tontine où l'utilisateur est organisateur - ACTIVE avec progression avancée
     final activeTontineAsOrganizer = Tontine(
-      id: 'tontine_1',
+      id: 1,
       name: 'Entrepreneurs du Plateau',
       description: 'Tontine mensuelle pour entrepreneurs ambitieux du quartier Plateau',
       imageUrl: null,
@@ -259,9 +259,9 @@ class TontineService {
       maxParticipants: 8,
       drawOrder: TontineDrawOrder.random,
       penaltyPercentage: 10.0,
-      organizerId: currentUser.id,
+      organizerId: currentUser.id ?? 0,
       status: TontineStatus.active,
-      participantIds: [currentUser.id, 'user_2', 'user_3', 'user_4', 'user_5', 'user_6', 'user_7', 'user_8'],
+      participantIds: [currentUser.id ?? 0, 2, 3, 4, 5, 6, 7, 8],
       rules: [
         'Paiement avant le 5 de chaque mois',
         'Pénalité de 10% après 3 jours de retard',
@@ -272,12 +272,12 @@ class TontineService {
       createdAt: DateTime.now().subtract(const Duration(days: 60)),
       currentRound: 4,
       nextContributionDate: DateTime.now().add(const Duration(days: 12)),
-      currentWinnerId: 'user_5',
+      currentWinnerId: 5,
     );
 
     // 2. Tontine où l'utilisateur est participant - ACTIVE début de cycle
     final activeTontineAsParticipant = Tontine(
-      id: 'tontine_2',
+      id: 2,
       name: 'Tontine Solidarité Femmes',
       description: 'Épargne collective pour l\'autonomisation des femmes',
       imageUrl: null,
@@ -287,12 +287,12 @@ class TontineService {
       maxParticipants: 15,
       drawOrder: TontineDrawOrder.merit,
       penaltyPercentage: 5.0,
-      organizerId: 'user_organizer_1',
+      organizerId: 1001,
       status: TontineStatus.active,
       participantIds: [
-        'user_organizer_1', currentUser.id, 'user_10', 'user_11', 'user_12', 
-        'user_13', 'user_14', 'user_15', 'user_16', 'user_17', 'user_18',
-        'user_19', 'user_20','user_21','user_22'
+        1001, currentUser.id ?? 0, 10, 11, 12, 
+        13, 14, 15, 16, 17, 18,
+        19, 20, 21, 22
       ],
       rules: [
         'Paiement chaque lundi avant 18h',
@@ -304,12 +304,12 @@ class TontineService {
       createdAt: DateTime.now().subtract(const Duration(days: 20)),
       currentRound: 2,
       nextContributionDate: DateTime.now().add(const Duration(days: 3)),
-      currentWinnerId: 'user_10',
+      currentWinnerId: 10,
     );
 
     // 3. Tontine en attente de participants - PENDING (organisateur)
     final pendingTontineAsOrganizer = Tontine(
-      id: 'tontine_3',
+      id: 3,
       name: 'Projet Maison 2025',
       description: 'Épargne pour construction ou rénovation de maison',
       imageUrl: null,
@@ -319,9 +319,9 @@ class TontineService {
       maxParticipants: 6,
       drawOrder: TontineDrawOrder.fixed,
       penaltyPercentage: 15.0,
-      organizerId: currentUser.id,
+      organizerId: currentUser.id ?? 0,
       status: TontineStatus.pending,
-      participantIds: [currentUser.id, 'user_21', 'user_22'],
+      participantIds: [currentUser.id ?? 0, 21, 22],
       rules: [
         'Contribution le 1er de chaque mois',
         'Ordre fixe déterminé par ancienneté',
@@ -337,7 +337,7 @@ class TontineService {
 
     // 4. Tontine quotidienne rapide - ACTIVE (participant)
     final dailyTontine = Tontine(
-      id: 'tontine_4',
+      id: 4,
       name: 'Express Dakar',
       description: 'Tontine quotidienne pour liquidités immédiates',
       imageUrl: null,
@@ -347,11 +347,11 @@ class TontineService {
       maxParticipants: 10,
       drawOrder: TontineDrawOrder.random,
       penaltyPercentage: 20.0,
-      organizerId: 'user_express_org',
+      organizerId: 1002,
       status: TontineStatus.active,
       participantIds: [
-        'user_express_org', currentUser.id, 'user_30', 'user_31', 'user_32',
-        'user_33', 'user_34', 'user_35', 'user_36', 'user_37'
+        1002, currentUser.id ?? 0, 30, 31, 32,
+        33, 34, 35, 36, 37
       ],
       rules: [
         'Paiement avant 12h chaque jour',
@@ -363,12 +363,12 @@ class TontineService {
       createdAt: DateTime.now().subtract(const Duration(days: 5)),
       currentRound: 4,
       nextContributionDate: DateTime.now().add(const Duration(hours: 18)),
-      currentWinnerId: 'user_32',
+      currentWinnerId: 32,
     );
 
     // 5. Tontine terminée avec succès - COMPLETED (organisateur)
     final completedTontine = Tontine(
-      id: 'tontine_5',
+      id: 5,
       name: 'Vacances Été 2024',
       description: 'Épargne collective pour voyage de groupe',
       imageUrl: null,
@@ -378,9 +378,9 @@ class TontineService {
       maxParticipants: 6,
       drawOrder: TontineDrawOrder.hybrid,
       penaltyPercentage: 8.0,
-      organizerId: currentUser.id,
+      organizerId: currentUser.id ?? 0,
       status: TontineStatus.completed,
-      participantIds: [currentUser.id, 'user_40', 'user_41', 'user_42', 'user_43', 'user_44'],
+      participantIds: [currentUser.id ?? 0, 40, 41, 42, 43, 44],
       rules: [
         'Paiement bi-mensuel régulier',
         'Ordre hybride (mérite + hasard)',
@@ -396,7 +396,7 @@ class TontineService {
 
     // 6. Tontine trimestrielle haut montant - ACTIVE (participant)
     final quarterlyTontine = Tontine(
-      id: 'tontine_6',
+      id: 6,
       name: 'Business Angels Dakar',
       description: 'Investissement trimestriel pour projets entrepreneuriaux',
       imageUrl: null,
@@ -406,9 +406,9 @@ class TontineService {
       maxParticipants: 4,
       drawOrder: TontineDrawOrder.merit,
       penaltyPercentage: 25.0,
-      organizerId: 'user_business_lead',
+      organizerId: 1003,
       status: TontineStatus.active,
-      participantIds: ['user_business_lead', currentUser.id, 'user_50', 'user_51'],
+      participantIds: [1003, currentUser.id ?? 0, 50, 51],
       rules: [
         'Contribution chaque début de trimestre',
         'Présentation obligatoire du projet',
@@ -419,12 +419,12 @@ class TontineService {
       createdAt: DateTime.now().subtract(const Duration(days: 50)),
       currentRound: 1,
       nextContributionDate: DateTime.now().add(const Duration(days: 60)),
-      currentWinnerId: 'user_business_lead',
+      currentWinnerId: 1003,
     );
 
     // 7. Tontine famille étendue - ACTIVE (organisateur)
     final familyTontine = Tontine(
-      id: 'tontine_7',
+      id: 7,
       name: 'Famille Diop United',
       description: 'Tontine familiale pour soutien mutuel et projets communs',
       imageUrl: null,
@@ -434,12 +434,12 @@ class TontineService {
       maxParticipants: 12,
       drawOrder: TontineDrawOrder.fixed,
       penaltyPercentage: 5.0,
-      organizerId: currentUser.id,
+      organizerId: currentUser.id ?? 0,
       status: TontineStatus.active,
       participantIds: [
-        currentUser.id, 'user_cousin1', 'user_cousin2', 'user_tante1', 'user_oncle1',
-        'user_frere1', 'user_soeur1', 'user_neveu1', 'user_niece1', 'user_cousin3',
-        'user_belle_soeur', 'user_beau_frere'
+        currentUser.id ?? 0, 101, 102, 103, 104,
+        105, 106, 107, 108, 109,
+        110, 111
       ],
       rules: [
         'Ordre basé sur l\'âge (aînés d\'abord)',
@@ -451,7 +451,7 @@ class TontineService {
       createdAt: DateTime.now().subtract(const Duration(days: 90)),
       currentRound: 6,
       nextContributionDate: DateTime.now().add(const Duration(days: 8)),
-      currentWinnerId: 'user_tante1',
+      currentWinnerId: 103,
     );
 
     _tontines.addAll([
@@ -468,54 +468,54 @@ class TontineService {
     final contributions = <Contribution>[
       // Contributions pour Entrepreneurs du Plateau (round 4)
       ...activeTontineAsOrganizer.participantIds.map((userId) => Contribution(
-        id: 'contrib_plat_${userId}_r4',
-        tontineId: activeTontineAsOrganizer.id,
+        id: userId * 10000 + 4001,
+        tontineId: activeTontineAsOrganizer.id ?? 0,
         participantId: userId,
         round: 4,
         amount: activeTontineAsOrganizer.contributionAmount,
-        dueDate: activeTontineAsOrganizer.nextContributionDate!,
-        status: userId == currentUser.id || userId == 'user_2' || userId == 'user_3' 
+        dueDate: activeTontineAsOrganizer.nextContributionDate ?? DateTime.now(),
+        status: userId == (currentUser.id ?? 0) || userId == 2 || userId == 3 
             ? ContributionStatus.paid 
             : ContributionStatus.pending,
-        paidDate: userId == currentUser.id ? DateTime.now().subtract(const Duration(hours: 6))
-                : userId == 'user_2' ? DateTime.now().subtract(const Duration(hours: 3))
-                : userId == 'user_3' ? DateTime.now().subtract(const Duration(hours: 1))
+        paidDate: userId == (currentUser.id ?? 0) ? DateTime.now().subtract(const Duration(hours: 6))
+                : userId == 2 ? DateTime.now().subtract(const Duration(hours: 3))
+                : userId == 3 ? DateTime.now().subtract(const Duration(hours: 1))
                 : null,
-        paymentReference: userId == currentUser.id ? 'WAVE789123'
-                        : userId == 'user_2' ? 'ORANGE456789'
-                        : userId == 'user_3' ? 'FREE987654'
+        paymentReference: userId == (currentUser.id ?? 0) ? 'WAVE789123'
+                        : userId == 2 ? 'ORANGE456789'
+                        : userId == 3 ? 'FREE987654'
                         : null,
       )),
 
       // Contributions pour Solidarité Femmes (round 2)
       ...activeTontineAsParticipant.participantIds.map((userId) => Contribution(
-        id: 'contrib_solid_${userId}_r2',
-        tontineId: activeTontineAsParticipant.id,
+        id: userId * 10000 + 2002,
+        tontineId: activeTontineAsParticipant.id ?? 0,
         participantId: userId,
         round: 2,
         amount: activeTontineAsParticipant.contributionAmount,
-        dueDate: activeTontineAsParticipant.nextContributionDate!,
-        status: ['user_organizer_1', currentUser.id, 'user_10', 'user_11', 'user_12'].contains(userId)
+        dueDate: activeTontineAsParticipant.nextContributionDate ?? DateTime.now(),
+        status: [1001, currentUser.id ?? 0, 10, 11, 12].contains(userId)
             ? ContributionStatus.paid 
             : ContributionStatus.pending,
-        paidDate: userId == currentUser.id ? DateTime.now().subtract(const Duration(hours: 12))
-                : ['user_organizer_1', 'user_10', 'user_11', 'user_12'].contains(userId) 
+        paidDate: userId == (currentUser.id ?? 0) ? DateTime.now().subtract(const Duration(hours: 12))
+                : [1001, 10, 11, 12].contains(userId) 
                     ? DateTime.now().subtract(Duration(hours: Random().nextInt(24) + 1))
                     : null,
-        paymentReference: userId == currentUser.id ? 'MOBICASH123'
-                        : ['user_organizer_1', 'user_10', 'user_11', 'user_12'].contains(userId)
+        paymentReference: userId == (currentUser.id ?? 0) ? 'MOBICASH123'
+                        : [1001, 10, 11, 12].contains(userId)
                             ? 'AUTO${Random().nextInt(999999)}'
                             : null,
       )),
 
       // Contributions pour Express Dakar (round 4)
       ...dailyTontine.participantIds.map((userId) => Contribution(
-        id: 'contrib_expr_${userId}_r4',
-        tontineId: dailyTontine.id,
+        id: userId * 10000 + 4004,
+        tontineId: dailyTontine.id ?? 0,
         participantId: userId,
         round: 4,
         amount: dailyTontine.contributionAmount,
-        dueDate: dailyTontine.nextContributionDate!,
+        dueDate: dailyTontine.nextContributionDate ?? DateTime.now(),
         status: ContributionStatus.paid,
         paidDate: DateTime.now().subtract(Duration(hours: Random().nextInt(6) + 1)),
         paymentReference: 'EXPR${Random().nextInt(999999)}',
@@ -523,32 +523,32 @@ class TontineService {
 
       // Contributions pour Business Angels (round 1)
       ...quarterlyTontine.participantIds.map((userId) => Contribution(
-        id: 'contrib_biz_${userId}_r1',
-        tontineId: quarterlyTontine.id,
+        id: userId * 10000 + 1006,
+        tontineId: quarterlyTontine.id ?? 0,
         participantId: userId,
         round: 1,
         amount: quarterlyTontine.contributionAmount,
-        dueDate: quarterlyTontine.nextContributionDate!,
-        status: userId == 'user_business_lead' ? ContributionStatus.paid : ContributionStatus.pending,
-        paidDate: userId == 'user_business_lead' ? DateTime.now().subtract(const Duration(days: 2)) : null,
-        paymentReference: userId == 'user_business_lead' ? 'BANK_TRANSFER_001' : null,
+        dueDate: quarterlyTontine.nextContributionDate ?? DateTime.now(),
+        status: userId == 1003 ? ContributionStatus.paid : ContributionStatus.pending,
+        paidDate: userId == 1003 ? DateTime.now().subtract(const Duration(days: 2)) : null,
+        paymentReference: userId == 1003 ? 'BANK_TRANSFER_001' : null,
       )),
 
       // Contributions pour Famille Diop (round 6)
       ...familyTontine.participantIds.map((userId) => Contribution(
-        id: 'contrib_fam_${userId}_r6',
-        tontineId: familyTontine.id,
+        id: userId * 10000 + 6007,
+        tontineId: familyTontine.id ?? 0,
         participantId: userId,
         round: 6,
         amount: familyTontine.contributionAmount,
-        dueDate: familyTontine.nextContributionDate!,
-        status: [currentUser.id, 'user_cousin1', 'user_frere1', 'user_soeur1', 'user_tante1'].contains(userId)
+        dueDate: familyTontine.nextContributionDate ?? DateTime.now(),
+        status: [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
             ? ContributionStatus.paid 
             : ContributionStatus.pending,
-        paidDate: [currentUser.id, 'user_cousin1', 'user_frere1', 'user_soeur1', 'user_tante1'].contains(userId)
+        paidDate: [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
             ? DateTime.now().subtract(Duration(days: Random().nextInt(3) + 1))
             : null,
-        paymentReference: [currentUser.id, 'user_cousin1', 'user_frere1', 'user_soeur1', 'user_tante1'].contains(userId)
+        paymentReference: [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
             ? 'FAM${Random().nextInt(999999)}'
             : null,
       )),
@@ -561,5 +561,9 @@ class TontineService {
     
     print('DEBUG TontineService: Generated ${_tontines.length} tontines for user ${currentUser.id}');
     print('DEBUG TontineService: Generated ${contributions.length} contributions');
+    print('DEBUG TontineService: Sample tontine participant IDs:');
+    for (var tontine in _tontines) {
+      print('  Tontine ${tontine.id}: ${tontine.participantIds}');
+    }
   }
 }

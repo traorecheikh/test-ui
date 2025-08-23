@@ -49,7 +49,8 @@ class ProfileScreen extends GetView<ProfileController> {
   }
 
   Widget _buildAppBar(ThemeData theme) {
-    final user = controller.currentUser.value!;
+    final user = controller.currentUser.value;
+    if (user == null) return const SliverAppBar();
     return SliverAppBar(
       expandedHeight: 240,
       pinned: false,
@@ -194,7 +195,8 @@ class ProfileScreen extends GetView<ProfileController> {
   }
 
   Widget _buildStatsSection(ThemeData theme) {
-    final user = controller.currentUser.value!;
+    final user = controller.currentUser.value;
+    if (user == null) return const SizedBox();
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -289,7 +291,8 @@ class ProfileScreen extends GetView<ProfileController> {
   }
 
   Widget _buildPersonalInfoSection(ThemeData theme) {
-    final user = controller.currentUser.value!;
+    final user = controller.currentUser.value;
+    if (user == null) return const SizedBox();
     return _buildSection(theme, 'Informations Personnelles', [
       _buildInfoTile(
         theme,
@@ -411,7 +414,8 @@ class ProfileScreen extends GetView<ProfileController> {
   }
 
   Widget _buildPreferencesSection(ThemeData theme) {
-    final user = controller.currentUser.value!;
+    final user = controller.currentUser.value;
+    if (user == null) return const SizedBox();
     return _buildSection(theme, 'Préférences', [
       SwitchListTile(
         title: const Text('Mode sombre'),

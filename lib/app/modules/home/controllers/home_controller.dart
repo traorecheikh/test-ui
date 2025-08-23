@@ -20,7 +20,7 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     currentUser.value = AppUser(
-      id: '0',
+      id: 0,
       name: "cheikh",
       phone: "781706184",
       createdAt: DateTime.parse('2025-10-02'),
@@ -39,7 +39,9 @@ class HomeController extends GetxController {
   void _initializeAndLoadData() async {
     // Initialiser StorageService et sauvegarder l'utilisateur
     await StorageService.init();
-    await StorageService.saveUser(currentUser.value!);
+    if (currentUser.value != null) {
+      await StorageService.saveUser(currentUser.value!);
+    }
     
     _loadData();
   }
@@ -50,18 +52,18 @@ class HomeController extends GetxController {
     // S'assurer que le TontineService est initialisé
     await TontineService.init();
     
-    currentUser.value = StorageService.getCurrentUser();
-    print('DEBUG: Current user from storage: ${currentUser.value?.id}');
+    // Keep using the same user instance, don't override from storage
+    print('DEBUG: Current user ID: ${currentUser.value?.id}');
     
     final previousCount = userTontines.length;
-    if (currentUser.value != null) {
+    if (currentUser.value?.id != null) {
       userTontines.value = TontineService.getUserTontines(
-        currentUser.value!.id,
+        currentUser.value!.id!,
       );
-      print('DEBUG: Found ${userTontines.length} tontines for user ${currentUser.value!.id}');
+      print('DEBUG: Found ${userTontines.length} tontines for user ${currentUser.value?.id}');
     } else {
       userTontines.clear();
-      print('DEBUG: No current user found');
+      print('DEBUG: No current user found or user ID is null - currentUser: ${currentUser.value?.id}');
     }
     isLoading.value = false;
     if (previousCount == 0 && userTontines.isNotEmpty) {
@@ -75,36 +77,9 @@ class HomeController extends GetxController {
         }
       });
     }
-    currentUser.value = AppUser(
-      id: '0',
-      name: "cheikh",
-      phone: "781706184",
-      createdAt: DateTime.parse('2025-10-02'),
-      preferences: UserPreferences(
-        darkMode: false,
-        language: 'fr',
-        soundEnabled: true,
-        notificationsEnabled: true,
-        currencyFormat: 'FCFA',
-      ),
-    );
   }
 
   String getTotalSavings() {
-    currentUser.value = AppUser(
-      id: '0',
-      name: "cheikh",
-      phone: "781706184",
-      createdAt: DateTime.parse('2025-10-02'),
-      preferences: UserPreferences(
-        darkMode: false,
-        language: 'fr',
-        soundEnabled: true,
-        notificationsEnabled: true,
-        currencyFormat: 'FCFA',
-      ),
-    );
-
     double total = 0;
     for (final tontine in userTontines) {
       total += tontine.contributionAmount * tontine.participantIds.length;

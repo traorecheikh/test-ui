@@ -10,7 +10,7 @@ import '../../../widgets/modern_pot_visual.dart';
 import '../controllers/tontine_detail_controller.dart';
 
 class TontineDetailScreen extends GetView<TontineDetailController> {
-  final String tontineId;
+  final int tontineId;
   const TontineDetailScreen({super.key, required this.tontineId});
 
   @override
@@ -67,7 +67,8 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
   }
 
   Widget _buildTerangaHeroHeader(ThemeData theme) {
-    final tontine = controller.tontine.value!;
+    final tontine = controller.tontine.value;
+    if (tontine == null) return const SizedBox();
     final paidCount = controller.currentRoundContributions
         .where((c) => c.isPaid)
         .length;
@@ -357,7 +358,8 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
   }
 
   Widget _buildCurrentRoundSection(ThemeData theme) {
-    final tontine = controller.tontine.value!;
+    final tontine = controller.tontine.value;
+    if (tontine == null) return const SizedBox();
     final paidContributions = controller.currentRoundContributions
         .where((c) => c.isPaid)
         .length;
@@ -494,7 +496,8 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
   }
 
   Widget _buildTontineInfoSection(ThemeData theme) {
-    final tontine = controller.tontine.value!;
+    final tontine = controller.tontine.value;
+    if (tontine == null) return const SizedBox();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -684,7 +687,8 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
 
   Widget _buildParticipantsTab(BuildContext context) {
     final theme = Theme.of(context);
-    final tontine = controller.tontine.value!;
+    final tontine = controller.tontine.value;
+    if (tontine == null) return const SizedBox();
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -775,7 +779,8 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
 
   Widget _buildHistoryTab(BuildContext context) {
     final theme = Theme.of(context);
-    final tontine = controller.tontine.value!;
+    final tontine = controller.tontine.value;
+    if (tontine == null) return const SizedBox();
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -872,7 +877,8 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
 
   Widget _buildSettingsTab(BuildContext context) {
     final theme = Theme.of(context);
-    final tontine = controller.tontine.value!;
+    final tontine = controller.tontine.value;
+    if (tontine == null) return const SizedBox();
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -965,7 +971,8 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
   // Missing methods implementation with Senegalese cultural design
 
   Widget _buildProgressCardRow(ThemeData theme) {
-    final tontine = controller.tontine.value!;
+    final tontine = controller.tontine.value;
+    if (tontine == null) return const SizedBox();
     final paidCount = controller.currentRoundContributions
         .where((c) => c.isPaid)
         .length;
@@ -1391,7 +1398,8 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
   }
 
   Widget _buildTerangaFloatingAction(ThemeData theme) {
-    final tontine = controller.tontine.value!;
+    final tontine = controller.tontine.value;
+    if (tontine == null) return const SizedBox();
     final hasUnpaidContribution = controller.currentRoundContributions
         .any((c) => !c.isPaid && c.participantId == controller.currentUserId);
 

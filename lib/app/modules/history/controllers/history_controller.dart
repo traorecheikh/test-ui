@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 enum TransactionType { contribution, withdrawal, penalty, join, creation }
 
 class HistoryItem {
-  final String id;
+  final int? id;
   final String title;
   final String subtitle;
   final double amount;
@@ -93,7 +93,7 @@ class HistoryController extends GetxController {
     // Mock data - replace with API call
     _historyItems.assignAll([
       HistoryItem(
-        id: '1',
+        id: 1,
         title: 'Cotisation Tontine Famille',
         subtitle: 'Tour 5/12',
         amount: -25000,
@@ -101,7 +101,7 @@ class HistoryController extends GetxController {
         type: TransactionType.contribution,
       ),
       HistoryItem(
-        id: '2',
+        id: 2,
         title: 'Gain du tour',
         subtitle: 'Tontine Amis',
         amount: 300000,
@@ -109,7 +109,7 @@ class HistoryController extends GetxController {
         type: TransactionType.withdrawal,
       ),
       HistoryItem(
-        id: '3',
+        id: 3,
         title: 'Pénalité de retard',
         subtitle: 'Tontine Famille',
         amount: -1000,
@@ -117,7 +117,7 @@ class HistoryController extends GetxController {
         type: TransactionType.penalty,
       ),
       HistoryItem(
-        id: '4',
+        id: 4,
         title: 'Cotisation Tontine Travail',
         subtitle: 'Tour 3/10',
         date: DateTime.now().subtract(const Duration(days: 3)),
@@ -125,7 +125,7 @@ class HistoryController extends GetxController {
         type: TransactionType.contribution,
       ),
       HistoryItem(
-        id: '5',
+        id: 5,
         title: 'Rejoint Tontine Vacances',
         subtitle: 'Frais d\'entrée',
         amount: -5000,
@@ -133,7 +133,7 @@ class HistoryController extends GetxController {
         type: TransactionType.join,
       ),
       HistoryItem(
-        id: '6',
+        id: 6,
         title: 'Cotisation Tontine Famille',
         subtitle: 'Tour 4/12',
         amount: -25000,

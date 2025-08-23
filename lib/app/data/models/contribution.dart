@@ -1,7 +1,7 @@
 class Contribution {
-  final String id;
-  final String tontineId;
-  final String participantId;
+  final int? id;
+  final int tontineId;
+  final int participantId;
   final int round;
   final double amount;
   final DateTime dueDate;
@@ -30,9 +30,9 @@ class Contribution {
   double get totalAmount => amount + (penaltyAmount ?? 0);
   
   Contribution copyWith({
-    String? id,
-    String? tontineId,
-    String? participantId,
+    int? id,
+    int? tontineId,
+    int? participantId,
     int? round,
     double? amount,
     DateTime? dueDate,
@@ -68,8 +68,8 @@ enum ContributionStatus {
 
 class TontineRound {
   final int roundNumber;
-  final String tontineId;
-  final String winnerId;
+  final int tontineId;
+  final int winnerId;
   final double totalAmount;
   final DateTime distributionDate;
   final List<Contribution> contributions;
@@ -93,8 +93,8 @@ class TontineRound {
   
   TontineRound copyWith({
     int? roundNumber,
-    String? tontineId,
-    String? winnerId,
+    int? tontineId,
+    int? winnerId,
     double? totalAmount,
     DateTime? distributionDate,
     List<Contribution>? contributions,

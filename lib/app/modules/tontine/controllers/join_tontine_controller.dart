@@ -96,9 +96,18 @@ class JoinTontineController extends GetxController {
     }
     isJoining.value = true;
     try {
+      if (tontine.id == null || currentUser.id == null) {
+        Get.snackbar(
+          'Erreur',
+          'Données manquantes pour rejoindre la tontine',
+          backgroundColor: Get.theme.colorScheme.error,
+          colorText: Get.theme.colorScheme.onError,
+        );
+        return;
+      }
       final success = await TontineService.joinTontine(
-        tontine.id,
-        currentUser.id,
+        tontine.id!,
+        currentUser.id!,
       );
       if (success) {
         Get.snackbar(

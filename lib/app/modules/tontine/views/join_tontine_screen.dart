@@ -38,7 +38,7 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
                 _buildTontinePreview(theme),
                 const SizedBox(height: 32),
               ],
-              if (controller.searchError!.value.isNotEmpty)
+              if (controller.searchError?.value.isNotEmpty == true)
                 _buildErrorMessage(theme),
               const Spacer(),
               _buildInstructions(theme),
@@ -198,7 +198,8 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
   }
 
   Widget _buildTontineDetails(ThemeData theme) {
-    final tontine = controller.foundTontine.value!;
+    final tontine = controller.foundTontine.value;
+    if (tontine == null) return const SizedBox();
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -322,7 +323,7 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
   Widget _buildErrorMessage(ThemeData theme) {
     return Obx(() {
       final error = controller.searchError?.value;
-      if (error!.isEmpty) return const SizedBox.shrink();
+      if (error?.isEmpty == true) return const SizedBox.shrink();
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -339,7 +340,7 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                error,
+                error ?? '',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
                 ),

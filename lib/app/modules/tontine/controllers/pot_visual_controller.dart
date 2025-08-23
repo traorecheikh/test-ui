@@ -29,7 +29,7 @@ class PotVisualController extends GetxController
   late Animation<double> coinAnimation;
   
   Timer? _progressTimer;
-  String tontineId = '';
+  int? tontineId;
 
   @override
   void onInit() {
@@ -38,7 +38,7 @@ class PotVisualController extends GetxController
     // Get tontine ID from arguments
     final args = Get.arguments;
     if (args is Map && args.containsKey('tontineId')) {
-      tontineId = args['tontineId'];
+      tontineId = args['tontineId'] as int?;
     }
     
     _initializeAnimations();
@@ -87,9 +87,14 @@ class PotVisualController extends GetxController
   void _loadTontineData() {
     isLoading.value = true;
     
+    if (tontineId == null) {
+      _showError('ID tontine manquant');
+      return;
+    }
+    
     try {
       // Load tontine data
-      final tontineData = TontineService.getTontine(tontineId);
+      final tontineData = TontineService.getTontine(tontineId!);
       if (tontineData == null) {
         _showError('Tontine non trouvée');
         return;
@@ -99,7 +104,7 @@ class PotVisualController extends GetxController
       
       // Calculate progress
       final contributions = TontineService.getTontineContributions(
-        tontineId,
+        tontineId!,
         round: tontineData.currentRound,
       );
       
@@ -149,6 +154,7 @@ class PotVisualController extends GetxController
     
     // Simulate adding a contribution
     final newPaid = math.min(paidParticipants.value + 1, totalParticipants.value);
+    if (tontine.value == null) return;
     final newAmount = newPaid * tontine.value!.contributionAmount;
     final newProgress = newAmount / targetAmount.value;
     
