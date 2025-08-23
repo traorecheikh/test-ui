@@ -23,14 +23,24 @@ class StorageService {
   // User management
   /// Persists the current user in Hive.
   static Future<void> saveUser(AppUser user) async {
+    if (_userBox == null) {
+      print('ERROR: User box is not initialized!');
+      return;
+    }
     await _userBox?.put('current_user', user);
+    print('User saved: ${user.name}');
+    print('User box keys after save: \\${_userBox?.keys}');
   }
 
   /// Retrieves the current user from Hive.
   static AppUser? getCurrentUser() {
+    if (_userBox == null) {
+      print('ERROR: User box is not initialized!');
+      return null;
+    }
     final user = _userBox?.get('current_user');
-    if (user == null) return null;
-    // Defensive type check for legacy/corrupted data
+    print('Loaded user from box: \\${user?.name}');
+    return user;
   }
 
   // Tontine management

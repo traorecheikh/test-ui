@@ -26,6 +26,7 @@ class HomeController extends GetxController {
     await StorageService.init();
     var user = StorageService.getCurrentUser();
     if (user == null) {
+      print('No user found, creating a new one.');
       user = AppUser(
         id: TontineService.generateId(),
         name: "Cheikh",
@@ -42,7 +43,6 @@ class HomeController extends GetxController {
       await StorageService.saveUser(user);
     }
 
-    await TontineService.init();
     currentUser.value = user;
     _loadData();
   }
@@ -50,6 +50,7 @@ class HomeController extends GetxController {
   void _loadData() async {
     isLoading.value = true;
 
+    await TontineService.init();
     final previousCount = userTontines.length;
     if (currentUser.value != null) {
       userTontines.value = TontineService.getUserTontines(

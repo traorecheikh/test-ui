@@ -4,15 +4,37 @@ import 'package:snt_ui_test/app/services/storage_service.dart';
 
 import '../data/models/contribution.dart';
 import '../data/models/tontine.dart';
+import '../data/models/user.dart';
 
 class TontineService {
   static List<Tontine> _tontines = [];
   static List<Contribution> _contributions = [];
+  static AppUser? _currentUser;
 
   static Future<void> init() async {
+    _currentUser = StorageService.getCurrentUser();
+    if (_currentUser == null) {
+      final newUser = AppUser(
+        id: DateTime.now().millisecondsSinceEpoch,
+        name: 'Cheikh',
+        phone: '',
+        createdAt: DateTime.now(),
+        level: UserLevel.regular,
+        sunuPoints: 0,
+        reliabilityScore: 1.0,
+        tontineIds: [],
+        organizedTontineIds: [],
+        preferences: UserPreferences(),
+        achievements: [],
+      );
+      await StorageService.saveUser(newUser);
+      _currentUser = StorageService.getCurrentUser();
+    }
     _tontines = StorageService.getTontines();
     _contributions = StorageService.getContributions();
-    await _generateSampleData();
+    if (_currentUser != null) {
+      await _generateSampleData();
+    }
   }
 
   // Create a new tontine
@@ -180,7 +202,16 @@ class TontineService {
 
   // Private helper methods
   static int generateId() {
-    return DateTime.now().millisecondsSinceEpoch + Random().nextInt(1000);
+    // Using a smaller random component to reduce chances of overflow with epoch,
+    // but this is still not ideal for Hive keys if they need to be small integers.
+    // Consider a robust unique ID generation strategy if this ID is a Hive key.
+    // For now, let's cap the random part to ensure it's less likely to overflow
+    // when added to millisecondsSinceEpoch, assuming millisecondsSinceEpoch
+    // itself fits within a significant portion of the 32-bit range.
+    // A better solution would be to not use this as a direct Hive key if Hive
+    // has strict 0-0xFFFFFFFF limitations for *all* integer keys.
+    return (DateTime.now().millisecondsSinceEpoch % 0xFFFFFFFF) +
+        Random().nextInt(1000);
   }
 
   static String _generateInviteCode() {
@@ -218,7 +249,7 @@ class TontineService {
     final contributions = tontine.participantIds
         .map(
           (participantId) => Contribution(
-            id: generateId(),
+            id: generateId(), // This might still be an issue if Hive keys are strictly 0-0xFFFFFFFF
             tontineId: tontine.id ?? 0,
             participantId: participantId,
             round: round,
@@ -240,15 +271,11 @@ class TontineService {
     _contributions.clear();
 
     final currentUser = StorageService.getCurrentUser();
-    print(
-      'DEBUG TontineService: Current user from storage: ${currentUser?.id}',
-    );
     if (currentUser == null) {
-      print(
-        'DEBUG TontineService: No current user found, skipping sample data generation',
-      );
       return;
     }
+
+    int nextContributionId = 1;
 
     // 1. Tontine où l'utilisateur est organisateur - ACTIVE avec progression avancée
     final activeTontineAsOrganizer = Tontine(
@@ -502,7 +529,7 @@ class TontineService {
       // Contributions pour Entrepreneurs du Plateau (round 4)
       ...activeTontineAsOrganizer.participantIds.map(
         (userId) => Contribution(
-          id: userId * 10000 + 4001,
+          id: nextContributionId++,
           tontineId: activeTontineAsOrganizer.id ?? 0,
           participantId: userId,
           round: 4,
@@ -532,7 +559,7 @@ class TontineService {
       // Contributions pour Solidarité Femmes (round 2)
       ...activeTontineAsParticipant.participantIds.map(
         (userId) => Contribution(
-          id: userId * 10000 + 2002,
+          id: nextContributionId++,
           tontineId: activeTontineAsParticipant.id ?? 0,
           participantId: userId,
           round: 2,
@@ -560,7 +587,7 @@ class TontineService {
       // Contributions pour Express Dakar (round 4)
       ...dailyTontine.participantIds.map(
         (userId) => Contribution(
-          id: userId * 10000 + 4004,
+          id: nextContributionId++,
           tontineId: dailyTontine.id ?? 0,
           participantId: userId,
           round: 4,
@@ -577,7 +604,7 @@ class TontineService {
       // Contributions pour Business Angels (round 1)
       ...quarterlyTontine.participantIds.map(
         (userId) => Contribution(
-          id: userId * 10000 + 1006,
+          id: nextContributionId++,
           tontineId: quarterlyTontine.id ?? 0,
           participantId: userId,
           round: 1,
@@ -596,7 +623,7 @@ class TontineService {
       // Contributions pour Famille Diop (round 6)
       ...familyTontine.participantIds.map(
         (userId) => Contribution(
-          id: userId * 10000 + 6007,
+          id: nextContributionId++,
           tontineId: familyTontine.id ?? 0,
           participantId: userId,
           round: 6,
