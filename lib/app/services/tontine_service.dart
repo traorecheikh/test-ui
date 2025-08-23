@@ -30,7 +30,7 @@ class TontineService {
     List<String> rules = const [],
   }) async {
     final tontine = Tontine(
-      id: _generateId(),
+      id: generateId(),
       name: name,
       description: description,
       imageUrl: imageUrl,
@@ -179,9 +179,8 @@ class TontineService {
   }
 
   // Private helper methods
-  static int _generateId() {
-    return DateTime.now().millisecondsSinceEpoch +
-        Random().nextInt(1000);
+  static int generateId() {
+    return DateTime.now().millisecondsSinceEpoch + Random().nextInt(1000);
   }
 
   static String _generateInviteCode() {
@@ -219,7 +218,7 @@ class TontineService {
     final contributions = tontine.participantIds
         .map(
           (participantId) => Contribution(
-            id: _generateId(),
+            id: generateId(),
             tontineId: tontine.id ?? 0,
             participantId: participantId,
             round: round,
@@ -241,9 +240,13 @@ class TontineService {
     _contributions.clear();
 
     final currentUser = StorageService.getCurrentUser();
-    print('DEBUG TontineService: Current user from storage: ${currentUser?.id}');
+    print(
+      'DEBUG TontineService: Current user from storage: ${currentUser?.id}',
+    );
     if (currentUser == null) {
-      print('DEBUG TontineService: No current user found, skipping sample data generation');
+      print(
+        'DEBUG TontineService: No current user found, skipping sample data generation',
+      );
       return;
     }
 
@@ -251,7 +254,8 @@ class TontineService {
     final activeTontineAsOrganizer = Tontine(
       id: 1,
       name: 'Entrepreneurs du Plateau',
-      description: 'Tontine mensuelle pour entrepreneurs ambitieux du quartier Plateau',
+      description:
+          'Tontine mensuelle pour entrepreneurs ambitieux du quartier Plateau',
       imageUrl: null,
       contributionAmount: 75000,
       frequency: TontineFrequency.monthly,
@@ -290,9 +294,21 @@ class TontineService {
       organizerId: 1001,
       status: TontineStatus.active,
       participantIds: [
-        1001, currentUser.id ?? 0, 10, 11, 12, 
-        13, 14, 15, 16, 17, 18,
-        19, 20, 21, 22
+        1001,
+        currentUser.id ?? 0,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
       ],
       rules: [
         'Paiement chaque lundi avant 18h',
@@ -350,8 +366,16 @@ class TontineService {
       organizerId: 1002,
       status: TontineStatus.active,
       participantIds: [
-        1002, currentUser.id ?? 0, 30, 31, 32,
-        33, 34, 35, 36, 37
+        1002,
+        currentUser.id ?? 0,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
       ],
       rules: [
         'Paiement avant 12h chaque jour',
@@ -437,9 +461,18 @@ class TontineService {
       organizerId: currentUser.id ?? 0,
       status: TontineStatus.active,
       participantIds: [
-        currentUser.id ?? 0, 101, 102, 103, 104,
-        105, 106, 107, 108, 109,
-        110, 111
+        currentUser.id ?? 0,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
       ],
       rules: [
         'Ordre basé sur l\'âge (aînés d\'abord)',
@@ -467,100 +500,133 @@ class TontineService {
     // Create realistic sample contributions for multiple tontines
     final contributions = <Contribution>[
       // Contributions pour Entrepreneurs du Plateau (round 4)
-      ...activeTontineAsOrganizer.participantIds.map((userId) => Contribution(
-        id: userId * 10000 + 4001,
-        tontineId: activeTontineAsOrganizer.id ?? 0,
-        participantId: userId,
-        round: 4,
-        amount: activeTontineAsOrganizer.contributionAmount,
-        dueDate: activeTontineAsOrganizer.nextContributionDate ?? DateTime.now(),
-        status: userId == (currentUser.id ?? 0) || userId == 2 || userId == 3 
-            ? ContributionStatus.paid 
-            : ContributionStatus.pending,
-        paidDate: userId == (currentUser.id ?? 0) ? DateTime.now().subtract(const Duration(hours: 6))
-                : userId == 2 ? DateTime.now().subtract(const Duration(hours: 3))
-                : userId == 3 ? DateTime.now().subtract(const Duration(hours: 1))
-                : null,
-        paymentReference: userId == (currentUser.id ?? 0) ? 'WAVE789123'
-                        : userId == 2 ? 'ORANGE456789'
-                        : userId == 3 ? 'FREE987654'
-                        : null,
-      )),
+      ...activeTontineAsOrganizer.participantIds.map(
+        (userId) => Contribution(
+          id: userId * 10000 + 4001,
+          tontineId: activeTontineAsOrganizer.id ?? 0,
+          participantId: userId,
+          round: 4,
+          amount: activeTontineAsOrganizer.contributionAmount,
+          dueDate:
+              activeTontineAsOrganizer.nextContributionDate ?? DateTime.now(),
+          status: userId == (currentUser.id ?? 0) || userId == 2 || userId == 3
+              ? ContributionStatus.paid
+              : ContributionStatus.pending,
+          paidDate: userId == (currentUser.id ?? 0)
+              ? DateTime.now().subtract(const Duration(hours: 6))
+              : userId == 2
+              ? DateTime.now().subtract(const Duration(hours: 3))
+              : userId == 3
+              ? DateTime.now().subtract(const Duration(hours: 1))
+              : null,
+          paymentReference: userId == (currentUser.id ?? 0)
+              ? 'WAVE789123'
+              : userId == 2
+              ? 'ORANGE456789'
+              : userId == 3
+              ? 'FREE987654'
+              : null,
+        ),
+      ),
 
       // Contributions pour Solidarité Femmes (round 2)
-      ...activeTontineAsParticipant.participantIds.map((userId) => Contribution(
-        id: userId * 10000 + 2002,
-        tontineId: activeTontineAsParticipant.id ?? 0,
-        participantId: userId,
-        round: 2,
-        amount: activeTontineAsParticipant.contributionAmount,
-        dueDate: activeTontineAsParticipant.nextContributionDate ?? DateTime.now(),
-        status: [1001, currentUser.id ?? 0, 10, 11, 12].contains(userId)
-            ? ContributionStatus.paid 
-            : ContributionStatus.pending,
-        paidDate: userId == (currentUser.id ?? 0) ? DateTime.now().subtract(const Duration(hours: 12))
-                : [1001, 10, 11, 12].contains(userId) 
-                    ? DateTime.now().subtract(Duration(hours: Random().nextInt(24) + 1))
-                    : null,
-        paymentReference: userId == (currentUser.id ?? 0) ? 'MOBICASH123'
-                        : [1001, 10, 11, 12].contains(userId)
-                            ? 'AUTO${Random().nextInt(999999)}'
-                            : null,
-      )),
+      ...activeTontineAsParticipant.participantIds.map(
+        (userId) => Contribution(
+          id: userId * 10000 + 2002,
+          tontineId: activeTontineAsParticipant.id ?? 0,
+          participantId: userId,
+          round: 2,
+          amount: activeTontineAsParticipant.contributionAmount,
+          dueDate:
+              activeTontineAsParticipant.nextContributionDate ?? DateTime.now(),
+          status: [1001, currentUser.id ?? 0, 10, 11, 12].contains(userId)
+              ? ContributionStatus.paid
+              : ContributionStatus.pending,
+          paidDate: userId == (currentUser.id ?? 0)
+              ? DateTime.now().subtract(const Duration(hours: 12))
+              : [1001, 10, 11, 12].contains(userId)
+              ? DateTime.now().subtract(
+                  Duration(hours: Random().nextInt(24) + 1),
+                )
+              : null,
+          paymentReference: userId == (currentUser.id ?? 0)
+              ? 'MOBICASH123'
+              : [1001, 10, 11, 12].contains(userId)
+              ? 'AUTO${Random().nextInt(999999)}'
+              : null,
+        ),
+      ),
 
       // Contributions pour Express Dakar (round 4)
-      ...dailyTontine.participantIds.map((userId) => Contribution(
-        id: userId * 10000 + 4004,
-        tontineId: dailyTontine.id ?? 0,
-        participantId: userId,
-        round: 4,
-        amount: dailyTontine.contributionAmount,
-        dueDate: dailyTontine.nextContributionDate ?? DateTime.now(),
-        status: ContributionStatus.paid,
-        paidDate: DateTime.now().subtract(Duration(hours: Random().nextInt(6) + 1)),
-        paymentReference: 'EXPR${Random().nextInt(999999)}',
-      )),
+      ...dailyTontine.participantIds.map(
+        (userId) => Contribution(
+          id: userId * 10000 + 4004,
+          tontineId: dailyTontine.id ?? 0,
+          participantId: userId,
+          round: 4,
+          amount: dailyTontine.contributionAmount,
+          dueDate: dailyTontine.nextContributionDate ?? DateTime.now(),
+          status: ContributionStatus.paid,
+          paidDate: DateTime.now().subtract(
+            Duration(hours: Random().nextInt(6) + 1),
+          ),
+          paymentReference: 'EXPR${Random().nextInt(999999)}',
+        ),
+      ),
 
       // Contributions pour Business Angels (round 1)
-      ...quarterlyTontine.participantIds.map((userId) => Contribution(
-        id: userId * 10000 + 1006,
-        tontineId: quarterlyTontine.id ?? 0,
-        participantId: userId,
-        round: 1,
-        amount: quarterlyTontine.contributionAmount,
-        dueDate: quarterlyTontine.nextContributionDate ?? DateTime.now(),
-        status: userId == 1003 ? ContributionStatus.paid : ContributionStatus.pending,
-        paidDate: userId == 1003 ? DateTime.now().subtract(const Duration(days: 2)) : null,
-        paymentReference: userId == 1003 ? 'BANK_TRANSFER_001' : null,
-      )),
+      ...quarterlyTontine.participantIds.map(
+        (userId) => Contribution(
+          id: userId * 10000 + 1006,
+          tontineId: quarterlyTontine.id ?? 0,
+          participantId: userId,
+          round: 1,
+          amount: quarterlyTontine.contributionAmount,
+          dueDate: quarterlyTontine.nextContributionDate ?? DateTime.now(),
+          status: userId == 1003
+              ? ContributionStatus.paid
+              : ContributionStatus.pending,
+          paidDate: userId == 1003
+              ? DateTime.now().subtract(const Duration(days: 2))
+              : null,
+          paymentReference: userId == 1003 ? 'BANK_TRANSFER_001' : null,
+        ),
+      ),
 
       // Contributions pour Famille Diop (round 6)
-      ...familyTontine.participantIds.map((userId) => Contribution(
-        id: userId * 10000 + 6007,
-        tontineId: familyTontine.id ?? 0,
-        participantId: userId,
-        round: 6,
-        amount: familyTontine.contributionAmount,
-        dueDate: familyTontine.nextContributionDate ?? DateTime.now(),
-        status: [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
-            ? ContributionStatus.paid 
-            : ContributionStatus.pending,
-        paidDate: [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
-            ? DateTime.now().subtract(Duration(days: Random().nextInt(3) + 1))
-            : null,
-        paymentReference: [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
-            ? 'FAM${Random().nextInt(999999)}'
-            : null,
-      )),
+      ...familyTontine.participantIds.map(
+        (userId) => Contribution(
+          id: userId * 10000 + 6007,
+          tontineId: familyTontine.id ?? 0,
+          participantId: userId,
+          round: 6,
+          amount: familyTontine.contributionAmount,
+          dueDate: familyTontine.nextContributionDate ?? DateTime.now(),
+          status: [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
+              ? ContributionStatus.paid
+              : ContributionStatus.pending,
+          paidDate: [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
+              ? DateTime.now().subtract(Duration(days: Random().nextInt(3) + 1))
+              : null,
+          paymentReference:
+              [currentUser.id ?? 0, 101, 105, 106, 103].contains(userId)
+              ? 'FAM${Random().nextInt(999999)}'
+              : null,
+        ),
+      ),
     ];
 
     _contributions.addAll(contributions);
 
     await StorageService.saveTontines(_tontines);
     await StorageService.saveContributions(_contributions);
-    
-    print('DEBUG TontineService: Generated ${_tontines.length} tontines for user ${currentUser.id}');
-    print('DEBUG TontineService: Generated ${contributions.length} contributions');
+
+    print(
+      'DEBUG TontineService: Generated ${_tontines.length} tontines for user ${currentUser.id}',
+    );
+    print(
+      'DEBUG TontineService: Generated ${contributions.length} contributions',
+    );
     print('DEBUG TontineService: Sample tontine participant IDs:');
     for (var tontine in _tontines) {
       print('  Tontine ${tontine.id}: ${tontine.participantIds}');

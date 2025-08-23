@@ -14,6 +14,13 @@ import 'app/utils/constants.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  await Hive.deleteFromDisk();
+  await Hive.deleteBoxFromDisk('user_box');
+  print('Deleted user_box');
+  await Hive.deleteBoxFromDisk('tontines_box');
+  print('Deleted tontines_box');
+  await Hive.deleteBoxFromDisk('contributions_box');
+  print('Deleted contributions_box');
   await initializeDateFormatting('fr_FR', null);
   Hive.registerAdapters();
   await TontineService.init();

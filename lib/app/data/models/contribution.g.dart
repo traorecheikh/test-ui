@@ -17,9 +17,9 @@ class ContributionAdapter extends TypeAdapter<Contribution> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Contribution(
-      id: fields[0] as String,
-      tontineId: fields[1] as String,
-      participantId: fields[2] as String,
+      id: (fields[0] as num).toInt(),
+      tontineId: (fields[1] as num).toInt(),
+      participantId: (fields[2] as num).toInt(),
       round: (fields[3] as num).toInt(),
       amount: (fields[4] as num).toDouble(),
       dueDate: fields[5] as DateTime,

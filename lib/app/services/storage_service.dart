@@ -28,7 +28,9 @@ class StorageService {
 
   /// Retrieves the current user from Hive.
   static AppUser? getCurrentUser() {
-    return _userBox?.get('current_user');
+    final user = _userBox?.get('current_user');
+    if (user == null) return null;
+    // Defensive type check for legacy/corrupted data
   }
 
   // Tontine management

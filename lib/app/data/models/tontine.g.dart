@@ -17,7 +17,7 @@ class TontineAdapter extends TypeAdapter<Tontine> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Tontine(
-      id: fields[0] as String,
+      id: (fields[0] as num).toInt(),
       name: fields[1] as String,
       description: fields[2] as String,
       imageUrl: fields[3] as String?,
@@ -28,15 +28,15 @@ class TontineAdapter extends TypeAdapter<Tontine> {
       maxParticipants: (fields[8] as num).toInt(),
       drawOrder: fields[9] as TontineDrawOrder,
       penaltyPercentage: (fields[10] as num).toDouble(),
-      organizerId: fields[11] as String,
+      organizerId: (fields[11] as num).toInt(),
       status: fields[12] as TontineStatus,
-      participantIds: (fields[13] as List).cast<String>(),
+      participantIds: (fields[13] as List).cast<int>(),
       rules: (fields[14] as List).cast<String>(),
       inviteCode: fields[15] as String,
       createdAt: fields[16] as DateTime,
       currentRound: fields[17] == null ? 0 : (fields[17] as num).toInt(),
       nextContributionDate: fields[18] as DateTime?,
-      currentWinnerId: fields[19] as String?,
+      currentWinnerId: (fields[19] as num?)?.toInt(),
     );
   }
 

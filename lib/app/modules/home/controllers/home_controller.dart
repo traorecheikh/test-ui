@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:snt_ui_test/app/routes/app_pages.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../data/models/tontine.dart';
 import '../../../data/models/user.dart';
@@ -28,9 +27,9 @@ class HomeController extends GetxController {
     var user = StorageService.getCurrentUser();
     if (user == null) {
       user = AppUser(
-        id: const Uuid().v4(),
-        name: "New User",
-        phone: "000000000",
+        id: TontineService.generateId(),
+        name: "Cheikh",
+        phone: "781706184",
         createdAt: DateTime.now(),
         preferences: UserPreferences(
           darkMode: false,
@@ -42,13 +41,14 @@ class HomeController extends GetxController {
       );
       await StorageService.saveUser(user);
     }
+
+    await TontineService.init();
     currentUser.value = user;
     _loadData();
   }
 
   void _loadData() async {
     isLoading.value = true;
-    await TontineService.init();
 
     final previousCount = userTontines.length;
     if (currentUser.value != null) {

@@ -5,7 +5,7 @@ part 'tontine.g.dart';
 @HiveType(typeId: 3)
 class Tontine {
   @HiveField(0)
-  final String id;
+  final int id;
   @HiveField(1)
   final String name;
   @HiveField(2)
@@ -27,11 +27,11 @@ class Tontine {
   @HiveField(10)
   final double penaltyPercentage;
   @HiveField(11)
-  final String organizerId;
+  final int organizerId;
   @HiveField(12)
   final TontineStatus status;
   @HiveField(13)
-  final List<String> participantIds;
+  final List<int> participantIds;
   @HiveField(14)
   final List<String> rules;
   @HiveField(15)
@@ -43,7 +43,7 @@ class Tontine {
   @HiveField(18)
   final DateTime? nextContributionDate;
   @HiveField(19)
-  final String? currentWinnerId;
+  final int? currentWinnerId;
 
   const Tontine({
     required this.id,
@@ -83,7 +83,7 @@ class Tontine {
   get members => participantIds.length;
 
   Tontine copyWith({
-    String? id,
+    int? id,
     String? name,
     String? description,
     String? imageUrl,
@@ -94,15 +94,15 @@ class Tontine {
     int? maxParticipants,
     TontineDrawOrder? drawOrder,
     double? penaltyPercentage,
-    String? organizerId,
+    int? organizerId,
     TontineStatus? status,
-    List<String>? participantIds,
+    List<int>? participantIds,
     List<String>? rules,
     String? inviteCode,
     DateTime? createdAt,
     int? currentRound,
     DateTime? nextContributionDate,
-    String? currentWinnerId,
+    int? currentWinnerId,
   }) => Tontine(
     id: id ?? this.id,
     name: name ?? this.name,

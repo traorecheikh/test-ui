@@ -5,7 +5,7 @@ part 'user.g.dart';
 @HiveType(typeId: 10)
 class AppUser {
   @HiveField(0)
-  final String id;
+  final int id;
   @HiveField(1)
   final String name;
   @HiveField(2)
@@ -23,9 +23,9 @@ class AppUser {
   @HiveField(8)
   final double reliabilityScore;
   @HiveField(9)
-  final List<String> tontineIds;
+  final List<int> tontineIds;
   @HiveField(10)
-  final List<String> organizedTontineIds;
+  final List<int> organizedTontineIds;
   @HiveField(11)
   final UserPreferences preferences;
   @HiveField(12)
@@ -51,7 +51,7 @@ class AppUser {
   int get totalTontines => tontineIds.length;
 
   AppUser copyWith({
-    String? id,
+    int? id,
     String? name,
     String? phone,
     String? email,
@@ -60,8 +60,8 @@ class AppUser {
     UserLevel? level,
     int? sunuPoints,
     double? reliabilityScore,
-    List<String>? tontineIds,
-    List<String>? organizedTontineIds,
+    List<int>? tontineIds,
+    List<int>? organizedTontineIds,
     UserPreferences? preferences,
     List<Achievement>? achievements,
   }) => AppUser(

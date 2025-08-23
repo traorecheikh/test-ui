@@ -5,11 +5,11 @@ part 'contribution.g.dart';
 @HiveType(typeId: 1)
 class Contribution {
   @HiveField(0)
-  final String id;
+  final int id;
   @HiveField(1)
-  final String tontineId;
+  final int tontineId;
   @HiveField(2)
-  final String participantId;
+  final int participantId;
   @HiveField(3)
   final int round;
   @HiveField(4)
@@ -46,9 +46,9 @@ class Contribution {
   double get totalAmount => amount + (penaltyAmount ?? 0);
 
   Contribution copyWith({
-    String? id,
-    String? tontineId,
-    String? participantId,
+    int? id,
+    int? tontineId,
+    int? participantId,
     int? round,
     double? amount,
     DateTime? dueDate,
@@ -89,8 +89,8 @@ enum ContributionStatus {
 
 class TontineRound {
   final int roundNumber;
-  final String tontineId;
-  final String winnerId;
+  final int tontineId;
+  final int winnerId;
   final double totalAmount;
   final DateTime distributionDate;
   final List<Contribution> contributions;
@@ -114,8 +114,8 @@ class TontineRound {
 
   TontineRound copyWith({
     int? roundNumber,
-    String? tontineId,
-    String? winnerId,
+    int? tontineId,
+    int? winnerId,
     double? totalAmount,
     DateTime? distributionDate,
     List<Contribution>? contributions,
