@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:snt_ui_test/app/routes/app_pages.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../data/models/tontine.dart';
 import '../../../data/models/user.dart';
@@ -19,85 +20,51 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    currentUser.value = AppUser(
-      id: '0',
-      name: "cheikh",
-      phone: "781706184",
-      createdAt: DateTime.parse('2025-10-02'),
-      preferences: UserPreferences(
-        darkMode: false,
-        language: 'fr',
-        soundEnabled: true,
-        notificationsEnabled: true,
-        currencyFormat: 'FCFA',
-      ),
-    );
-
     _initializeAndLoadData();
   }
 
   void _initializeAndLoadData() async {
-    // Initialiser StorageService et sauvegarder l'utilisateur
     await StorageService.init();
-    await StorageService.saveUser(currentUser.value!);
-
+    var user = StorageService.getCurrentUser();
+    if (user == null) {
+      user = AppUser(
+        id: const Uuid().v4(),
+        name: "New User",
+        phone: "000000000",
+        createdAt: DateTime.now(),
+        preferences: UserPreferences(
+          darkMode: false,
+          language: 'fr',
+          soundEnabled: true,
+          notificationsEnabled: true,
+          currencyFormat: 'FCFA',
+        ),
+      );
+      await StorageService.saveUser(user);
+    }
+    currentUser.value = user;
     _loadData();
   }
 
   void _loadData() async {
     isLoading.value = true;
-    // S'assurer que le TontineService est initialisé
     await TontineService.init();
-
-    currentUser.value = StorageService.getCurrentUser();
-    print('DEBUG: Current user from storage: ${currentUser.value?.id}');
 
     final previousCount = userTontines.length;
     if (currentUser.value != null) {
       userTontines.value = TontineService.getUserTontines(
         currentUser.value!.id,
       );
-      print(
-        'DEBUG: Found ${userTontines.length} tontines for user ${currentUser.value!.id}',
-      );
     } else {
       userTontines.clear();
-      print('DEBUG: No current user found');
     }
     isLoading.value = false;
     if (previousCount == 0 && userTontines.isNotEmpty) {
       showCelebration.value = true;
     }
-    currentUser.value = AppUser(
-      id: '0',
-      name: "cheikh",
-      phone: "781706184",
-      createdAt: DateTime.parse('2025-10-02'),
-      preferences: UserPreferences(
-        darkMode: false,
-        language: 'fr',
-        soundEnabled: true,
-        notificationsEnabled: true,
-        currencyFormat: 'FCFA',
-      ),
-    );
   }
 
   String getTotalSavings() {
-    currentUser.value = AppUser(
-      id: '0',
-      name: "cheikh",
-      phone: "781706184",
-      createdAt: DateTime.parse('2025-10-02'),
-      preferences: UserPreferences(
-        darkMode: false,
-        language: 'fr',
-        soundEnabled: true,
-        notificationsEnabled: true,
-        currencyFormat: 'FCFA',
-      ),
-    );
-
     double total = 0;
     for (final tontine in userTontines) {
       total += tontine.contributionAmount * tontine.participantIds.length;

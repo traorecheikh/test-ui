@@ -7,46 +7,47 @@ const Size kDesignSize = Size(390, 844);
 
 //<------------------- COLORS ------------------->
 class LightModeColors {
-  static const lightPrimary = Color(0xFF1B365D); // Dark blue
+  static const lightPrimary = Color(0xFF0D47A1); // Deeper, more professional blue
   static const lightOnPrimary = Color(0xFFFFFFFF);
-  static const lightPrimaryContainer = Color(0xFF1B365D);
+  static const lightPrimaryContainer = Color(0xFF1976D2); // A brighter blue for containers
   static const lightOnPrimaryContainer = Color(0xFFFFFFFF);
-  static const lightSecondary = Color(0xFF4A90E2); // Light blue
+  static const lightSecondary = Color(0xFF42A5F5); // A vibrant, yet soft blue for secondary elements
   static const lightOnSecondary = Color(0xFFFFFFFF);
-  static const lightTertiary = Color(0xFF34C759); // Success green
+  static const lightTertiary = Color(0xFF66BB6A); // A slightly muted, calming green
   static const lightOnTertiary = Color(0xFFFFFFFF);
-  static const lightError = Color(0xFFFF3B30);
+  static const lightError = Color(0xFFEF5350); // A softer red for errors
   static const lightOnError = Color(0xFFFFFFFF);
-  static const lightErrorContainer = Color(0xFFFFDAD6);
-  static const lightOnErrorContainer = Color(0xFF410002);
-  static const lightInversePrimary = Color(0xFF4A90E2);
+  static const lightErrorContainer = Color(0xFFFFCDD2);
+  static const lightOnErrorContainer = Color(0xFFB71C1C);
+  static const lightInversePrimary = Color(0xFF42A5F5);
   static const lightShadow = Color(0xFF000000);
-  static const lightSurface = Color(0xFFFFFFFF); // Pure white
-  static const lightBackground = Color(0xFFF6F6F6); // Standard UX background
-  static const lightOnSurface = Color(0xFF2C2C2E);
-  static const lightAppBarBackground = Color(0xFFFFFFFF); // Transparent white
+  static const lightSurface = Color(0xFFFFFFFF); // Pure white for surfaces
+  static const lightBackground = Color(0xFFF5F5F5); // A very light grey for the background
+  static const lightOnSurface = Color(0xFF212121); // A dark grey for text
+  static const lightAppBarBackground = Color(0xFFFFFFFF);
 }
 
 class DarkModeColors {
-  static const darkPrimary = Color(0xFF4A90E2);
+  static const darkPrimary = Color(0xFF42A5F5);
   static const darkOnPrimary = Color(0xFFFFFFFF);
-  static const darkPrimaryContainer = Color(0xFF1B365D);
-  static const darkOnPrimaryContainer = Color(0xFF4A90E2);
-  static const darkSecondary = Color(0xFF6BB6FF);
-  static const darkOnSecondary = Color(0xFF003A6B);
-  static const darkTertiary = Color(0xFF34C759);
-  static const darkOnTertiary = Color(0xFF002818);
-  static const darkError = Color(0xFFFF6961);
-  static const darkOnError = Color(0xFF690005);
-  static const darkErrorContainer = Color(0xFF93000A);
-  static const darkOnErrorContainer = Color(0xFFFFDAD6);
-  static const darkInversePrimary = Color(0xFF1B365D);
+  static const darkPrimaryContainer = Color(0xFF1976D2);
+  static const darkOnPrimaryContainer = Color(0xFF42A5F5);
+  static const darkSecondary = Color(0xFF64B5F6);
+  static const darkOnSecondary = Color(0xFF0D47A1);
+  static const darkTertiary = Color(0xFF81C784);
+  static const darkOnTertiary = Color(0xFF1B5E20);
+  static const darkError = Color(0xFFE57373);
+  static const darkOnError = Color(0xFFB71C1C);
+  static const darkErrorContainer = Color(0xFFD32F2F);
+  static const darkOnErrorContainer = Color(0xFFFFCDD2);
+  static const darkInversePrimary = Color(0xFF0D47A1);
   static const darkShadow = Color(0xFF000000);
-  static const darkSurface = Color(0xFF1C1C1E);
-  static const darkBackground = Color(0xFF000000);
-  static const darkOnSurface = Color(0xFFE5E5E7);
-  static const darkAppBarBackground = Color(0xFF1C1C1E);
+  static const darkSurface = Color(0xFF121212); // A very dark grey for surfaces
+  static const darkBackground = Color(0xFF000000); // Pure black for the background
+  static const darkOnSurface = Color(0xFFE0E0E0); // A light grey for text
+  static const darkAppBarBackground = Color(0xFF121212);
 }
+
 
 //<------------------- SPACING ------------------->
 class AppSpacing {
@@ -119,17 +120,17 @@ class AppFontSize {
 //<------------------- SHADOWS ------------------->
 class AppShadows {
   static final BoxShadow small = BoxShadow(
-    color: LightModeColors.lightShadow.withOpacity(0.1),
+    color: LightModeColors.lightShadow.withOpacity(0.05),
     blurRadius: 8.r,
     offset: Offset(0, 4.h),
   );
   static final BoxShadow medium = BoxShadow(
-    color: LightModeColors.lightShadow.withOpacity(0.15),
+    color: LightModeColors.lightShadow.withOpacity(0.1),
     blurRadius: 16.r,
     offset: Offset(0, 8.h),
   );
   static final BoxShadow large = BoxShadow(
-    color: LightModeColors.lightShadow.withOpacity(0.2),
+    color: LightModeColors.lightShadow.withOpacity(0.15),
     blurRadius: 24.r,
     offset: Offset(0, 12.h),
   );
@@ -165,12 +166,12 @@ class AppIconSizes {
 
 //<------------------- ACTION COLORS ------------------->
 class AppActionColors {
-  static const create = Color(0xFF34C759); // Vibrant green
-  static const join = Color(0xFF007AFF); // Bright blue
-  static const myTontines = Color(0xFFAF52DE); // Friendly purple
-  static const history = Color(0xFFFF9500); // Bold orange
-  static const sunuPoints = Color(0xFFFF2D55); // Vivid pink/red
-  static const reports = Color(0xFF5AC8FA); // Light blue
+  static const create = Color(0xFF66BB6A); // Calming green
+  static const join = Color(0xFF42A5F5); // Vibrant blue
+  static const myTontines = Color(0xFFAB47BC); // Friendly purple
+  static const history = Color(0xFFFFA726); // Bold orange
+  static const sunuPoints = Color(0xFFEC407A); // Vivid pink
+  static const reports = Color(0xFF29B6F6); // Light blue
 }
 
 //<------------------- THEMES ------------------->

@@ -52,6 +52,7 @@ class HomeView extends GetView<HomeController> {
                         ),
                   AppSpacing.smallWidthSpacerWidget,
                   Flexible(
+                    flex: 6,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -81,7 +82,8 @@ class HomeView extends GetView<HomeController> {
                     tooltip: 'Recharger les tontines',
                   ),   c
                 * */
-                  AppSpacing.smallWidthSpacerWidget,
+                  // AppSpacing.smallWidthSpacerWidget,
+                  Spacer(flex: 3),
                   IconButton(
                     icon: Icon(
                       Icons.settings,
