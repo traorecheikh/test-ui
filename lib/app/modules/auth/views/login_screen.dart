@@ -2,7 +2,9 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:snt_ui_test/app/theme.dart';
 
 import '../controllers/login_controller.dart';
 
@@ -43,21 +45,13 @@ class LoginScreen extends GetView<LoginController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Lottie animation fallback
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: Icon(
-            CupertinoIcons.person_alt,
-            color: theme.colorScheme.primary,
-            size: 40,
-          ),
+        Image.asset(
+          'assets/images/auth/auth.png',
+          height: 260.h,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          semanticLabel: 'Illustration de connexion',
         ),
-        const SizedBox(height: 24),
         Text(
           'Bienvenue !',
           style: theme.textTheme.displaySmall?.copyWith(
@@ -65,12 +59,12 @@ class LoginScreen extends GetView<LoginController> {
             color: theme.colorScheme.onSurface,
           ),
         ),
-        const SizedBox(height: 8),
+        AppSpacing.smallHeightSpacerWidget,
         Text(
           'Connectez-vous pour gérer vos tontines en toute simplicité.',
           style: theme.textTheme.titleMedium?.copyWith(
             color: theme.colorScheme.onSurface.withOpacity(0.6),
-            height: 1.5,
+            height: 1.5.sp,
           ),
         ),
       ],
@@ -88,7 +82,7 @@ class LoginScreen extends GetView<LoginController> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 12),
+          AppSpacing.mediumHeightSpacerWidget,
           TextFormField(
             controller: controller.phoneController,
             keyboardType: TextInputType.phone,
@@ -109,9 +103,9 @@ class LoginScreen extends GetView<LoginController> {
                   : controller.phoneError.value,
               filled: true,
               fillColor: theme.colorScheme.primary.withOpacity(0.05),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 20,
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 20.w,
+                vertical: 20.h,
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
@@ -152,15 +146,17 @@ class LoginScreen extends GetView<LoginController> {
                 },
                 child: Obx(
                   () => Container(
-                    margin: const EdgeInsets.only(left: 12),
+                    margin: EdgeInsets.only(left: 12.w),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           controller.selectedCountry.value.flagEmoji,
-                          style: const TextStyle(fontSize: 24),
+                          style: TextStyle(
+                            fontSize: AppFontSize.headlineMedium,
+                          ),
                         ),
-                        const SizedBox(width: 8),
+                        AppSpacing.smallWidthSpacerWidget,
                         Text(
                           '+${controller.selectedCountry.value.phoneCode}',
                           style: theme.textTheme.bodyLarge?.copyWith(
@@ -168,7 +164,7 @@ class LoginScreen extends GetView<LoginController> {
                           ),
                         ),
                         const Icon(Icons.arrow_drop_down, size: 20),
-                        const SizedBox(width: 8),
+                        AppSpacing.smallWidthSpacerWidget,
                       ],
                     ),
                   ),
@@ -193,22 +189,22 @@ class LoginScreen extends GetView<LoginController> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 20.h),
             elevation: 5,
             shadowColor: theme.colorScheme.primary.withOpacity(0.3),
           ),
           child: controller.isLoading.value
-              ? const SizedBox(
-                  width: 24,
-                  height: 24,
+              ? SizedBox(
+                  width: 24.w,
+                  height: 24.h,
                   child: CircularProgressIndicator(
-                    strokeWidth: 3,
+                    strokeWidth: 3.sp,
                     color: Colors.white,
                   ),
                 )
               : Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Text(
                       'Recevoir le code',
                       style: TextStyle(
@@ -216,8 +212,8 @@ class LoginScreen extends GetView<LoginController> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 12),
-                    Icon(CupertinoIcons.arrow_right, size: 22),
+                    AppSpacing.mediumWidthSpacer,
+                    Icon(CupertinoIcons.arrow_right, size: AppIconSizes.medium),
                   ],
                 ),
         ),
@@ -232,7 +228,10 @@ class LoginScreen extends GetView<LoginController> {
         child: const Text('Besoin d\'aide ?'),
         style: TextButton.styleFrom(
           foregroundColor: theme.colorScheme.onSurface.withOpacity(0.7),
-          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          textStyle: TextStyle(
+            fontSize: AppFontSize.bodyLarge,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
     );
