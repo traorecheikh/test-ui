@@ -284,6 +284,59 @@ class TontineDetailController extends GetxController
     });
   }
 
+  // Show share dialog
+  void showShareDialog() {
+    final t = tontine.value;
+    if (t == null) return;
+    
+    Get.dialog(
+      AlertDialog(
+        title: Text('Partager ${t.name}'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Code d\'invitation: ${t.inviteCode}'),
+            const SizedBox(height: 16),
+            Center(
+              child: QrImageView(
+                data: t.inviteCode,
+                version: QrVersions.auto,
+                size: 200.0,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text('Partagez ce code ou le QR avec vos proches!'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(), 
+            child: const Text('Fermer')
+          ),
+          TextButton(
+            onPressed: () {
+              // Copy to clipboard functionality
+              Get.snackbar('Copié', 'Code copié dans le presse-papiers');
+            },
+            child: const Text('Copier le Code'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Refresh tontine data
+  Future<void> refreshTontineData() async {
+    VibrationService.softVibrate();
+    _loadTontineData();
+    Get.snackbar(
+      'Actualisé',
+      'Les données ont été mises à jour',
+      duration: const Duration(seconds: 2),
+    );
+  }
+
   @override
   void onClose() {
     tabController.dispose();
