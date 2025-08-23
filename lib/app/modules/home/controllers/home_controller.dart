@@ -29,7 +29,7 @@ class HomeController extends GetxController {
       print('No user found, creating a new one.');
       user = AppUser(
         id: TontineService.generateId(),
-        name: "Cheikh",
+        name: "GOAT",
         phone: "781706184",
         createdAt: DateTime.now(),
         preferences: UserPreferences(
