@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../data/models/tontine.dart';
 import '../../../utils/formatters.dart';
 import '../../../widgets/godly_vibrate_button.dart';
-import '../../../widgets/tontine_card.dart';
 import '../controllers/join_tontine_controller.dart';
 
 class JoinTontineScreen extends GetView<JoinTontineController> {
@@ -155,9 +156,7 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
             ),
           ),
           const SizedBox(height: 12),
-          TontineCard(
-            tontine: tontine,
-          ),
+          _TontinePreviewCard(tontine: tontine),
           const SizedBox(height: 16),
           _buildTontineDetails(theme),
           const SizedBox(height: 16),
@@ -199,105 +198,96 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
   }
 
   Widget _buildTontineDetails(ThemeData theme) {
-    return Obx(() {
-      final tontine = controller.foundTontine.value;
-      if (tontine == null) return const SizedBox.shrink();
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+    final tontine = controller.foundTontine.value!;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outline.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Détails de la Tontine',
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          const SizedBox(height: 12),
+          _buildDetailRow(
+            theme,
+            'Contribution',
+            Formatters.formatCurrency(tontine.contributionAmount),
+            Icons.account_balance_wallet,
+          ),
+          _buildDetailRow(
+            theme,
+            'Participants',
+            '${tontine.participantIds.length}/${tontine.maxParticipants}',
+            Icons.people,
+          ),
+          _buildDetailRow(
+            theme,
+            'Fréquence',
+            tontine.frequency.label,
+            Icons.schedule,
+          ),
+          _buildDetailRow(
+            theme,
+            'Ordre de tirage',
+            tontine.drawOrder.label,
+            Icons.shuffle,
+          ),
+          _buildDetailRow(
+            theme,
+            'Pénalité',
+            '${tontine.penaltyPercentage}%',
+            Icons.warning,
+          ),
+          if (tontine.rules.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            const Divider(),
+            const SizedBox(height: 8),
             Text(
-              'Détails de la Tontine',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+              'Règles:',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 12),
-            _buildDetailRow(
-              theme,
-              'Contribution',
-              tontine != null
-                  ? Formatters.formatCurrency(tontine.contributionAmount)
-                  : '',
-              Icons.account_balance_wallet,
-            ),
-            _buildDetailRow(
-              theme,
-              'Participants',
-              tontine != null
-                  ? '${tontine.participantIds.length}/${tontine.maxParticipants}'
-                  : '',
-              Icons.people,
-            ),
-            _buildDetailRow(
-              theme,
-              'Fréquence',
-              tontine != null ? tontine.frequency.label : '',
-              Icons.schedule,
-            ),
-            _buildDetailRow(
-              theme,
-              'Ordre de tirage',
-              tontine != null ? tontine.drawOrder.label : '',
-              Icons.shuffle,
-            ),
-            _buildDetailRow(
-              theme,
-              'Pénalité',
-              tontine != null ? '${tontine.penaltyPercentage}%' : '',
-              Icons.warning,
-            ),
-            if (tontine != null && tontine.rules.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              const Divider(),
-              const SizedBox(height: 8),
-              Text(
-                'Règles:',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 4),
-              ...tontine.rules
-                  .take(3)
-                  .map(
-                    (rule) => Padding(
-                      padding: const EdgeInsets.only(bottom: 2),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '• ',
-                            style: TextStyle(color: theme.colorScheme.primary),
-                          ),
-                          Expanded(
-                            child: Text(rule, style: theme.textTheme.bodySmall),
-                          ),
-                        ],
-                      ),
+            const SizedBox(height: 4),
+            ...tontine.rules
+                .take(3)
+                .map(
+                  (rule) => Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '• ',
+                          style: TextStyle(color: theme.colorScheme.primary),
+                        ),
+                        Expanded(
+                          child: Text(rule, style: theme.textTheme.bodySmall),
+                        ),
+                      ],
                     ),
                   ),
-              if (tontine.rules.length > 3)
-                Text(
-                  '... et ${tontine.rules.length - 3} autres règles',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    fontStyle: FontStyle.italic,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
                 ),
-            ],
+            if (tontine.rules.length > 3)
+              Text(
+                '... et ${tontine.rules.length - 3} autres règles',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontStyle: FontStyle.italic,
+                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                ),
+              ),
           ],
-        ),
-      );
-    });
+        ],
+      ),
+    );
   }
 
   Widget _buildDetailRow(
@@ -315,7 +305,7 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
           Text(
             '$label: ',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              color: theme.colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
           Text(
@@ -332,15 +322,13 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
   Widget _buildErrorMessage(ThemeData theme) {
     return Obx(() {
       final error = controller.searchError?.value;
-      if (error == null) return const SizedBox.shrink();
+      if (error!.isEmpty) return const SizedBox.shrink();
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: theme.colorScheme.errorContainer,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: theme.colorScheme.error.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: theme.colorScheme.error.withOpacity(0.3)),
         ),
         child: Row(
           children: [
@@ -367,11 +355,9 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
+        color: theme.colorScheme.primaryContainer.withOpacity(0.3),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.primary.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -400,15 +386,138 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
             '3. Ou scannez le QR code avec l\'appareil photo\n'
             '4. Vérifiez les détails et rejoignez la tontine',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer.withValues(
-                alpha: 0.8,
-              ),
+              color: theme.colorScheme.onPrimaryContainer.withOpacity(0.8),
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  // All business logic and state is now handled by the controller using Rx variables and methods.
+class _TontinePreviewCard extends StatelessWidget {
+  final Tontine tontine;
+
+  const _TontinePreviewCard({required this.tontine});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: _getStatusColor(theme).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Icon(
+                  _getHeaderIcon(),
+                  color: _getStatusColor(theme),
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tontine.name,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(theme).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        tontine.status.label.toUpperCase(),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: _getStatusColor(theme),
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Icon(
+                CupertinoIcons.group,
+                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${tontine.participantIds.length} / ${tontine.maxParticipants} Membres',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getStatusColor(ThemeData theme) {
+    switch (tontine.status) {
+      case TontineStatus.active:
+        return Colors.green.shade600;
+      case TontineStatus.pending:
+        return Colors.blue.shade600;
+      case TontineStatus.completed:
+        return theme.colorScheme.primary;
+      case TontineStatus.cancelled:
+        return theme.colorScheme.error;
+    }
+  }
+
+  IconData _getHeaderIcon() {
+    switch (tontine.frequency) {
+      case TontineFrequency.daily:
+        return Icons.wb_sunny;
+      case TontineFrequency.weekly:
+        return Icons.calendar_today;
+      case TontineFrequency.monthly:
+        return Icons.calendar_month;
+      default:
+        return CupertinoIcons.group;
+    }
+  }
 }

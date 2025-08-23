@@ -6,7 +6,7 @@ import 'dart:math' as math;
 import '../../../utils/constants.dart';
 import '../../../utils/formatters.dart';
 import '../../../widgets/godly_vibrate_button.dart';
-import '../../../widgets/pot_visual.dart';
+import '../../../widgets/modern_pot_visual.dart';
 import '../controllers/tontine_detail_controller.dart';
 
 class TontineDetailScreen extends GetView<TontineDetailController> {
@@ -152,7 +152,7 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
                     flex: 3,
                     child: GestureDetector(
                       onTap: () => Get.toNamed('/pot-visual', arguments: {'tontineId': tontineId}),
-                      child: PotVisualWidget(
+                      child: ModernPotVisualWidget(
                         currentAmount: currentAmount,
                         targetAmount: tontine.totalPot,
                         paidParticipants: paidCount,
