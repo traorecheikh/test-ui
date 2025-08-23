@@ -14,8 +14,8 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final user = controller.currentUser.value;
     return Obx(() {
+      final user = controller.currentUser.value;
       if (controller.showCelebration.value) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           CelebrationOverlay.show(

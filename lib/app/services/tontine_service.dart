@@ -16,7 +16,7 @@ class TontineService {
     if (_currentUser == null) {
       final newUser = AppUser(
         id: DateTime.now().millisecondsSinceEpoch,
-        name: 'Cheikh',
+        name: 'GOAT',
         phone: '',
         createdAt: DateTime.now(),
         level: UserLevel.regular,
