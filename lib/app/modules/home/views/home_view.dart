@@ -47,6 +47,7 @@ class HomeView extends GetView<HomeController> {
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
+                      overflow: TextOverflow.clip,
                     ),
                   ],
                 ),

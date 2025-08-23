@@ -157,21 +157,6 @@ class JoinTontineScreen extends GetView<JoinTontineController> {
           const SizedBox(height: 12),
           TontineCard(
             tontine: tontine,
-            trailing: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Text(
-                'Disponible',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
           ),
           const SizedBox(height: 16),
           _buildTontineDetails(theme),
