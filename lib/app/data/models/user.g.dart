@@ -17,7 +17,7 @@ class AppUserAdapter extends TypeAdapter<AppUser> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AppUser(
-      id: fields[0] as String,
+      id: (fields[0] as num).toInt(),
       name: fields[1] as String,
       phone: fields[2] as String,
       email: fields[3] as String?,
@@ -28,10 +28,10 @@ class AppUserAdapter extends TypeAdapter<AppUser> {
       reliabilityScore: fields[8] == null ? 5.0 : (fields[8] as num).toDouble(),
       tontineIds: fields[9] == null
           ? const []
-          : (fields[9] as List).cast<String>(),
+          : (fields[9] as List).cast<int>(),
       organizedTontineIds: fields[10] == null
           ? const []
-          : (fields[10] as List).cast<String>(),
+          : (fields[10] as List).cast<int>(),
       preferences: fields[11] as UserPreferences,
       achievements: fields[12] == null
           ? const []
