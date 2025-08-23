@@ -38,20 +38,22 @@ class HomeView extends GetView<HomeController> {
                         size: AppIconSizes.extraBitLarge,
                       ),
                 AppSpacing.smallWidthSpacerWidget,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${Formatters.getGreeting()}, ${user?.name.split(' ').first ?? 'Utilisateur'}',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w600,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${Formatters.getGreeting()}, ${user?.name.split(' ').first ?? 'Utilisateur'}',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
-                      overflow: TextOverflow.clip,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const Spacer(),
                 /*
               *
               *   IconButton(
