@@ -1,16 +1,32 @@
+import 'package:hive_ce/hive.dart';
+
+part 'contribution.g.dart';
+
+@HiveType(typeId: 1)
 class Contribution {
-  final int? id;
-  final int tontineId;
-  final int participantId;
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
+  final String tontineId;
+  @HiveField(2)
+  final String participantId;
+  @HiveField(3)
   final int round;
+  @HiveField(4)
   final double amount;
+  @HiveField(5)
   final DateTime dueDate;
+  @HiveField(6)
   final DateTime? paidDate;
+  @HiveField(7)
   final ContributionStatus status;
+  @HiveField(8)
   final String? paymentReference;
+  @HiveField(9)
   final double? penaltyAmount;
+  @HiveField(10)
   final String? notes;
-  
+
   const Contribution({
     required this.id,
     required this.tontineId,
@@ -24,15 +40,15 @@ class Contribution {
     this.penaltyAmount,
     this.notes,
   });
-  
+
   bool get isPaid => status == ContributionStatus.paid;
   bool get isOverdue => DateTime.now().isAfter(dueDate) && !isPaid;
   double get totalAmount => amount + (penaltyAmount ?? 0);
-  
+
   Contribution copyWith({
-    int? id,
-    int? tontineId,
-    int? participantId,
+    String? id,
+    String? tontineId,
+    String? participantId,
     int? round,
     double? amount,
     DateTime? dueDate,
@@ -56,25 +72,30 @@ class Contribution {
   );
 }
 
+@HiveType(typeId: 2)
 enum ContributionStatus {
+  @HiveField(0)
   pending('En attente'),
+  @HiveField(1)
   paid('Payé'),
+  @HiveField(2)
   late('En retard'),
+  @HiveField(3)
   failed('Échec');
-  
+
   const ContributionStatus(this.label);
   final String label;
 }
 
 class TontineRound {
   final int roundNumber;
-  final int tontineId;
-  final int winnerId;
+  final String tontineId;
+  final String winnerId;
   final double totalAmount;
   final DateTime distributionDate;
   final List<Contribution> contributions;
   final RoundStatus status;
-  
+
   const TontineRound({
     required this.roundNumber,
     required this.tontineId,
@@ -84,17 +105,17 @@ class TontineRound {
     required this.contributions,
     required this.status,
   });
-  
+
   double get collectedAmount => contributions
       .where((c) => c.isPaid)
       .fold(0.0, (sum, c) => sum + c.totalAmount);
-      
+
   bool get isComplete => contributions.every((c) => c.isPaid);
-  
+
   TontineRound copyWith({
     int? roundNumber,
-    int? tontineId,
-    int? winnerId,
+    String? tontineId,
+    String? winnerId,
     double? totalAmount,
     DateTime? distributionDate,
     List<Contribution>? contributions,
@@ -115,7 +136,7 @@ enum RoundStatus {
   ready('Prêt'),
   distributed('Distribué'),
   completed('Terminé');
-  
+
   const RoundStatus(this.label);
   final String label;
 }

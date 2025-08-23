@@ -5,6 +5,7 @@ import 'package:snt_ui_test/app/theme.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../../utils/formatters.dart';
+import '../../../widgets/celebration_overlay.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -14,86 +15,99 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final user = controller.currentUser.value;
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: AppPaddings.pageHome,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                (user != null && user.name.trim().isNotEmpty)
-                    ? _AnimatedAvatar(
-                        initials: user.name
-                            .trim()
-                            .split(' ')
-                            .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
-                            .take(2)
-                            .join(),
-                        color: theme.colorScheme.primary,
-                      )
-                    : Icon(
-                        Icons.account_circle,
-                        color: theme.colorScheme.primary.withOpacity(0.18),
-                        size: AppIconSizes.extraBitLarge,
-                      ),
-                AppSpacing.smallWidthSpacerWidget,
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${Formatters.getGreeting()}, ${user?.name.split(' ').first ?? 'Utilisateur'}',
-                        style: theme.textTheme.titleLarge?.copyWith(
+    return Obx(() {
+      if (controller.showCelebration.value) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          CelebrationOverlay.show(
+            context,
+            message: 'Bravo ! Première tontine créée 🎉',
+          );
+          controller.showCelebration.value = false;
+        });
+      }
+      return Scaffold(
+        body: SafeArea(
+          child: ListView(
+            padding: AppPaddings.pageHome,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  (user != null && user.name.trim().isNotEmpty)
+                      ? _AnimatedAvatar(
+                          initials: user.name
+                              .trim()
+                              .split(' ')
+                              .map(
+                                (e) => e.isNotEmpty ? e[0].toUpperCase() : '',
+                              )
+                              .take(2)
+                              .join(),
                           color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w600,
+                        )
+                      : Icon(
+                          Icons.account_circle,
+                          color: theme.colorScheme.primary.withOpacity(0.18),
+                          size: AppIconSizes.extraBitLarge,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
+                  AppSpacing.smallWidthSpacerWidget,
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${Formatters.getGreeting()}, ${user?.name.split(' ').first ?? 'Utilisateur'}',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                /*
-              *
-              *   IconButton(
-                  icon: Icon(
-                    Icons.refresh,
-                    color: theme.colorScheme.secondary,
-                    size: 28,
+                  /*
+                *
+                *   IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      color: theme.colorScheme.secondary,
+                      size: 28,
+                    ),
+                    onPressed: () {
+                      controller.refreshTontines();
+                    },
+                    tooltip: 'Recharger les tontines',
+                  ),   c
+                * */
+                  AppSpacing.smallWidthSpacerWidget,
+                  IconButton(
+                    icon: Icon(
+                      Icons.settings,
+                      color: theme.colorScheme.primary,
+                      size: AppIconSizes.large,
+                    ),
+                    onPressed: () {
+                      Get.toNamed(Routes.settings);
+                    },
+                    tooltip: 'Paramètres',
                   ),
-                  onPressed: () {
-                    controller.refreshTontines();
-                  },
-                  tooltip: 'Recharger les tontines',
-                ),   c
-              * */
-                AppSpacing.smallWidthSpacerWidget,
-                IconButton(
-                  icon: Icon(
-                    Icons.settings,
-                    color: theme.colorScheme.primary,
-                    size: AppIconSizes.large,
-                  ),
-                  onPressed: () {
-                    Get.toNamed(Routes.settings);
-                  },
-                  tooltip: 'Paramètres',
-                ),
-              ],
-            ),
+                ],
+              ),
 
-            AppSpacing.extraLargeHeightSpacerWidget,
-            _buildFinanceDataCard(theme),
-            // _buildPrimaryTontineSection(theme),
-            AppSpacing.extraLargeHeightSpacerWidget,
-            _buildQuickActionsSection(theme),
-            AppSpacing.extraLargeHeightSpacerWidget,
-            _buildRecentActivitiesSection(theme),
-          ],
+              AppSpacing.extraLargeHeightSpacerWidget,
+              _buildFinanceDataCard(theme),
+              // _buildPrimaryTontineSection(theme),
+              AppSpacing.extraLargeHeightSpacerWidget,
+              _buildQuickActionsSection(theme),
+              AppSpacing.extraLargeHeightSpacerWidget,
+              _buildRecentActivitiesSection(theme),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildFinanceDataCard(ThemeData theme) {

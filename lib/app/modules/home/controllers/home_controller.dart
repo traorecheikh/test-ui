@@ -8,19 +8,19 @@ import '../../../services/storage_service.dart';
 import '../../../services/tontine_service.dart';
 import '../../../services/vibration_service.dart';
 import '../../../utils/formatters.dart';
-import '../../../widgets/celebration_overlay.dart';
 import '../../../widgets/custom_snackbar.dart';
 
 class HomeController extends GetxController {
   final Rx<AppUser?> currentUser = Rx<AppUser?>(null);
   final RxList<Tontine> userTontines = <Tontine>[].obs;
   final RxBool isLoading = true.obs;
+  final RxBool showCelebration = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     currentUser.value = AppUser(
-      id: 0,
+      id: '0',
       name: "cheikh",
       phone: "781706184",
       createdAt: DateTime.parse('2025-10-02'),
@@ -32,54 +32,72 @@ class HomeController extends GetxController {
         currencyFormat: 'FCFA',
       ),
     );
-    
+
     _initializeAndLoadData();
   }
 
   void _initializeAndLoadData() async {
     // Initialiser StorageService et sauvegarder l'utilisateur
     await StorageService.init();
-    if (currentUser.value != null) {
-      await StorageService.saveUser(currentUser.value!);
-    }
-    
+    await StorageService.saveUser(currentUser.value!);
+
     _loadData();
   }
 
   void _loadData() async {
     isLoading.value = true;
-    
     // S'assurer que le TontineService est initialisé
     await TontineService.init();
-    
-    // Keep using the same user instance, don't override from storage
-    print('DEBUG: Current user ID: ${currentUser.value?.id}');
-    
+
+    currentUser.value = StorageService.getCurrentUser();
+    print('DEBUG: Current user from storage: ${currentUser.value?.id}');
+
     final previousCount = userTontines.length;
-    if (currentUser.value?.id != null) {
+    if (currentUser.value != null) {
       userTontines.value = TontineService.getUserTontines(
-        currentUser.value!.id!,
+        currentUser.value!.id,
       );
-      print('DEBUG: Found ${userTontines.length} tontines for user ${currentUser.value?.id}');
+      print(
+        'DEBUG: Found ${userTontines.length} tontines for user ${currentUser.value!.id}',
+      );
     } else {
       userTontines.clear();
-      print('DEBUG: No current user found or user ID is null - currentUser: ${currentUser.value?.id}');
+      print('DEBUG: No current user found');
     }
     isLoading.value = false;
     if (previousCount == 0 && userTontines.isNotEmpty) {
-      Future.delayed(const Duration(milliseconds: 300), () {
-        final context = Get.context;
-        if (context != null) {
-          CelebrationOverlay.show(
-            context,
-            message: 'Bravo ! Première tontine créée 🎉',
-          );
-        }
-      });
+      showCelebration.value = true;
     }
+    currentUser.value = AppUser(
+      id: '0',
+      name: "cheikh",
+      phone: "781706184",
+      createdAt: DateTime.parse('2025-10-02'),
+      preferences: UserPreferences(
+        darkMode: false,
+        language: 'fr',
+        soundEnabled: true,
+        notificationsEnabled: true,
+        currencyFormat: 'FCFA',
+      ),
+    );
   }
 
   String getTotalSavings() {
+    currentUser.value = AppUser(
+      id: '0',
+      name: "cheikh",
+      phone: "781706184",
+      createdAt: DateTime.parse('2025-10-02'),
+      preferences: UserPreferences(
+        darkMode: false,
+        language: 'fr',
+        soundEnabled: true,
+        notificationsEnabled: true,
+        currencyFormat: 'FCFA',
+      ),
+    );
+
     double total = 0;
     for (final tontine in userTontines) {
       total += tontine.contributionAmount * tontine.participantIds.length;

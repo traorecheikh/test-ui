@@ -1,24 +1,49 @@
+import 'package:hive_ce/hive.dart';
+
+part 'tontine.g.dart';
+
+@HiveType(typeId: 3)
 class Tontine {
-  final int? id;
+  @HiveField(0)
+  final String id;
+  @HiveField(1)
   final String name;
+  @HiveField(2)
   final String description;
+  @HiveField(3)
   final String? imageUrl;
+  @HiveField(4)
   final double contributionAmount;
+  @HiveField(5)
   final TontineFrequency frequency;
+  @HiveField(6)
   final DateTime startDate;
+  @HiveField(7)
   final DateTime? endDate;
+  @HiveField(8)
   final int maxParticipants;
+  @HiveField(9)
   final TontineDrawOrder drawOrder;
+  @HiveField(10)
   final double penaltyPercentage;
-  final int organizerId;
+  @HiveField(11)
+  final String organizerId;
+  @HiveField(12)
   final TontineStatus status;
-  final List<int> participantIds;
+  @HiveField(13)
+  final List<String> participantIds;
+  @HiveField(14)
   final List<String> rules;
+  @HiveField(15)
   final String inviteCode;
+  @HiveField(16)
   final DateTime createdAt;
+  @HiveField(17)
   final int currentRound;
+  @HiveField(18)
   final DateTime? nextContributionDate;
-  final int? currentWinnerId;
+  @HiveField(19)
+  final String? currentWinnerId;
 
   const Tontine({
     required this.id,
@@ -58,7 +83,7 @@ class Tontine {
   get members => participantIds.length;
 
   Tontine copyWith({
-    int? id,
+    String? id,
     String? name,
     String? description,
     String? imageUrl,
@@ -69,15 +94,15 @@ class Tontine {
     int? maxParticipants,
     TontineDrawOrder? drawOrder,
     double? penaltyPercentage,
-    int? organizerId,
+    String? organizerId,
     TontineStatus? status,
-    List<int>? participantIds,
+    List<String>? participantIds,
     List<String>? rules,
     String? inviteCode,
     DateTime? createdAt,
     int? currentRound,
     DateTime? nextContributionDate,
-    int? currentWinnerId,
+    String? currentWinnerId,
   }) => Tontine(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -102,31 +127,47 @@ class Tontine {
   );
 }
 
+@HiveType(typeId: 4)
 enum TontineFrequency {
+  @HiveField(0)
   daily('Quotidien'),
+  @HiveField(1)
   weekly('Hebdomadaire'),
+  @HiveField(2)
   biweekly('Bimensuel'),
+  @HiveField(3)
   monthly('Mensuel'),
+  @HiveField(4)
   quarterly('Trimestriel');
 
   const TontineFrequency(this.label);
   final String label;
 }
 
+@HiveType(typeId: 5)
 enum TontineDrawOrder {
+  @HiveField(0)
   fixed('Ordre fixe'),
+  @HiveField(1)
   random('Tirage aléatoire'),
+  @HiveField(2)
   merit('Ordre au mérite'),
+  @HiveField(3)
   hybrid('Hybride');
 
   const TontineDrawOrder(this.label);
   final String label;
 }
 
+@HiveType(typeId: 6)
 enum TontineStatus {
+  @HiveField(0)
   pending('En attente'),
+  @HiveField(1)
   active('Active'),
+  @HiveField(2)
   completed('Terminée'),
+  @HiveField(3)
   cancelled('Annulée');
 
   const TontineStatus(this.label);
