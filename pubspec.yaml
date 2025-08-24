@@ -58,10 +58,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/
     - assets/lotties/onboarding1.json
     - assets/lotties/onboarding2.json
     - assets/lotties/onboarding3.json
-    - assets/
     - assets/images/
     - assets/images/auth/
     - assets/lotties/
