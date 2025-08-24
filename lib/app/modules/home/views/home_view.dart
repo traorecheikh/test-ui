@@ -143,7 +143,7 @@ class HomeView extends GetView<HomeController> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.account_balance_wallet, size: 32, color: Colors.white),
-              AppSpacing.extraLargeHeightSpacerWidget,
+              AppSpacing.smallWidthSpacerWidget,
               Text(
                 'Épargne Totale',
                 style: theme.textTheme.headlineMedium?.copyWith(
