@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:snt_ui_test/app/modules/settings/controllers/settings_controller.dart';
+
+import '../../../routes/app_pages.dart';
 // import 'package:snt_ui_test/app/theme.dart'; // Assuming AppPaddings, AppRadius etc. were intended to be here
 
 class SettingsScreen extends GetView<SettingsController> {
@@ -63,11 +65,17 @@ class SettingsScreen extends GetView<SettingsController> {
                   controller,
                   showSection: controller.showToggles.value,
                   children: [
+                    _buildInfoItem(
+                      theme,
+                      Icons.person_outline,
+                      'Compte utilisateur',
+                      onTap: () => Get.toNamed(Routes.profile),
+                    ),
                     _buildToggleItem(
                       theme,
                       Icons.brightness_6,
                       'Mode sombre',
-                      controller.darkMode, // Use the RxBool directly
+                      controller.darkMode,
                       controller.toggleDarkMode,
                     ),
                     _buildToggleItem(

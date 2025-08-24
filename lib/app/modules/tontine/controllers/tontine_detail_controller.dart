@@ -17,7 +17,7 @@ class TontineDetailController extends GetxController
   final RxBool isOrganizer = false.obs;
   late TabController tabController;
   List<Contribution> currentRoundContributions = [];
-  
+
   // Current user ID (in a real app, this would come from a storage service)
   int get currentUserId => 1;
 
@@ -61,6 +61,33 @@ class TontineDetailController extends GetxController
       return TontineService.getTontineContributions(t.id!, round: round);
     }
     return [];
+  }
+
+  /// Returns a list of personalized insights for the current tontine.
+  List<Map<String, dynamic>> get contextualInsights {
+    final t = tontine.value;
+    if (t == null) return [];
+    // Example: Show a tip if not all participants have paid
+    final unpaid = currentRoundContributions.where((c) => !c.isPaid).length;
+    final insights = <Map<String, dynamic>>[];
+    if (unpaid > 0) {
+      insights.add({
+        'title': 'Paiements en attente',
+        'message': 'Il reste $unpaid participant(s) à payer ce tour.',
+        'icon': Icons.warning,
+        'color': Colors.orange,
+      });
+    }
+    // Example: Show a tip if there are available spots
+    if (t.participantIds.length < t.maxParticipants) {
+      insights.add({
+        'title': 'Places disponibles',
+        'message': 'Invitez vos amis, il reste des places dans la tontine.',
+        'icon': Icons.group_add,
+        'color': Colors.blue,
+      });
+    }
+    return insights;
   }
 
   // Floating action button builder
@@ -288,7 +315,7 @@ class TontineDetailController extends GetxController
   void showShareDialog() {
     final t = tontine.value;
     if (t == null) return;
-    
+
     Get.dialog(
       AlertDialog(
         title: Text('Partager ${t.name}'),
@@ -310,10 +337,7 @@ class TontineDetailController extends GetxController
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(), 
-            child: const Text('Fermer')
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Fermer')),
           TextButton(
             onPressed: () {
               // Copy to clipboard functionality
