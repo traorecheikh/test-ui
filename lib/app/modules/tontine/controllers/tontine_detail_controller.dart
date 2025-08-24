@@ -23,12 +23,12 @@ class TontineDetailController extends GetxController {
 
   List<Contribution> currentRoundContributions = [];
 
-  // In a real app, this would come from an auth service
   int get currentUserId => 1;
 
   Contribution? get myContribution {
-    return currentRoundContributions
-        .firstWhereOrNull((c) => c.participantId == currentUserId);
+    return currentRoundContributions.firstWhereOrNull(
+      (c) => c.participantId == currentUserId,
+    );
   }
 
   @override
@@ -38,14 +38,22 @@ class TontineDetailController extends GetxController {
   }
 
   void _triggerAnimations() {
-    Future.delayed(const Duration(milliseconds: 100),
-        () => showSummary.value = true);
-    Future.delayed(const Duration(milliseconds: 200),
-        () => showStatus.value = true);
-    Future.delayed(const Duration(milliseconds: 300),
-        () => showParticipants.value = true);
     Future.delayed(
-        const Duration(milliseconds: 400), () => showActions.value = true);
+      const Duration(milliseconds: 100),
+      () => showSummary.value = true,
+    );
+    Future.delayed(
+      const Duration(milliseconds: 200),
+      () => showStatus.value = true,
+    );
+    Future.delayed(
+      const Duration(milliseconds: 300),
+      () => showParticipants.value = true,
+    );
+    Future.delayed(
+      const Duration(milliseconds: 400),
+      () => showActions.value = true,
+    );
   }
 
   void _loadTontineData() {
@@ -141,12 +149,17 @@ class TontineDetailController extends GetxController {
                 Get.back();
                 // TODO: Navigate to tontine management screen
                 CustomSnackbar.show(
-                    title: 'Info', message: 'Écran de gestion à venir.');
+                  title: 'Info',
+                  message: 'Écran de gestion à venir.',
+                );
               },
             ),
           ListTile(
             leading: const Icon(Icons.exit_to_app, color: Colors.red),
-            title: Text('Quitter la tontine', style: TextStyle(color: Colors.red)),
+            title: Text(
+              'Quitter la tontine',
+              style: TextStyle(color: Colors.red),
+            ),
             onTap: () {
               Get.back();
               showLeaveConfirmation();
@@ -214,8 +227,7 @@ class TontineDetailController extends GetxController {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-                'Montant: ${Formatters.formatCurrency(t.contributionAmount)}'),
+            Text('Montant: ${Formatters.formatCurrency(t.contributionAmount)}'),
             const SizedBox(height: 8),
             Text(
               'Destinataire: Organisateur (${AppConstants.sampleParticipantNames[0]})',
