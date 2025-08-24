@@ -24,16 +24,16 @@ class LoginScreen extends GetView<LoginController> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(theme),
-            const SizedBox(height: 48),
+            AppSpacing.extraBitLargeHeightSpacer,
             _buildPhoneInput(context, theme),
-            const SizedBox(height: 32),
+            AppSpacing.extraLargeHeightSpacer,
             _buildLoginButton(theme),
-            const SizedBox(height: 24),
+            AppSpacing.largeHeightSpacer,
             _buildFooter(theme),
           ],
         ),

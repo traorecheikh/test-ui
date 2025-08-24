@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -10,25 +11,46 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
+class _OnboardingPageData {
+  final String lottie;
+  final String title;
+  final String subtitle;
+  final String desc;
+
+  const _OnboardingPageData({
+    required this.lottie,
+    required this.title,
+    required this.subtitle,
+    required this.desc,
+  });
+}
+
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<_OnboardingPage> _pages = [
-    _OnboardingPage(
-      lottie: 'assets/lottie/onboard1.json',
-      title: 'Gérez vos tontines facilement',
-      desc: 'Créez, rejoignez et suivez vos tontines en toute simplicité.',
+  // Content aligned with the PRD and marketing strategy
+  final List<_OnboardingPageData> _pages = [
+    _OnboardingPageData(
+      lottie: 'assets/lotties/onboarding1.json',
+      subtitle: 'Bienvenue dans SunuTontine',
+      title: 'La tontine, simple et transparente.',
+      desc:
+          'Fini les calculs compliqués et les oublis. Suivez tout en temps réel, pour que la confiance règne.',
     ),
-    _OnboardingPage(
-      lottie: 'assets/lottie/onboard2.json',
-      title: 'Transparence & Sécurité',
-      desc: 'Toutes les transactions sont claires et sécurisées.',
+    _OnboardingPageData(
+      lottie: 'assets/lotties/onboarding2.json',
+      subtitle: 'La tontine sans stress',
+      title: 'Tout est automatisé, vous n\'oubliez rien.',
+      desc:
+          'Rappels, suivi des paiements, calendrier partagé... L\'app s\'occupe de tout pour que vous puissiez vous concentrer sur vos projets, pas sur la gestion.',
     ),
-    _OnboardingPage(
-      lottie: 'assets/lottie/onboard3.json',
-      title: 'Communauté & entraide',
-      desc: 'Participez à une communauté de confiance et d’entraide.',
+    _OnboardingPageData(
+      lottie: 'assets/lotties/onboarding3.json',
+      subtitle: 'Bâtir l\'avenir, ensemble',
+      title: 'Rejoignez une communauté qui avance.',
+      desc:
+          'Plus qu\'une application, un réseau d\'entraide pour réaliser vos projets les plus chers.',
     ),
   ];
 
@@ -38,190 +60,188 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
+  void _onNext() {
+    if (_currentPage < _pages.length - 1) {
+      _pageController.nextPage(duration: 400.ms, curve: Curves.easeInOut);
+    } else {
+      _onGetStarted();
+    }
+  }
+
   void _onGetStarted() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_done', true);
-    Get.offAllNamed('/login');
+    Get.offAllNamed('/login'); // Assuming '/login' is the correct route
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      body: Stack(
-        children: [
-          AnimatedContainer(
-            duration: const Duration(seconds: 1),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFB2FEFA), Color(0xFF0ED2F7)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+      backgroundColor: theme.cardColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header with Skip button
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Placeholder for logo if needed
+                  const SizedBox(width: 50),
+                  if (_currentPage < _pages.length - 1)
+                    TextButton(
+                      onPressed: _onGetStarted,
+                      child: Text(
+                        'Passer',
+                        style: TextStyle(color: theme.colorScheme.primary),
+                      ),
+                    )
+                  else
+                    const SizedBox(height: 48), // Keep space consistent
+                ],
               ),
             ),
-          ),
-          SafeArea(
-            child: Column(
-              children: [
-                // Skip button (not on last page)
-                if (_currentPage < _pages.length - 1)
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8, right: 16),
-                      child: GestureDetector(
-                        onTap: _onGetStarted,
-                        child: AnimatedOpacity(
-                          opacity: 1,
-                          duration: 300.ms,
-                          child:
-                              Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 18,
-                                      vertical: 8,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.primary
-                                          .withOpacity(0.12),
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Text(
-                                      'Passer',
-                                      style: theme.textTheme.labelLarge
-                                          ?.copyWith(
-                                            color: theme.colorScheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                  )
-                                  .animate()
-                                  .fadeIn(duration: 300.ms)
-                                  .slideX(begin: 0.2, duration: 300.ms),
+
+            // PageView for content
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: _pages.length,
+                onPageChanged: (i) => setState(() => _currentPage = i),
+                itemBuilder: (context, i) {
+                  final page = _pages[i];
+                  return _OnboardingPage(
+                    data: page,
+                    isActive: i == _currentPage,
+                  );
+                },
+              ),
+            ),
+
+            // Footer with indicator and button
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 32.0,
+              ),
+              child: Column(
+                children: [
+                  // Custom Page Indicator
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(_pages.length, (i) {
+                      return AnimatedContainer(
+                        duration: 300.ms,
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: i == _currentPage ? 24 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: i == _currentPage
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.primary.withValues(
+                                  alpha: (0.3 * 255),
+                                ),
+                          borderRadius: BorderRadius.circular(8),
                         ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _onNext,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                        foregroundColor: theme.colorScheme.onPrimary,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        textStyle:
+                            (theme.textTheme.titleMedium ?? const TextStyle())
+                                .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      child: Text(
+                        _currentPage == _pages.length - 1
+                            ? 'Commencer l\'aventure'
+                            : 'Suivant',
                       ),
                     ),
                   ),
-                Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: _pages.length,
-                    onPageChanged: (i) => setState(() => _currentPage = i),
-                    itemBuilder: (context, i) {
-                      final page = _pages[i];
-                      // Animated page transitions: fade + slide
-                      return AnimatedBuilder(
-                        animation: _pageController,
-                        builder: (context, child) {
-                          double pageOffset = 0;
-                          try {
-                            pageOffset = _pageController.hasClients
-                                ? _pageController.page! - i
-                                : 0;
-                          } catch (_) {}
-                          final opacity = (1 - pageOffset.abs()).clamp(
-                            0.0,
-                            1.0,
-                          );
-                          final slide = 40.0 * pageOffset;
-                          return Opacity(
-                            opacity: opacity,
-                            child: Transform.translate(
-                              offset: Offset(slide, 0),
-                              child: child,
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 32,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Lottie.asset(page.lottie, width: 220, height: 220, repeat: true)
-                              //     .animate().fadeIn(duration: 600.ms),
-                              const SizedBox(height: 32),
-                              Text(
-                                page.title,
-                                style: theme.textTheme.headlineMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.primary,
-                                ),
-                                textAlign: TextAlign.center,
-                              ).animate().slideY(begin: -0.2, duration: 400.ms),
-                              const SizedBox(height: 18),
-                              Text(
-                                page.desc,
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: theme.colorScheme.onSurface
-                                      .withOpacity(0.8),
-                                  fontSize: 18,
-                                ),
-                                textAlign: TextAlign.center,
-                              ).animate().fadeIn(
-                                duration: 500.ms,
-                                delay: 200.ms,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(_pages.length, (i) {
-                    final isActive = i == _currentPage;
-                    return AnimatedContainer(
-                      duration: 300.ms,
-                      margin: const EdgeInsets.symmetric(horizontal: 6),
-                      width: isActive ? 32 : 16,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: isActive
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.primary.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OnboardingPage extends StatelessWidget {
+  final _OnboardingPageData data;
+  final bool isActive;
+
+  const _OnboardingPage({required this.data, required this.isActive});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Column(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Lottie.asset(
+              data.lottie,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              backgroundLoading: false,
+              repeat: false,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  data.subtitle,
+                  style: (theme.textTheme.titleMedium ?? const TextStyle())
+                      .copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  }),
                 ),
-                const SizedBox(height: 32),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child:
-                        ElevatedButton(
-                          onPressed: _onGetStarted,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.colorScheme.primary,
-                            foregroundColor: theme.colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            textStyle: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            elevation: 2,
-                          ),
-                          child: Text(
-                            _currentPage == _pages.length - 1
-                                ? 'Commencer'
-                                : 'Suivant',
-                          ),
-                        ).animate().scaleXY(
-                          begin: 0.95,
-                          end: 1.0,
-                          duration: 200.ms,
+                const SizedBox(height: 12),
+                Text(
+                  data.title,
+                  style: (theme.textTheme.headlineMedium ?? const TextStyle())
+                      .copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  data.desc,
+                  style: (theme.textTheme.bodyLarge ?? const TextStyle())
+                      .copyWith(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: (0.7 * 255),
                         ),
-                  ),
+                        height: 1.5,
+                      ),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -229,16 +249,4 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-}
-
-class _OnboardingPage {
-  final String lottie;
-  final String title;
-  final String desc;
-
-  const _OnboardingPage({
-    required this.lottie,
-    required this.title,
-    required this.desc,
-  });
 }
