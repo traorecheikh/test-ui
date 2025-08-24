@@ -248,10 +248,18 @@ class SettingsScreen extends GetView<SettingsController> {
               ],
             )
           : null,
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        size: 16.sp,
-        color: theme.iconTheme.color?.withOpacity(0.5),
+      trailing: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) =>
+            ScaleTransition(scale: animation, child: child),
+        child: Icon(
+          Icons.arrow_forward_ios,
+          key: ValueKey(
+            theme.iconTheme.color,
+          ), // Ensures animation on theme change
+          size: 16.sp,
+          color: theme.iconTheme.color?.withOpacity(0.5),
+        ),
       ),
       onTap: onTap,
       contentPadding: EdgeInsets.symmetric(

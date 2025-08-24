@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: settingsController.themeMode,
-            initialRoute: Routes.home,
+            initialRoute: Routes.profile,
             getPages: AppPages.routes,
             builder: (context, child) {
               // Ensure text scaling and accessibility
