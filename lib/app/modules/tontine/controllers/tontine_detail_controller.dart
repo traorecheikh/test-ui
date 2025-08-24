@@ -10,38 +10,57 @@ import '../../../utils/constants.dart';
 import '../../../utils/formatters.dart';
 import '../../../widgets/custom_snackbar.dart';
 
-class TontineDetailController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class TontineDetailController extends GetxController {
   final Rx<Tontine?> tontine = Rx<Tontine?>(null);
   final RxBool isLoading = true.obs;
   final RxBool isOrganizer = false.obs;
-  late TabController tabController;
+
+  // Animation flags
+  final showSummary = false.obs;
+  final showStatus = false.obs;
+  final showParticipants = false.obs;
+  final showActions = false.obs;
+
   List<Contribution> currentRoundContributions = [];
 
-  // Current user ID (in a real app, this would come from a storage service)
+  // In a real app, this would come from an auth service
   int get currentUserId => 1;
 
-  // Initialization
+  Contribution? get myContribution {
+    return currentRoundContributions
+        .firstWhereOrNull((c) => c.participantId == currentUserId);
+  }
+
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 4, vsync: this);
     _loadTontineData();
+  }
+
+  void _triggerAnimations() {
+    Future.delayed(const Duration(milliseconds: 100),
+        () => showSummary.value = true);
+    Future.delayed(const Duration(milliseconds: 200),
+        () => showStatus.value = true);
+    Future.delayed(const Duration(milliseconds: 300),
+        () => showParticipants.value = true);
+    Future.delayed(
+        const Duration(milliseconds: 400), () => showActions.value = true);
   }
 
   void _loadTontineData() {
     isLoading.value = true;
-    // In a real app, tontineId would come from arguments
     final tontineId = Get.arguments as int?;
     if (tontineId == null) {
       tontine.value = null;
       isLoading.value = false;
       return;
     }
+
     final t = TontineService.getTontine(tontineId);
     tontine.value = t;
+
     if (t != null) {
-      // Organizer check (replace with real user check)
       isOrganizer.value = t.organizerId == currentUserId;
       if (t.id != null) {
         currentRoundContributions = TontineService.getTontineContributions(
@@ -50,59 +69,17 @@ class TontineDetailController extends GetxController
         );
       }
     }
+
     isLoading.value = false;
+    _triggerAnimations();
   }
 
-  /// Returns the list of contributions for a given round.
   List<Contribution> getRoundContributions(int round) {
     final t = tontine.value;
-    if (t == null) return [];
-    if (t.id != null) {
-      return TontineService.getTontineContributions(t.id!, round: round);
-    }
-    return [];
+    if (t == null || t.id == null) return [];
+    return TontineService.getTontineContributions(t.id!, round: round);
   }
 
-  /// Returns a list of personalized insights for the current tontine.
-  List<Map<String, dynamic>> get contextualInsights {
-    final t = tontine.value;
-    if (t == null) return [];
-    // Example: Show a tip if not all participants have paid
-    final unpaid = currentRoundContributions.where((c) => !c.isPaid).length;
-    final insights = <Map<String, dynamic>>[];
-    if (unpaid > 0) {
-      insights.add({
-        'title': 'Paiements en attente',
-        'message': 'Il reste $unpaid participant(s) à payer ce tour.',
-        'icon': Icons.warning,
-        'color': Colors.orange,
-      });
-    }
-    // Example: Show a tip if there are available spots
-    if (t.participantIds.length < t.maxParticipants) {
-      insights.add({
-        'title': 'Places disponibles',
-        'message': 'Invitez vos amis, il reste des places dans la tontine.',
-        'icon': Icons.group_add,
-        'color': Colors.blue,
-      });
-    }
-    return insights;
-  }
-
-  // Floating action button builder
-  Widget? buildFloatingActionButton(ThemeData theme) {
-    // Example: Only show for organizer
-    if (!isOrganizer.value) return null;
-    return FloatingActionButton(
-      onPressed: showInviteDialog,
-      backgroundColor: theme.colorScheme.primary,
-      child: const Icon(Icons.person_add),
-      tooltip: 'Inviter',
-    );
-  }
-
-  // Show invite dialog
   void showInviteDialog() {
     final t = tontine.value;
     if (t == null) return;
@@ -124,7 +101,7 @@ class TontineDetailController extends GetxController
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text('Partagez ce code ou le QR pour inviter des membres.'),
+            const Text('Partagez ce code ou le QR pour inviter des membres.'),
           ],
         ),
         actions: [
@@ -134,7 +111,6 @@ class TontineDetailController extends GetxController
     );
   }
 
-  // Show options menu
   void showOptionsMenu() {
     Get.bottomSheet(
       Column(
@@ -146,30 +122,35 @@ class TontineDetailController extends GetxController
             onTap: () {
               Get.back();
               VibrationService.softVibrate();
-              showInviteDialog();
+              showShareDialog();
             },
           ),
           ListTile(
-            leading: const Icon(Icons.info),
-            title: const Text('Informations'),
+            leading: const Icon(Icons.history),
+            title: const Text('Voir l\'historique'),
             onTap: () {
               Get.back();
-              tabController.animateTo(3);
+              showTransactionHistory();
             },
           ),
           if (isOrganizer.value)
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text('Gérer'),
+              title: const Text('Gérer la tontine'),
               onTap: () {
                 Get.back();
-                // Organizer settings
+                // TODO: Navigate to tontine management screen
+                CustomSnackbar.show(
+                    title: 'Info', message: 'Écran de gestion à venir.');
               },
             ),
           ListTile(
-            leading: const Icon(Icons.close),
-            title: const Text('Fermer'),
-            onTap: () => Get.back(),
+            leading: const Icon(Icons.exit_to_app, color: Colors.red),
+            title: Text('Quitter la tontine', style: TextStyle(color: Colors.red)),
+            onTap: () {
+              Get.back();
+              showLeaveConfirmation();
+            },
           ),
         ],
       ),
@@ -180,24 +161,22 @@ class TontineDetailController extends GetxController
     );
   }
 
-  // Show leave confirmation
   void showLeaveConfirmation() {
     Get.dialog(
       AlertDialog(
         title: const Text('Quitter la Tontine'),
         content: const Text(
-          'Êtes-vous sûr de vouloir quitter cette tontine ? '
-          'Cette action est irréversible et vous perdrez votre place.',
+          'Êtes-vous sûr de vouloir quitter cette tontine ? Cette action est irréversible.',
         ),
         actions: [
           TextButton(onPressed: () => Get.back(), child: const Text('Annuler')),
           TextButton(
             onPressed: () {
               Get.back();
-              Get.back();
+              Get.back(); // Go back from detail screen
               CustomSnackbar.show(
                 title: 'Succès',
-                message: 'Vous avez quitté la tontine',
+                message: 'Vous avez quitté la tontine.',
                 success: true,
               );
             },
@@ -211,13 +190,20 @@ class TontineDetailController extends GetxController
     );
   }
 
-  // Show transaction history
   void showTransactionHistory() {
     VibrationService.softVibrate();
-    Get.toNamed('/transaction-history', arguments: tontine.value?.id);
+    // In a real app, you would navigate to a dedicated transaction history screen
+    Get.dialog(
+      AlertDialog(
+        title: const Text('Historique des Transactions'),
+        content: const Text('L\'historique des transactions sera affiché ici.'),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('Fermer')),
+        ],
+      ),
+    );
   }
 
-  // Show payment dialog
   void showPaymentDialog() {
     final t = tontine.value;
     if (t == null) return;
@@ -228,7 +214,8 @@ class TontineDetailController extends GetxController
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Montant: ${Formatters.formatCurrency(t.contributionAmount)}'),
+            Text(
+                'Montant: ${Formatters.formatCurrency(t.contributionAmount)}'),
             const SizedBox(height: 8),
             Text(
               'Destinataire: Organisateur (${AppConstants.sampleParticipantNames[0]})',
@@ -286,7 +273,7 @@ class TontineDetailController extends GetxController
 
   void processPayment(String method) {
     VibrationService.godlyVibrate();
-    Get.back();
+    Get.back(); // Close payment options
     Get.dialog(
       AlertDialog(
         content: Column(
@@ -301,17 +288,16 @@ class TontineDetailController extends GetxController
       barrierDismissible: false,
     );
     Future.delayed(const Duration(seconds: 2), () {
-      Get.back();
+      Get.back(); // Close progress indicator
       CustomSnackbar.show(
         title: 'Succès',
         message: 'Paiement effectué avec succès!',
         success: true,
       );
-      _loadTontineData();
+      _loadTontineData(); // Refresh data
     });
   }
 
-  // Show share dialog
   void showShareDialog() {
     final t = tontine.value;
     if (t == null) return;
@@ -340,7 +326,7 @@ class TontineDetailController extends GetxController
           TextButton(onPressed: () => Get.back(), child: const Text('Fermer')),
           TextButton(
             onPressed: () {
-              // Copy to clipboard functionality
+              // In a real app, you would use a share plugin
               Get.snackbar('Copié', 'Code copié dans le presse-papiers');
             },
             child: const Text('Copier le Code'),
@@ -350,20 +336,13 @@ class TontineDetailController extends GetxController
     );
   }
 
-  // Refresh tontine data
   Future<void> refreshTontineData() async {
     VibrationService.softVibrate();
     _loadTontineData();
-    Get.snackbar(
-      'Actualisé',
-      'Les données ont été mises à jour',
-      duration: const Duration(seconds: 2),
+    CustomSnackbar.show(
+      title: 'Actualisé',
+      message: 'Les données de la tontine ont été mises à jour.',
+      success: false,
     );
-  }
-
-  @override
-  void onClose() {
-    tabController.dispose();
-    super.onClose();
   }
 }

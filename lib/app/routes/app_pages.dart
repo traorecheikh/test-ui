@@ -61,7 +61,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.detail,
-      page: () => TontineDetailScreen(tontineId: Get.arguments as int),
+      page: () => const TontineDetailScreen(),
       binding: TontineDetailBinding(),
       transition: Transition.rightToLeft,
     ),
