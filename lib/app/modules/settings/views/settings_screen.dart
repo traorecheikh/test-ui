@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../controllers/settings_controller.dart';
+import 'package:snt_ui_test/app/modules/settings/controllers/settings_controller.dart';
+// import 'package:snt_ui_test/app/theme.dart'; // Assuming AppPaddings, AppRadius etc. were intended to be here
 
 class SettingsScreen extends GetView<SettingsController> {
   const SettingsScreen({super.key});
@@ -9,214 +10,254 @@ class SettingsScreen extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.only(
-            top: 32,
-            left: 20,
-            right: 20,
-            bottom: 20,
-          ),
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+        child: Obx(
+          () => AnimatedOpacity(
+            // Use one of the controller's flags for the root animation
+            opacity: controller.showHeader.value
+                ? 1.0
+                : 0.0, // Or a dedicated 'showScreen' flag if preferred
+            duration: const Duration(
+              milliseconds: 300,
+            ), // Short overall fade-in
+            curve: Curves.easeIn,
+            child: ListView(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: theme.colorScheme.primary,
-                    size: 32,
+                AnimatedSlide(
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOutCubic,
+                  offset: controller.showHeader.value
+                      ? Offset.zero
+                      : const Offset(0, 0.2),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios_new,
+                            color: theme.colorScheme.primary,
+                          ),
+                          onPressed: () => Get.back(),
+                          tooltip: 'Retour',
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          'Paramètres',
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  onPressed: () => Get.back(),
-                  tooltip: 'Retour',
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  'Paramètres',
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 28,
-                  ),
+                SizedBox(height: 20.h),
+                _buildSettingsSection(
+                  theme,
+                  controller,
+                  showSection: controller.showToggles.value,
+                  children: [
+                    _buildToggleItem(
+                      theme,
+                      Icons.brightness_6,
+                      'Mode sombre',
+                      controller.darkMode, // Use the RxBool directly
+                      controller.toggleDarkMode,
+                    ),
+                    _buildToggleItem(
+                      theme,
+                      Icons.notifications_none,
+                      'Notifications',
+                      controller.notificationsEnabled,
+                      controller.toggleNotifications,
+                    ),
+                    _buildToggleItem(
+                      theme,
+                      Icons.volume_up_outlined,
+                      'Sons',
+                      controller.soundEnabled,
+                      controller.toggleSound,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 32.h), // Changed from 24.h
+                _buildSettingsSection(
+                  theme,
+                  controller,
+                  showSection: controller.showInfo.value,
+                  children: [
+                    _buildInfoItem(
+                      theme,
+                      Icons.info_outline,
+                      'À propos de l\'application',
+                      onTap: controller.openAboutDialog,
+                    ),
+                    _buildInfoItem(
+                      theme,
+                      Icons.privacy_tip_outlined,
+                      'Confidentialité',
+                      onTap: controller.openPrivacyPolicy,
+                    ),
+                    _buildInfoItem(
+                      theme,
+                      Icons.description_outlined,
+                      'Conditions d’utilisation',
+                      onTap: controller.openTermsOfService,
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.logout,
+                        color: theme.colorScheme.error,
+                      ),
+                      title: Text(
+                        'Se déconnecter',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.error,
+                        ),
+                      ),
+                      onTap: controller.logout,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 20.h, // Changed from 8.h
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12.h,
+                        horizontal: 16.w,
+                      ),
+                      child: Obx(
+                        () => Text(
+                          'Version ${controller.appVersion.value}',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 32),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.primary.withOpacity(0.08),
-                    blurRadius: 18,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.dark_mode,
-                        color: theme.colorScheme.primary,
-                        size: 28,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          'Mode sombre',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Obx(
-                        () => Switch(
-                          value: controller.darkMode.value,
-                          onChanged: controller.toggleDarkMode,
-                          activeColor: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 32),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.notifications,
-                        color: theme.colorScheme.primary,
-                        size: 28,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          'Notifications',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Obx(
-                        () => Switch(
-                          value: controller.notificationsEnabled.value,
-                          onChanged: controller.toggleNotifications,
-                          activeColor: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 32),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.volume_up,
-                        color: theme.colorScheme.primary,
-                        size: 28,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          'Sons',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Obx(
-                        () => Switch(
-                          value: controller.soundEnabled.value,
-                          onChanged: controller.toggleSound,
-                          activeColor: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(28),
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.primary.withOpacity(0.06),
-                    blurRadius: 12,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: Icon(
-                      Icons.info_outline,
-                      color: theme.colorScheme.primary,
-                    ),
-                    title: Text(
-                      'À propos',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: theme.colorScheme.primary,
-                    ),
-                    onTap: () {},
-                  ),
-                  Divider(),
-                  ListTile(
-                    leading: Icon(
-                      Icons.privacy_tip,
-                      color: theme.colorScheme.primary,
-                    ),
-                    title: Text(
-                      'Confidentialité',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: theme.colorScheme.primary,
-                    ),
-                    onTap: () {},
-                  ),
-                  Divider(),
-                  ListTile(
-                    leading: Icon(
-                      Icons.gavel,
-                      color: theme.colorScheme.primary,
-                    ),
-                    title: Text(
-                      'Conditions d’utilisation',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: theme.colorScheme.primary,
-                    ),
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSettingsSection(
+    ThemeData theme,
+    SettingsController controller, {
+    required bool showSection,
+    required List<Widget> children,
+  }) {
+    return AnimatedSlide(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOutCubic,
+      offset: showSection ? Offset.zero : const Offset(0, 0.3),
+      child: AnimatedOpacity(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOutCubic,
+        opacity: showSection ? 1.0 : 0.0,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 8.h), // Added this padding
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(12.r),
+            boxShadow: [
+              BoxShadow(
+                color: theme.shadowColor.withOpacity(0.05),
+                blurRadius: 6.r,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Column(
+            children: children, // Removed the map and divider logic
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildToggleItem(
+    ThemeData theme,
+    IconData icon,
+    String title,
+    RxBool value,
+    ValueChanged<bool> onChanged,
+  ) {
+    // Removed showDivider parameter
+    return Obx(
+      () => SwitchListTile(
+        secondary: Icon(icon, color: theme.colorScheme.primary),
+        title: Text(
+          title,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        value: value.value,
+        onChanged: onChanged,
+        activeColor: theme.colorScheme.primary,
+        inactiveThumbColor: theme.colorScheme.onSurface.withOpacity(0.4),
+        inactiveTrackColor: theme.colorScheme.onSurface.withOpacity(0.1),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 16.h,
+        ), // Changed from 8.h
+      ),
+    );
+  }
+
+  Widget _buildInfoItem(
+    ThemeData theme,
+    IconData icon,
+    String title, {
+    String? subtitle,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: theme.colorScheme.primary),
+      title: Text(
+        title,
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: subtitle != null
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 4.h),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            )
+          : null,
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 16.sp,
+        color: theme.iconTheme.color?.withOpacity(0.5),
+      ),
+      onTap: onTap,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: 16.w,
+        vertical: 20.h,
+      ), // Changed from 12.h
     );
   }
 }
