@@ -58,6 +58,17 @@ class RefreshTokenBody {
   Map<String, dynamic> toJson() => _$RefreshTokenBodyToJson(this);
 }
 
+@JsonSerializable()
+class TokenResponse {
+  final String accessToken;
+  final String refreshToken;
+
+  TokenResponse({required this.accessToken, required this.refreshToken});
+
+  factory TokenResponse.fromJson(Map<String, dynamic> json) => _$TokenResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$TokenResponseToJson(this);
+}
+
 // User Models
 
 @JsonSerializable()

@@ -1,7 +1,8 @@
-
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+
 import '../models/api_models.dart';
+import 'auth_interceptor.dart';
 
 part 'api_client.g.dart';
 
@@ -9,7 +10,13 @@ part 'api_client.g.dart';
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
-  // Authentication Endpoints
+  factory ApiClient.withInterceptors(Dio dio, {required String baseUrl}) {
+    final client = _ApiClient(dio, baseUrl: baseUrl);
+    dio.interceptors.add(AuthInterceptor(dio));
+    return client;
+  }
+
+  /// Authentication Endpoints
   @POST("auth/request-registration-otp-sms")
   Future<void> requestRegistrationOtpSms(@Body() RequestOtpBody body);
 
@@ -29,12 +36,12 @@ abstract class ApiClient {
   Future<void> loginUser(@Body() LoginUserBody body);
 
   @POST("auth/refresh")
-  Future<void> refreshAccessToken(@Body() RefreshTokenBody body);
+  Future<TokenResponse> refreshAccessToken(@Body() RefreshTokenBody body);
 
   @GET("auth/health")
   Future<void> healthCheck();
 
-  // User Endpoints
+  /// User Endpoints
   @GET("user/profile")
   Future<UserProfile> getUserProfile(@Header("Authorization") String authToken);
 
@@ -44,7 +51,7 @@ abstract class ApiClient {
     @Body() UpdateUserProfileBody body,
   );
 
-  // Tontine Endpoints
+  /// Tontine Endpoints
   @POST("tontines")
   Future<Tontine> createTontine(
     @Header("Authorization") String authToken,

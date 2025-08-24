@@ -50,6 +50,18 @@ RefreshTokenBody _$RefreshTokenBodyFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$RefreshTokenBodyToJson(RefreshTokenBody instance) =>
     <String, dynamic>{'refreshToken': instance.refreshToken};
 
+TokenResponse _$TokenResponseFromJson(Map<String, dynamic> json) =>
+    TokenResponse(
+      accessToken: json['accessToken'] as String,
+      refreshToken: json['refreshToken'] as String,
+    );
+
+Map<String, dynamic> _$TokenResponseToJson(TokenResponse instance) =>
+    <String, dynamic>{
+      'accessToken': instance.accessToken,
+      'refreshToken': instance.refreshToken,
+    };
+
 UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => UserProfile(
   id: (json['id'] as num).toInt(),
   fullName: json['fullName'] as String,
