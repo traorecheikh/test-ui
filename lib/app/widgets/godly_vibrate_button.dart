@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../services/vibration_service.dart';
 
 class GodlyVibrateButton extends StatefulWidget {

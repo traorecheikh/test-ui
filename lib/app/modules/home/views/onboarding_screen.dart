@@ -74,25 +74,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: AnimatedOpacity(
                           opacity: 1,
                           duration: 300.ms,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18, vertical: 8),
-                            decoration: BoxDecoration(
-                              color:
-                                  theme.colorScheme.primary.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Text(
-                              'Passer',
-                              style: theme.textTheme.labelLarge?.copyWith(
-                                color: theme.colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          )
-                              .animate()
-                              .fadeIn(duration: 300.ms)
-                              .slideX(begin: 0.2, duration: 300.ms),
+                          child:
+                              Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 18,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.primary
+                                          .withOpacity(0.12),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Text(
+                                      'Passer',
+                                      style: theme.textTheme.labelLarge
+                                          ?.copyWith(
+                                            color: theme.colorScheme.primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  )
+                                  .animate()
+                                  .fadeIn(duration: 300.ms)
+                                  .slideX(begin: 0.2, duration: 300.ms),
                         ),
                       ),
                     ),
@@ -114,8 +118,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 ? _pageController.page! - i
                                 : 0;
                           } catch (_) {}
-                          final opacity =
-                              (1 - pageOffset.abs()).clamp(0.0, 1.0);
+                          final opacity = (1 - pageOffset.abs()).clamp(
+                            0.0,
+                            1.0,
+                          );
                           final slide = 40.0 * pageOffset;
                           return Opacity(
                             opacity: opacity,
@@ -127,7 +133,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 32),
+                            horizontal: 32,
+                            vertical: 32,
+                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -151,9 +159,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   fontSize: 18,
                                 ),
                                 textAlign: TextAlign.center,
-                              )
-                                  .animate()
-                                  .fadeIn(duration: 500.ms, delay: 200.ms),
+                              ).animate().fadeIn(
+                                duration: 500.ms,
+                                delay: 200.ms,
+                              ),
                             ],
                           ),
                         ),
@@ -184,25 +193,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _onGetStarted,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: theme.colorScheme.primary,
-                        foregroundColor: theme.colorScheme.onPrimary,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18),
+                    child:
+                        ElevatedButton(
+                          onPressed: _onGetStarted,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.primary,
+                            foregroundColor: theme.colorScheme.onPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            textStyle: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            elevation: 2,
+                          ),
+                          child: Text(
+                            _currentPage == _pages.length - 1
+                                ? 'Commencer'
+                                : 'Suivant',
+                          ),
+                        ).animate().scaleXY(
+                          begin: 0.95,
+                          end: 1.0,
+                          duration: 200.ms,
                         ),
-                        textStyle: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                        elevation: 2,
-                      ),
-                      child: Text(_currentPage == _pages.length - 1
-                          ? 'Commencer'
-                          : 'Suivant'),
-                    )
-                        .animate()
-                        .scaleXY(begin: 0.95, end: 1.0, duration: 200.ms),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -219,6 +235,10 @@ class _OnboardingPage {
   final String lottie;
   final String title;
   final String desc;
-  const _OnboardingPage(
-      {required this.lottie, required this.title, required this.desc});
+
+  const _OnboardingPage({
+    required this.lottie,
+    required this.title,
+    required this.desc,
+  });
 }

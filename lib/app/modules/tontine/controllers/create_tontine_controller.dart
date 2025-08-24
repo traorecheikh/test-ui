@@ -7,6 +7,7 @@ class CreateTontineController extends GetxController {
 
   // Stepper state
   final currentStep = 0.obs;
+
   int get stepCount => 5; // We have 5 steps now
   bool get isLastStep => currentStep.value == stepCount - 1;
 
@@ -42,36 +43,44 @@ class CreateTontineController extends GetxController {
   // Validation
   String? nameValidator(String? value) =>
       (value == null || value.isEmpty) ? 'Le nom est requis' : null;
+
   String? descriptionValidator(String? value) =>
       (value == null || value.isEmpty) ? 'La description est requise' : null;
+
   String? amountValidator(String? value) =>
       (value == null || double.tryParse(value) == null)
-          ? 'Un montant valide est requis'
-          : null;
+      ? 'Un montant valide est requis'
+      : null;
+
   String? maxParticipantsValidator(String? value) =>
       (value == null || int.tryParse(value) == null)
-          ? 'Un nombre valide est requis'
-          : null;
+      ? 'Un nombre valide est requis'
+      : null;
+
   String? maxHandsValidator(String? value) =>
       (value == null || int.tryParse(value) == null)
-          ? 'Un nombre valide est requis'
-          : null;
+      ? 'Un nombre valide est requis'
+      : null;
+
   String? organizerHandsValidator(String? value) =>
       (value == null || int.tryParse(value) == null)
-          ? 'Un nombre valide est requis'
-          : null;
+      ? 'Un nombre valide est requis'
+      : null;
+
   String? gracePeriodValidator(String? value) =>
       (value == null || int.tryParse(value) == null)
-          ? 'Un nombre valide est requis'
-          : null;
+      ? 'Un nombre valide est requis'
+      : null;
+
   String? penaltyRateValidator(String? value) =>
       (value == null || double.tryParse(value) == null)
-          ? 'Un taux valide est requis'
-          : null;
+      ? 'Un taux valide est requis'
+      : null;
+
   String? maxPenaltyValidator(String? value) =>
       (value == null || double.tryParse(value) == null)
-          ? 'Un taux valide est requis'
-          : null;
+      ? 'Un taux valide est requis'
+      : null;
 
   @override
   void onInit() {
@@ -115,10 +124,7 @@ class CreateTontineController extends GetxController {
         title: const Text('Tontine Créée'),
         content: const Text('La logique de soumission est à implémenter.'),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('OK'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('OK')),
         ],
       ),
     );

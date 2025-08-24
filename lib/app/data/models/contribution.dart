@@ -42,7 +42,9 @@ class Contribution {
   });
 
   bool get isPaid => status == ContributionStatus.paid;
+
   bool get isOverdue => DateTime.now().isAfter(dueDate) && !isPaid;
+
   double get totalAmount => amount + (penaltyAmount ?? 0);
 
   Contribution copyWith({
@@ -84,6 +86,7 @@ enum ContributionStatus {
   failed('Échec');
 
   const ContributionStatus(this.label);
+
   final String label;
 }
 
@@ -138,5 +141,6 @@ enum RoundStatus {
   completed('Terminé');
 
   const RoundStatus(this.label);
+
   final String label;
 }

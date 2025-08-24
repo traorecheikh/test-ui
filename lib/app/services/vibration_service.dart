@@ -37,8 +37,8 @@ class VibrationService {
 
       await Vibration.vibrate(
         pattern: pattern,
-        intensities:
-            intensities, // Pass empty if amplitude can't be controlled; library uses defaults
+        intensities: intensities,
+        // Pass empty if amplitude can't be controlled; library uses defaults
         amplitude: canControlAmp
             ? 160
             : -1, // Medium amplitude or platform default

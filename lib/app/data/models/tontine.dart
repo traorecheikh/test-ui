@@ -45,7 +45,10 @@ class Tontine {
   @HiveField(19)
   final int? currentWinnerId;
 
-  const Tontine({
+  // Transient field to indicate if the current user has paid for the current round
+  bool? isPaidByCurrentUser;
+
+  Tontine({
     required this.id,
     required this.name,
     required this.description,
@@ -66,10 +69,13 @@ class Tontine {
     this.currentRound = 0,
     this.nextContributionDate,
     this.currentWinnerId,
+    this.isPaidByCurrentUser,
   });
 
   int get totalRounds => participantIds.length;
+
   double get totalPot => contributionAmount * participantIds.length;
+
   bool get isComplete => currentRound >= totalRounds;
 
   String get formattedNextPaymentDate => nextContributionDate != null
@@ -103,6 +109,7 @@ class Tontine {
     int? currentRound,
     DateTime? nextContributionDate,
     int? currentWinnerId,
+    bool? isPaidByCurrentUser,
   }) => Tontine(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -124,6 +131,7 @@ class Tontine {
     currentRound: currentRound ?? this.currentRound,
     nextContributionDate: nextContributionDate ?? this.nextContributionDate,
     currentWinnerId: currentWinnerId ?? this.currentWinnerId,
+    isPaidByCurrentUser: isPaidByCurrentUser ?? this.isPaidByCurrentUser,
   );
 }
 
@@ -141,6 +149,7 @@ enum TontineFrequency {
   quarterly('Trimestriel');
 
   const TontineFrequency(this.label);
+
   final String label;
 }
 
@@ -156,6 +165,7 @@ enum TontineDrawOrder {
   hybrid('Hybride');
 
   const TontineDrawOrder(this.label);
+
   final String label;
 }
 
@@ -171,5 +181,6 @@ enum TontineStatus {
   cancelled('Annulée');
 
   const TontineStatus(this.label);
+
   final String label;
 }

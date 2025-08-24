@@ -105,12 +105,14 @@ class RegisterStepController extends GetxController {
   void _validateStep() {
     switch (currentStep.value) {
       case 0:
-        isStepValid.value = nameController.text.trim().length >= 3 &&
+        isStepValid.value =
+            nameController.text.trim().length >= 3 &&
             nameError.value.isEmpty &&
             emailError.value.isEmpty;
         break;
       case 1:
-        isStepValid.value = cityController.text.trim().isNotEmpty &&
+        isStepValid.value =
+            cityController.text.trim().isNotEmpty &&
             regionController.text.trim().isNotEmpty &&
             countryController.text.trim().isNotEmpty &&
             cityError.value.isEmpty &&

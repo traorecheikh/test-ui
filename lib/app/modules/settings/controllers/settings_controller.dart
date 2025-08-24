@@ -12,6 +12,7 @@ class SettingsController extends GetxController {
   final showHeader = false.obs;
   final showToggles = false.obs;
   final showInfo = false.obs;
+
   // final showAnimations = false.obs; // This will be handled by showHeader or a new composite if needed
 
   @override
@@ -40,7 +41,9 @@ class SettingsController extends GetxController {
 
   // Methods to toggle settings
   void toggleDarkMode(bool value) => darkMode.value = value;
+
   void toggleNotifications(bool value) => notificationsEnabled.value = value;
+
   void toggleSound(bool value) => soundEnabled.value = value;
 
   // Placeholder methods for actions - Implement their logic

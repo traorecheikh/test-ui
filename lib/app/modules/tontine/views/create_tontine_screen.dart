@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -85,6 +83,7 @@ class CreateTontineScreen extends GetView<CreateTontineController> {
 // --- ANIMATION WIDGET ---
 class _AnimatedStaggeredList extends StatefulWidget {
   final List<Widget> children;
+
   const _AnimatedStaggeredList({required this.children});
 
   @override
@@ -126,7 +125,11 @@ class _AnimatedStaggeredListState extends State<_AnimatedStaggeredList>
             builder: (context, child) {
               final animation = CurvedAnimation(
                 parent: _controller,
-                curve: Interval(intervalStart, intervalEnd, curve: Curves.easeOutCubic),
+                curve: Interval(
+                  intervalStart,
+                  intervalEnd,
+                  curve: Curves.easeOutCubic,
+                ),
               );
               return FadeTransition(
                 opacity: animation,
@@ -352,7 +355,8 @@ class _Step4Penalties extends GetView<CreateTontineController> {
                         hint: 'Ex: 5',
                         icon: CupertinoIcons.percent,
                         keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
+                          decimal: true,
+                        ),
                         validator: controller.penaltyRateValidator,
                       ),
                       const SizedBox(height: 24),
@@ -362,7 +366,8 @@ class _Step4Penalties extends GetView<CreateTontineController> {
                         hint: 'Ex: 50',
                         icon: CupertinoIcons.chart_pie_fill,
                         keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
+                          decimal: true,
+                        ),
                         validator: controller.maxPenaltyValidator,
                       ),
                     ],
@@ -399,7 +404,7 @@ class _Step5Preview extends GetView<CreateTontineController> {
                 color: Colors.black.withOpacity(0.04),
                 blurRadius: 15,
                 offset: const Offset(0, 4),
-              )
+              ),
             ],
           ),
           child: Column(
@@ -444,7 +449,11 @@ class _Step5Preview extends GetView<CreateTontineController> {
   }
 
   Widget _buildPreviewRow(
-      ThemeData theme, String label, String value, IconData icon) {
+    ThemeData theme,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -465,8 +474,9 @@ class _Step5Preview extends GetView<CreateTontineController> {
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
@@ -522,8 +532,9 @@ class _ProgressIndicator extends StatelessWidget {
               value: percentage,
               minHeight: 12,
               backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                theme.colorScheme.primary,
+              ),
             ),
           ),
         ],
@@ -573,6 +584,7 @@ class _StepHeader extends StatelessWidget {
 
 class _InputGroup extends StatelessWidget {
   final List<Widget> children;
+
   const _InputGroup({required this.children});
 
   @override
@@ -588,12 +600,10 @@ class _InputGroup extends StatelessWidget {
             color: Colors.black.withOpacity(0.04),
             blurRadius: 15,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 }
@@ -625,8 +635,9 @@ class _FluffyTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: theme.textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.w600),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 12),
         TextFormField(
@@ -636,12 +647,16 @@ class _FluffyTextField extends StatelessWidget {
           validator: validator,
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon:
-                Icon(icon, color: theme.colorScheme.primary.withOpacity(0.6)),
+            prefixIcon: Icon(
+              icon,
+              color: theme.colorScheme.primary.withOpacity(0.6),
+            ),
             filled: true,
             fillColor: theme.colorScheme.primary.withOpacity(0.05),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 20,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide.none,
@@ -652,7 +667,10 @@ class _FluffyTextField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+              borderSide: BorderSide(
+                color: theme.colorScheme.primary,
+                width: 2,
+              ),
             ),
           ),
         ),
@@ -684,23 +702,30 @@ class _FluffyDropdown extends StatelessWidget {
       children: [
         Text(
           label,
-          style: theme.textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.w600),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
           value: value,
           items: items,
           onChanged: onChanged,
-          icon: Icon(CupertinoIcons.chevron_down,
-              color: theme.colorScheme.primary),
+          icon: Icon(
+            CupertinoIcons.chevron_down,
+            color: theme.colorScheme.primary,
+          ),
           decoration: InputDecoration(
-            prefixIcon:
-                Icon(icon, color: theme.colorScheme.primary.withOpacity(0.6)),
+            prefixIcon: Icon(
+              icon,
+              color: theme.colorScheme.primary.withOpacity(0.6),
+            ),
             filled: true,
             fillColor: theme.colorScheme.primary.withOpacity(0.05),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 20,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide.none,
@@ -711,7 +736,10 @@ class _FluffyDropdown extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
-              borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+              borderSide: BorderSide(
+                color: theme.colorScheme.primary,
+                width: 2,
+              ),
             ),
           ),
         ),
@@ -738,17 +766,14 @@ class _SwitchTile extends StatelessWidget {
     final theme = Theme.of(context);
     return Row(
       children: [
-        Icon(
-          icon,
-          color: theme.colorScheme.primary,
-          size: 28,
-        ),
+        Icon(icon, color: theme.colorScheme.primary, size: 28),
         const SizedBox(width: 16),
         Expanded(
           child: Text(
             label,
-            style:
-                theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         CupertinoSwitch(
@@ -783,9 +808,7 @@ class _NavigationControls extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
       decoration: BoxDecoration(
         color: theme.colorScheme.background,
-        border: Border(
-          top: BorderSide(color: Colors.grey.withOpacity(0.1)),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey.withOpacity(0.1))),
       ),
       child: Row(
         children: [
@@ -807,8 +830,7 @@ class _NavigationControls extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24),
               ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
               elevation: 5,
               shadowColor: theme.colorScheme.primary.withOpacity(0.3),
             ),
@@ -818,7 +840,9 @@ class _NavigationControls extends StatelessWidget {
                 Text(
                   isLastStep ? 'Terminer' : 'Suivant',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Icon(

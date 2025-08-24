@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 import '../utils/formatters.dart';
 
@@ -22,7 +21,9 @@ class ModernPotVisualWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final percentage = (targetAmount > 0) ? (currentAmount / targetAmount).clamp(0.0, 1.0) : 0.0;
+    final percentage = (targetAmount > 0)
+        ? (currentAmount / targetAmount).clamp(0.0, 1.0)
+        : 0.0;
 
     return GestureDetector(
       onTap: onTap,
@@ -36,7 +37,7 @@ class ModernPotVisualWidget extends StatelessWidget {
               color: Colors.black.withOpacity(0.08),
               blurRadius: 20,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Column(
@@ -67,7 +68,9 @@ class ModernPotVisualWidget extends StatelessWidget {
               value: percentage,
               strokeWidth: 8,
               backgroundColor: theme.colorScheme.onSurface.withOpacity(0.1),
-              valueColor: AlwaysStoppedAnimation<Color>(_getStatusColor(percentage)),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                _getStatusColor(percentage),
+              ),
             ),
           ),
           Column(
@@ -87,7 +90,7 @@ class ModernPotVisualWidget extends StatelessWidget {
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -118,7 +121,11 @@ class ModernPotVisualWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.group, color: theme.colorScheme.onSurface.withOpacity(0.6), size: 16),
+        Icon(
+          Icons.group,
+          color: theme.colorScheme.onSurface.withOpacity(0.6),
+          size: 16,
+        ),
         const SizedBox(width: 8),
         Text(
           '$paidParticipants / $totalParticipants Participants',

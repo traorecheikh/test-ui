@@ -170,6 +170,7 @@ class HistoryView extends GetView<HistoryController> {
 
 class _HistoryItemCard extends StatelessWidget {
   final HistoryItem item;
+
   const _HistoryItemCard({required this.item});
 
   @override
@@ -195,8 +196,9 @@ class _HistoryItemCard extends StatelessWidget {
               children: [
                 Text(
                   item.title,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

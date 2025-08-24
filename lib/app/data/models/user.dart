@@ -48,6 +48,7 @@ class AppUser {
   });
 
   bool get isOrganizer => organizedTontineIds.isNotEmpty;
+
   int get totalTontines => tontineIds.length;
 
   AppUser copyWith({
@@ -95,6 +96,7 @@ enum UserLevel {
   legend('Légende SunuTontine', 100000);
 
   const UserLevel(this.label, this.requiredPoints);
+
   final String label;
   final int requiredPoints;
 }

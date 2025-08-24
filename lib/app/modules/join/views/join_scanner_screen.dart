@@ -172,6 +172,7 @@ class JoinScannerScreen extends GetView<JoinScannerController> {
 class _WhiteOutsideOverlayPainter extends CustomPainter {
   final Rect scanRect;
   final double borderRadius;
+
   _WhiteOutsideOverlayPainter({
     required this.scanRect,
     required this.borderRadius,
@@ -202,6 +203,7 @@ class _WhiteOutsideOverlayPainter extends CustomPainter {
 class _CornerArcPainter extends CustomPainter {
   final Color color;
   final double radius;
+
   _CornerArcPainter({required this.color, required this.radius});
 
   @override

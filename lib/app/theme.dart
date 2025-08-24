@@ -77,31 +77,45 @@ class AppSpacing {
 
   // Responsive height spacers (SizedBox)
   static SizedBox get smallHeightSpacer => SizedBox(height: smallH);
+
   static SizedBox get mediumHeightSpacer => SizedBox(height: mediumH);
+
   static SizedBox get largeHeightSpacer => SizedBox(height: largeH);
+
   static SizedBox get extraBitLargeHeightSpacer =>
       SizedBox(height: extraBitLargeH);
+
   static SizedBox get extraLargeHeightSpacer => SizedBox(height: extraLargeH);
 
   // Responsive width spacers (SizedBox)
   static SizedBox get smallWidthSpacer => SizedBox(width: small);
+
   static SizedBox get mediumWidthSpacer => SizedBox(width: medium);
+
   static SizedBox get largeWidthSpacer => SizedBox(width: large);
+
   static SizedBox get extraBitLargeWidthSpacer =>
       SizedBox(width: extraBitLarge);
+
   static SizedBox get extraLargeWidthSpacer => SizedBox(width: extraLarge);
 
   // Responsive height spacer widgets (for direct use as Widgets)
   static Widget get smallHeightSpacerWidget => SizedBox(height: smallH);
+
   static Widget get mediumHeightSpacerWidget => SizedBox(height: mediumH);
+
   static Widget get largeHeightSpacerWidget => SizedBox(height: largeH);
+
   static Widget get extraLargeHeightSpacerWidget =>
       SizedBox(height: extraLargeH);
 
   // Responsive width spacer widgets (for direct use as Widgets)
   static Widget get smallWidthSpacerWidget => SizedBox(width: small);
+
   static Widget get mediumWidthSpacerWidget => SizedBox(width: medium);
+
   static Widget get largeWidthSpacerWidget => SizedBox(width: large);
+
   static Widget get extraLargeWidthSpacerWidget => SizedBox(width: extraLarge);
 }
 

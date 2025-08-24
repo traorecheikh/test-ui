@@ -4,7 +4,12 @@ import 'package:flutter_animate/flutter_animate.dart';
 class AnimatedValidationIcon extends StatelessWidget {
   final bool isValid;
   final bool isVisible;
-  const AnimatedValidationIcon({super.key, required this.isValid, this.isVisible = true});
+
+  const AnimatedValidationIcon({
+    super.key,
+    required this.isValid,
+    this.isVisible = true,
+  });
 
   @override
   Widget build(BuildContext context) {

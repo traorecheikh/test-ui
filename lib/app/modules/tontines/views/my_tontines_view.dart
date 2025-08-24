@@ -7,7 +7,6 @@ import 'package:shimmer/shimmer.dart';
 import '../../../data/models/tontine.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/storage_service.dart';
-import '../../../theme.dart';
 import '../../home/controllers/home_controller.dart';
 
 class MyTontinesView extends GetView<HomeController> {
@@ -30,8 +29,11 @@ class MyTontinesView extends GetView<HomeController> {
         ),
         actions: [
           IconButton(
-            icon: Icon(CupertinoIcons.add_circled,
-                color: theme.colorScheme.primary, size: 28),
+            icon: Icon(
+              CupertinoIcons.add_circled,
+              color: theme.colorScheme.primary,
+              size: 28,
+            ),
             onPressed: () => Get.toNamed(Routes.create),
             tooltip: 'Créer une tontine',
           ),
@@ -191,7 +193,7 @@ class _ModernTontineCard extends StatelessWidget {
               color: Colors.black.withOpacity(0.08),
               blurRadius: 20,
               offset: const Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Column(
@@ -218,8 +220,11 @@ class _ModernTontineCard extends StatelessWidget {
             color: _getStatusColor(theme).withOpacity(0.1),
             borderRadius: BorderRadius.circular(18),
           ),
-          child: Icon(_getHeaderIcon(),
-              color: _getStatusColor(theme), size: 32),
+          child: Icon(
+            _getHeaderIcon(),
+            color: _getStatusColor(theme),
+            size: 32,
+          ),
         ),
         SizedBox(width: 16.w),
         Expanded(
@@ -237,8 +242,10 @@ class _ModernTontineCard extends StatelessWidget {
               ),
               SizedBox(height: 4.h),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: _getStatusColor(theme).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -275,8 +282,11 @@ class _ModernTontineCard extends StatelessWidget {
   Widget _buildParticipantInfo(ThemeData theme) {
     return Row(
       children: [
-        Icon(CupertinoIcons.group_solid,
-            color: theme.colorScheme.onSurface.withOpacity(0.6), size: 20),
+        Icon(
+          CupertinoIcons.group_solid,
+          color: theme.colorScheme.onSurface.withOpacity(0.6),
+          size: 20,
+        ),
         SizedBox(width: 8.w),
         Text(
           '${tontine.participantIds.length} / ${tontine.maxParticipants} Membres',
@@ -299,8 +309,9 @@ class _ModernTontineCard extends StatelessWidget {
       children: [
         Text(
           'Tour ${tontine.currentRound} sur ${tontine.totalRounds}',
-          style: theme.textTheme.bodyMedium
-              ?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6)),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
         ),
         SizedBox(height: 6.h),
         ClipRRect(
@@ -309,8 +320,7 @@ class _ModernTontineCard extends StatelessWidget {
             value: progress,
             minHeight: 10,
             backgroundColor: theme.colorScheme.onSurface.withOpacity(0.1),
-            valueColor:
-                AlwaysStoppedAnimation<Color>(_getStatusColor(theme)),
+            valueColor: AlwaysStoppedAnimation<Color>(_getStatusColor(theme)),
           ),
         ),
       ],
@@ -349,8 +359,9 @@ class _ModernTontineCard extends StatelessWidget {
         tontine.nextContributionDate == null) {
       return false;
     }
-    final difference =
-        tontine.nextContributionDate!.difference(DateTime.now()).inHours;
+    final difference = tontine.nextContributionDate!
+        .difference(DateTime.now())
+        .inHours;
     return difference <= 48 && difference > 0;
   }
 }

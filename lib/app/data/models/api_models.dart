@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'api_models.g.dart';
@@ -11,7 +10,9 @@ class RequestOtpBody {
 
   RequestOtpBody({required this.identifier});
 
-  factory RequestOtpBody.fromJson(Map<String, dynamic> json) => _$RequestOtpBodyFromJson(json);
+  factory RequestOtpBody.fromJson(Map<String, dynamic> json) =>
+      _$RequestOtpBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$RequestOtpBodyToJson(this);
 }
 
@@ -33,7 +34,9 @@ class RegisterUserBody {
     this.profilePictureUrl,
   });
 
-  factory RegisterUserBody.fromJson(Map<String, dynamic> json) => _$RegisterUserBodyFromJson(json);
+  factory RegisterUserBody.fromJson(Map<String, dynamic> json) =>
+      _$RegisterUserBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$RegisterUserBodyToJson(this);
 }
 
@@ -44,7 +47,9 @@ class LoginUserBody {
 
   LoginUserBody({required this.identifier, required this.otpCode});
 
-  factory LoginUserBody.fromJson(Map<String, dynamic> json) => _$LoginUserBodyFromJson(json);
+  factory LoginUserBody.fromJson(Map<String, dynamic> json) =>
+      _$LoginUserBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$LoginUserBodyToJson(this);
 }
 
@@ -54,7 +59,9 @@ class RefreshTokenBody {
 
   RefreshTokenBody({required this.refreshToken});
 
-  factory RefreshTokenBody.fromJson(Map<String, dynamic> json) => _$RefreshTokenBodyFromJson(json);
+  factory RefreshTokenBody.fromJson(Map<String, dynamic> json) =>
+      _$RefreshTokenBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$RefreshTokenBodyToJson(this);
 }
 
@@ -65,7 +72,9 @@ class TokenResponse {
 
   TokenResponse({required this.accessToken, required this.refreshToken});
 
-  factory TokenResponse.fromJson(Map<String, dynamic> json) => _$TokenResponseFromJson(json);
+  factory TokenResponse.fromJson(Map<String, dynamic> json) =>
+      _$TokenResponseFromJson(json);
+
   Map<String, dynamic> toJson() => _$TokenResponseToJson(this);
 }
 
@@ -95,7 +104,9 @@ class UserProfile {
     this.profilePictureUrl,
   });
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) => _$UserProfileFromJson(json);
+  factory UserProfile.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileFromJson(json);
+
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
 }
 
@@ -117,7 +128,9 @@ class UpdateUserProfileBody {
     this.country,
   });
 
-  factory UpdateUserProfileBody.fromJson(Map<String, dynamic> json) => _$UpdateUserProfileBodyFromJson(json);
+  factory UpdateUserProfileBody.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserProfileBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$UpdateUserProfileBodyToJson(this);
 }
 
@@ -153,7 +166,9 @@ class CreateTontineBody {
     required this.penaltySettings,
   });
 
-  factory CreateTontineBody.fromJson(Map<String, dynamic> json) => _$CreateTontineBodyFromJson(json);
+  factory CreateTontineBody.fromJson(Map<String, dynamic> json) =>
+      _$CreateTontineBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$CreateTontineBodyToJson(this);
 }
 
@@ -169,7 +184,9 @@ class PenaltySettings {
     required this.maxPenaltyPercent,
   });
 
-  factory PenaltySettings.fromJson(Map<String, dynamic> json) => _$PenaltySettingsFromJson(json);
+  factory PenaltySettings.fromJson(Map<String, dynamic> json) =>
+      _$PenaltySettingsFromJson(json);
+
   Map<String, dynamic> toJson() => _$PenaltySettingsToJson(this);
 }
 
@@ -225,7 +242,9 @@ class Tontine {
     required this.updatedAt,
   });
 
-  factory Tontine.fromJson(Map<String, dynamic> json) => _$TontineFromJson(json);
+  factory Tontine.fromJson(Map<String, dynamic> json) =>
+      _$TontineFromJson(json);
+
   Map<String, dynamic> toJson() => _$TontineToJson(this);
 }
 
@@ -255,7 +274,9 @@ class Participant {
     required this.joinedAt,
   });
 
-  factory Participant.fromJson(Map<String, dynamic> json) => _$ParticipantFromJson(json);
+  factory Participant.fromJson(Map<String, dynamic> json) =>
+      _$ParticipantFromJson(json);
+
   Map<String, dynamic> toJson() => _$ParticipantToJson(this);
 }
 
@@ -273,7 +294,9 @@ class PenaltyConfiguration {
     required this.maxPenaltyPercent,
   });
 
-  factory PenaltyConfiguration.fromJson(Map<String, dynamic> json) => _$PenaltyConfigurationFromJson(json);
+  factory PenaltyConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$PenaltyConfigurationFromJson(json);
+
   Map<String, dynamic> toJson() => _$PenaltyConfigurationToJson(this);
 }
 
@@ -295,7 +318,9 @@ class FinancialSummary {
     required this.completionPercentage,
   });
 
-  factory FinancialSummary.fromJson(Map<String, dynamic> json) => _$FinancialSummaryFromJson(json);
+  factory FinancialSummary.fromJson(Map<String, dynamic> json) =>
+      _$FinancialSummaryFromJson(json);
+
   Map<String, dynamic> toJson() => _$FinancialSummaryToJson(this);
 }
 
@@ -313,7 +338,9 @@ class UpdateTontineBody {
     this.drawingOrderType,
   });
 
-  factory UpdateTontineBody.fromJson(Map<String, dynamic> json) => _$UpdateTontineBodyFromJson(json);
+  factory UpdateTontineBody.fromJson(Map<String, dynamic> json) =>
+      _$UpdateTontineBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$UpdateTontineBodyToJson(this);
 }
 
@@ -324,7 +351,9 @@ class JoinTontineBody {
 
   JoinTontineBody({required this.joinCode, required this.numberOfHands});
 
-  factory JoinTontineBody.fromJson(Map<String, dynamic> json) => _$JoinTontineBodyFromJson(json);
+  factory JoinTontineBody.fromJson(Map<String, dynamic> json) =>
+      _$JoinTontineBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$JoinTontineBodyToJson(this);
 }
 
@@ -334,6 +363,8 @@ class ContributeToTontineBody {
 
   ContributeToTontineBody({required this.amount});
 
-  factory ContributeToTontineBody.fromJson(Map<String, dynamic> json) => _$ContributeToTontineBodyFromJson(json);
+  factory ContributeToTontineBody.fromJson(Map<String, dynamic> json) =>
+      _$ContributeToTontineBodyFromJson(json);
+
   Map<String, dynamic> toJson() => _$ContributeToTontineBodyToJson(this);
 }

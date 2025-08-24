@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'dart:async';
 import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../data/models/tontine.dart';
 import '../../../services/tontine_service.dart';
@@ -10,7 +11,6 @@ import '../../../widgets/custom_snackbar.dart';
 
 class PotVisualController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  
   // Observables
   final Rx<Tontine?> tontine = Rx<Tontine?>(null);
   final RxBool isLoading = true.obs;
@@ -21,26 +21,26 @@ class PotVisualController extends GetxController
   final RxInt paidParticipants = 0.obs;
   final RxInt totalParticipants = 0.obs;
   final RxBool isAnimating = false.obs;
-  
+
   // Animation controllers
   late AnimationController animationController;
   late Animation<double> fillAnimation;
   late Animation<double> shimmerAnimation;
   late Animation<double> coinAnimation;
-  
+
   Timer? _progressTimer;
   int? tontineId;
 
   @override
   void onInit() {
     super.onInit();
-    
+
     // Get tontine ID from arguments
     final args = Get.arguments;
     if (args is Map && args.containsKey('tontineId')) {
       tontineId = args['tontineId'] as int?;
     }
-    
+
     _initializeAnimations();
     _loadTontineData();
   }
@@ -52,31 +52,22 @@ class PotVisualController extends GetxController
     );
 
     // Smooth fill animation
-    fillAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: animationController,
-      curve: Curves.easeInOutCubic,
-    ));
+    fillAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: animationController,
+        curve: Curves.easeInOutCubic,
+      ),
+    );
 
     // Shimmer effect for coins/bills
-    shimmerAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: animationController,
-      curve: Curves.linear,
-    ));
+    shimmerAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: animationController, curve: Curves.linear),
+    );
 
     // Coin drop animation
-    coinAnimation = Tween<double>(
-      begin: -50.0,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: animationController,
-      curve: Curves.bounceOut,
-    ));
+    coinAnimation = Tween<double>(begin: -50.0, end: 0.0).animate(
+      CurvedAnimation(parent: animationController, curve: Curves.bounceOut),
+    );
 
     // Listen to animation progress
     fillAnimation.addListener(() {
@@ -86,12 +77,12 @@ class PotVisualController extends GetxController
 
   void _loadTontineData() {
     isLoading.value = true;
-    
+
     if (tontineId == null) {
       _showError('ID tontine manquant');
       return;
     }
-    
+
     try {
       // Load tontine data
       final tontineData = TontineService.getTontine(tontineId!);
@@ -99,29 +90,30 @@ class PotVisualController extends GetxController
         _showError('Tontine non trouvée');
         return;
       }
-      
+
       tontine.value = tontineData;
-      
+
       // Calculate progress
       final contributions = TontineService.getTontineContributions(
         tontineId!,
         round: tontineData.currentRound,
       );
-      
+
       final paid = contributions.where((c) => c.isPaid).length;
       final total = tontineData.participantIds.length;
       final collected = paid * tontineData.contributionAmount;
-      
+
       // Update observables
       paidParticipants.value = paid;
       totalParticipants.value = total;
       currentAmount.value = collected.toInt();
       targetAmount.value = tontineData.totalPot.toInt();
-      progressPercentage.value = total > 0 ? collected / tontineData.totalPot : 0.0;
-      
+      progressPercentage.value = total > 0
+          ? collected / tontineData.totalPot
+          : 0.0;
+
       // Start animation
       _startProgressAnimation();
-      
     } catch (e) {
       _showError('Erreur lors du chargement: ${e.toString()}');
     } finally {
@@ -132,7 +124,7 @@ class PotVisualController extends GetxController
   void _startProgressAnimation() {
     animationController.reset();
     isAnimating.value = true;
-    
+
     animationController.forward().then((_) {
       isAnimating.value = false;
       _startCoinDropEffect();
@@ -149,21 +141,24 @@ class PotVisualController extends GetxController
   // Simulate progress update (for demo purposes)
   void simulateContribution() {
     if (tontine.value == null) return;
-    
+
     VibrationService.godlyVibrate();
-    
+
     // Simulate adding a contribution
-    final newPaid = math.min(paidParticipants.value + 1, totalParticipants.value);
+    final newPaid = math.min(
+      paidParticipants.value + 1,
+      totalParticipants.value,
+    );
     if (tontine.value == null) return;
     final newAmount = newPaid * tontine.value!.contributionAmount;
     final newProgress = newAmount / targetAmount.value;
-    
+
     paidParticipants.value = newPaid;
     currentAmount.value = newAmount.toInt();
     progressPercentage.value = newProgress;
-    
+
     _startProgressAnimation();
-    
+
     CustomSnackbar.show(
       title: 'Contribution ajoutée !',
       message: 'Progression mise à jour : ${(newProgress * 100).toInt()}%',
@@ -175,7 +170,7 @@ class PotVisualController extends GetxController
   void refreshPotData() {
     VibrationService.softVibrate();
     _loadTontineData();
-    
+
     CustomSnackbar.show(
       title: 'Actualisation',
       message: 'Données mises à jour',
@@ -207,7 +202,7 @@ class PotVisualController extends GetxController
   String getMotivationalMessage() {
     final progress = progressPercentage.value;
     final remaining = totalParticipants.value - paidParticipants.value;
-    
+
     if (progress >= 1.0) {
       return 'Félicitations ! La cagnotte est complète !';
     } else if (progress >= 0.75) {
@@ -222,11 +217,7 @@ class PotVisualController extends GetxController
   }
 
   void _showError(String message) {
-    CustomSnackbar.show(
-      title: 'Erreur',
-      message: message,
-      success: false,
-    );
+    CustomSnackbar.show(title: 'Erreur', message: message, success: false);
   }
 
   @override

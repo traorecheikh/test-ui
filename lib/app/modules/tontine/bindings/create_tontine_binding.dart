@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+
 import '../controllers/create_tontine_controller.dart';
 
 class CreateTontineBinding extends Bindings {

@@ -20,9 +20,7 @@ class CustomSnackbar {
       messageText: Row(
         children: [
           Lottie.asset(
-            success
-                ? 'assets/lottie/success.json'
-                : 'assets/lottie/error.json',
+            success ? 'assets/lottie/success.json' : 'assets/lottie/error.json',
             width: 44,
             height: 44,
             repeat: false,

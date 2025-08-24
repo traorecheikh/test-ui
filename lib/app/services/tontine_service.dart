@@ -249,7 +249,8 @@ class TontineService {
     final contributions = tontine.participantIds
         .map(
           (participantId) => Contribution(
-            id: generateId(), // This might still be an issue if Hive keys are strictly 0-0xFFFFFFFF
+            id: generateId(),
+            // This might still be an issue if Hive keys are strictly 0-0xFFFFFFFF
             tontineId: tontine.id ?? 0,
             participantId: participantId,
             round: round,

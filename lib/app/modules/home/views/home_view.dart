@@ -579,6 +579,7 @@ class HomeView extends GetView<HomeController> {
 class _AnimatedAvatar extends StatefulWidget {
   final String initials;
   final Color color;
+
   const _AnimatedAvatar({required this.initials, required this.color});
 
   @override

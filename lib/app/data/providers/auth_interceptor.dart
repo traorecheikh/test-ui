@@ -1,8 +1,7 @@
-
 import 'package:dio/dio.dart';
-import 'package:snt_ui_test/app/services/token_manager.dart';
-import 'package:snt_ui_test/app/data/providers/api_client.dart';
 import 'package:snt_ui_test/app/data/models/api_models.dart';
+import 'package:snt_ui_test/app/data/providers/api_client.dart';
+import 'package:snt_ui_test/app/services/token_manager.dart';
 
 class AuthInterceptor extends Interceptor {
   final Dio _dio;
@@ -10,7 +9,10 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._dio);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final accessToken = await TokenManager.getAccessToken();
     if (accessToken != null && options.headers['Authorization'] == null) {
       options.headers['Authorization'] = 'Bearer $accessToken';
@@ -28,14 +30,17 @@ class AuthInterceptor extends Interceptor {
           final refreshDio = Dio();
           final apiClient = ApiClient(refreshDio);
 
-          final tokenResponse = await apiClient.refreshAccessToken(RefreshTokenBody(refreshToken: refreshToken));
+          final tokenResponse = await apiClient.refreshAccessToken(
+            RefreshTokenBody(refreshToken: refreshToken),
+          );
           final newAccessToken = tokenResponse.accessToken;
           final newRefreshToken = tokenResponse.refreshToken;
 
           await TokenManager.saveTokens(newAccessToken, newRefreshToken);
 
           // Retry the original request with the new access token
-          err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+          err.requestOptions.headers['Authorization'] =
+              'Bearer $newAccessToken';
           return handler.resolve(await _dio.fetch(err.requestOptions));
         } on DioException catch (e) {
           // If refresh token fails, clear tokens and redirect to login

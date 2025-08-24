@@ -36,6 +36,7 @@ class _CelebrationContent extends StatefulWidget {
   final ConfettiController controller;
   final String message;
   final VoidCallback onDismiss;
+
   const _CelebrationContent({
     required this.controller,
     required this.message,

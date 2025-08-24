@@ -18,12 +18,12 @@ import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_screen.dart';
 import '../modules/tontine/bindings/create_tontine_binding.dart';
 import '../modules/tontine/bindings/join_tontine_binding.dart';
-import '../modules/tontine/bindings/tontine_detail_binding.dart';
 import '../modules/tontine/bindings/pot_visual_binding.dart';
+import '../modules/tontine/bindings/tontine_detail_binding.dart';
 import '../modules/tontine/views/create_tontine_screen.dart';
 import '../modules/tontine/views/join_tontine_screen.dart';
-import '../modules/tontine/views/tontine_detail_screen.dart';
 import '../modules/tontine/views/pot_visual_screen.dart';
+import '../modules/tontine/views/tontine_detail_screen.dart';
 
 part 'app_routes.dart';
 

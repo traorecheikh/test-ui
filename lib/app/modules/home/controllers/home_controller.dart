@@ -53,9 +53,23 @@ class HomeController extends GetxController {
     await TontineService.init();
     final previousCount = userTontines.length;
     if (currentUser.value != null) {
-      userTontines.value = TontineService.getUserTontines(
+      final fetchedTontines = TontineService.getUserTontines(
         currentUser.value!.id,
       );
+
+      // Populate isPaidByCurrentUser for each tontine
+      for (var tontine in fetchedTontines) {
+        final contributions = TontineService.getTontineContributions(
+          tontine.id,
+          round: tontine.currentRound,
+        );
+        final currentUserContribution = contributions.firstWhereOrNull(
+          (c) => c.participantId == currentUser.value!.id,
+        );
+        tontine.isPaidByCurrentUser = currentUserContribution?.isPaid ?? false;
+      }
+
+      userTontines.value = fetchedTontines;
     } else {
       userTontines.clear();
     }
@@ -150,6 +164,7 @@ class _ActionButtonData {
   final IconData icon;
   final Color color;
   final VoidCallback onTap;
+
   _ActionButtonData({
     required this.title,
     required this.icon,
