@@ -6,6 +6,7 @@ import 'package:snt_ui_test/app/theme.dart';
 import '../../../routes/app_pages.dart';
 import '../../../utils/formatters.dart';
 import '../../../widgets/celebration_overlay.dart';
+import '../../../widgets/coming_soon_teaser.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -97,7 +98,6 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ],
               ),
-
               AppSpacing.extraLargeHeightSpacerWidget,
               _buildFinanceDataCard(theme),
               // _buildPrimaryTontineSection(theme),
@@ -232,180 +232,6 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  // Widget _buildPrimaryTontineSection(ThemeData theme) {
-  //   final primaryTontine = controller.userTontines.isNotEmpty
-  //       ? controller.userTontines.first
-  //       : null;
-  //
-  //   if (primaryTontine == null) return const SizedBox.shrink();
-  //
-  //   return GestureDetector(
-  //     onTap: () => Get.toNamed(Routes.detail, arguments: primaryTontine.id),
-  //     child: Container(
-  //       padding: const EdgeInsets.all(20),
-  //       decoration: BoxDecoration(
-  //         color: theme.colorScheme.primary,
-  //         borderRadius: BorderRadius.circular(28),
-  //         boxShadow: [
-  //           BoxShadow(
-  //             color: theme.colorScheme.primary.withOpacity(0.3),
-  //             blurRadius: AppSpacing.large,
-  //             offset: const Offset(0, 8),
-  //           ),
-  //         ],
-  //       ),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Text(
-  //             primaryTontine.name,
-  //             style: theme.textTheme.headlineSmall?.copyWith(
-  //               fontWeight: FontWeight.bold,
-  //               color: Colors.white,
-  //             ),
-  //           ),
-  //           const SizedBox(height: 12),
-  //           AppSpacing.largeWidthSpacer,
-  //           Row(
-  //             mainAxisAlignment:
-  //                 MainAxisAlignment.spaceBetween, // Ensures even spacing
-  //             crossAxisAlignment:
-  //                 CrossAxisAlignment.center, // Vertically centers content
-  //             children: [
-  //               Text(
-  //                 '${(primaryTontine.progress * 100).toStringAsFixed(0)}% complété',
-  //                 style: theme.textTheme.bodyMedium?.copyWith(
-  //                   color: Colors.white.withOpacity(0.8),
-  //                 ),
-  //               ),
-  //               Text(
-  //                 '${primaryTontine.members} membres',
-  //                 style: theme.textTheme.bodyMedium?.copyWith(
-  //                   color: Colors.white,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //           const SizedBox(
-  //             height: 12,
-  //           ), // Consistent spacing before progress bar
-  //           ClipRRect(
-  //             borderRadius: BorderRadius.circular(10),
-  //             child: LinearProgressIndicator(
-  //               value: primaryTontine.progress,
-  //               backgroundColor: Colors.white.withOpacity(0.2),
-  //               valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-  //               minHeight: 10,
-  //             ),
-  //           ),
-  //           const SizedBox(height: 24), // More space before next section
-  //           Row(
-  //             children: [
-  //               Expanded(
-  //                 child: _buildInfoChip(
-  //                   theme,
-  //                   'Prochain Tirage',
-  //                   primaryTontine.formattedNextPaymentDate,
-  //                   Icons.calendar_today,
-  //                   isWhite: true,
-  //                 ),
-  //               ),
-  //               const SizedBox(width: 12),
-  //               Expanded(
-  //                 child: _buildInfoChip(
-  //                   theme,
-  //                   'Ma Position',
-  //                   '#${_getUserPosition(primaryTontine)}',
-  //                   Icons.person_pin_circle,
-  //                   isWhite: true,
-  //                 ),
-  //               ),
-  //               const SizedBox(width: 12),
-  //               Expanded(
-  //                 child: _buildInfoChip(
-  //                   theme,
-  //                   'Montant',
-  //                   Formatters.formatCurrency(
-  //                     primaryTontine.contributionAmount,
-  //                   ),
-  //                   Icons.account_balance_wallet,
-  //                   isWhite: true,
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // int _getUserPosition(Tontine tontine) {
-  //   if (tontine.organizerId == controller.currentUser.value?.id) return 1;
-  //   return 5; // Sample position
-  // }
-  //
-  // Widget _buildInfoChip(
-  //   ThemeData theme,
-  //   String label,
-  //   String value,
-  //   IconData icon, {
-  //   bool isWhite = false,
-  // }) {
-  //   return Container(
-  //     padding: const EdgeInsets.all(12),
-  //     decoration: BoxDecoration(
-  //       color: isWhite
-  //           ? Colors.white.withOpacity(0.15)
-  //           : theme.colorScheme.surface,
-  //       borderRadius: BorderRadius.circular(12),
-  //       border: isWhite
-  //           ? Border.all(color: Colors.white.withOpacity(0.2))
-  //           : null,
-  //     ),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           children: [
-  //             Icon(
-  //               icon,
-  //               size: 16,
-  //               color: isWhite
-  //                   ? Colors.white.withOpacity(0.8)
-  //                   : theme.colorScheme.primary,
-  //             ),
-  //             const SizedBox(width: 6),
-  //             Expanded(
-  //               child: Text(
-  //                 label,
-  //                 style: theme.textTheme.bodySmall?.copyWith(
-  //                   color: isWhite
-  //                       ? Colors.white.withOpacity(0.8)
-  //                       : theme.colorScheme.onSurface.withOpacity(0.7),
-  //                 ),
-  //                 maxLines: 1,
-  //                 overflow: TextOverflow.ellipsis,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         const SizedBox(height: 4),
-  //         Text(
-  //           value,
-  //           style: theme.textTheme.bodyMedium?.copyWith(
-  //             fontWeight: FontWeight.w600,
-  //             color: isWhite ? Colors.white : theme.colorScheme.onSurface,
-  //           ),
-  //           maxLines: 1,
-  //           overflow: TextOverflow.ellipsis,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _buildQuickActionsSection(ThemeData theme) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -413,47 +239,53 @@ class HomeView extends GetView<HomeController> {
         return Wrap(
           spacing: 16.sp,
           runSpacing: 16.sp,
-          children: controller.quickActions
-              .map(
-                (action) => SizedBox(
-                  width: itemWidth,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(24),
-                    splashColor: action.color.withOpacity(0.2),
-                    highlightColor: action.color.withOpacity(0.1),
-                    onTap: action.onTap,
-                    onLongPress: action.onTap,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: AppSpacing.superExtraLarge,
-                          height: AppSpacing.superExtraLargeH,
-                          decoration: BoxDecoration(
-                            color: action.color.withOpacity(0.18),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            action.icon,
-                            color: action.color,
-                            size: AppIconSizes.large,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          action.title,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+          children: controller.quickActions.map((action) {
+            final bool isComingSoon =
+                action.title == 'Sunu Points' || action.title == 'Rapports';
+
+            final onTap = isComingSoon
+                ? () {
+                    ComingSoonTeaser.show(context, featureName: action.title);
+                  }
+                : action.onTap;
+            return SizedBox(
+              width: itemWidth,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(24),
+                splashColor: action.color.withOpacity(0.2),
+                highlightColor: action.color.withOpacity(0.1),
+                onTap: onTap,
+                onLongPress: onTap,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: AppSpacing.superExtraLarge,
+                      height: AppSpacing.superExtraLargeH,
+                      decoration: BoxDecoration(
+                        color: action.color.withOpacity(0.18),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        action.icon,
+                        color: action.color,
+                        size: AppIconSizes.large,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 10),
+                    Text(
+                      action.title,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-              )
-              .toList(),
+              ),
+            );
+          }).toList(),
         );
       },
     );
