@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:snt_ui_test/app/theme.dart';
 
 import '../controllers/history_controller.dart';
 
@@ -14,7 +16,7 @@ class HistoryView extends GetView<HistoryController> {
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        toolbarHeight: 70,
+        toolbarHeight: 70.h,
         backgroundColor: theme.colorScheme.background,
         elevation: 0,
         centerTitle: true,
@@ -37,7 +39,7 @@ class HistoryView extends GetView<HistoryController> {
 
   Widget _buildSearchAndFilters(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: EdgeInsets.fromLTRB(16.w, 0.h, 16.w, 16.h),
       child: Column(
         children: [
           CupertinoSearchTextField(
@@ -47,9 +49,9 @@ class HistoryView extends GetView<HistoryController> {
             style: theme.textTheme.bodyLarge,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           ),
-          const SizedBox(height: 12),
+          AppSpacing.largeHeightSpacerWidget,
           SizedBox(
-            height: 45,
+            height: AppSpacing.extraBitLargeH,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: controller.filters.length,
@@ -75,9 +77,9 @@ class HistoryView extends GetView<HistoryController> {
                             : theme.colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 10.h,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -137,7 +139,7 @@ class HistoryView extends GetView<HistoryController> {
         children: [
           Icon(
             isSearching ? CupertinoIcons.search : CupertinoIcons.clock_fill,
-            size: 80,
+            size: AppIconSizes.superExtraLarge,
             color: Colors.grey[300],
           ),
           const SizedBox(height: 24),
@@ -149,7 +151,7 @@ class HistoryView extends GetView<HistoryController> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 12),
+          AppSpacing.mediumHeightSpacerWidget,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
@@ -180,16 +182,19 @@ class _HistoryItemCard extends StatelessWidget {
     final format = NumberFormat.currency(locale: 'fr_FR', symbol: 'FCFA');
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.large,
+        vertical: AppSpacing.largeH,
+      ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(24.r),
       ),
       child: Row(
         children: [
           _buildIcon(theme),
-          const SizedBox(width: 16),
+          AppSpacing.mediumWidthSpacer,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +207,7 @@ class _HistoryItemCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 6),
+                AppSpacing.smallHeightSpacer,
                 Text(
                   item.subtitle,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -212,7 +217,7 @@ class _HistoryItemCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          AppSpacing.mediumHeightSpacerWidget,
           Text(
             '${isCredit ? '+' : ''}${format.format(item.amount).replaceAll(',00', '')}',
             style: theme.textTheme.bodyMedium?.copyWith(
@@ -252,8 +257,8 @@ class _HistoryItemCard extends StatelessWidget {
     final type = typeMap[item.type]!;
 
     return Container(
-      width: 52,
-      height: 52,
+      width: 52.w,
+      height: 52.h,
       decoration: BoxDecoration(
         color: (type['color'] as Color).withOpacity(0.1),
         borderRadius: BorderRadius.circular(18),
@@ -261,7 +266,7 @@ class _HistoryItemCard extends StatelessWidget {
       child: Icon(
         type['icon'] as IconData,
         color: type['color'] as Color,
-        size: 24,
+        size: 24.sp,
       ),
     );
   }

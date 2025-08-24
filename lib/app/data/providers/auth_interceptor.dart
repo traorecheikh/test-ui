@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:get/get.dart';
 import 'package:snt_ui_test/app/data/models/api_models.dart';
 import 'package:snt_ui_test/app/data/providers/api_client.dart';
 import 'package:snt_ui_test/app/services/token_manager.dart';
@@ -46,6 +47,7 @@ class AuthInterceptor extends Interceptor {
           // If refresh token fails, clear tokens and redirect to login
           await TokenManager.deleteTokens();
           // TODO: Implement navigation to login screen
+          Get.toNamed('/login');
           return handler.next(e);
         }
       }

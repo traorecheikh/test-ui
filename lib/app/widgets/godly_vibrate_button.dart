@@ -10,13 +10,13 @@ class GodlyVibrateButton extends StatefulWidget {
   final bool useGodlyVibration;
 
   const GodlyVibrateButton({
-    Key? key,
+    super.key,
     required this.child,
     this.onTap,
     this.scale = 0.93,
     this.duration = const Duration(milliseconds: 90),
     this.useGodlyVibration = true,
-  }) : super(key: key);
+  });
 
   @override
   State<GodlyVibrateButton> createState() => _GodlyVibrateButtonState();
