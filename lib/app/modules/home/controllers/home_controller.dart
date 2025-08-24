@@ -84,7 +84,7 @@ class HomeController extends GetxController {
       icon: Icons.add_circle,
       color: Colors.greenAccent,
       onTap: () {
-        VibrationService.godlyVibrate();
+        VibrationService.softVibrate();
         Get.toNamed(Routes.create);
       },
     ),
@@ -93,7 +93,7 @@ class HomeController extends GetxController {
       icon: Icons.group_add,
       color: Colors.blueAccent,
       onTap: () {
-        VibrationService.godlyVibrate();
+        VibrationService.softVibrate();
         Get.toNamed(Routes.joinScanner);
         print('Rejoindre Tontine');
       },
@@ -103,7 +103,7 @@ class HomeController extends GetxController {
       icon: Icons.group_add,
       color: Colors.indigo,
       onTap: () {
-        VibrationService.godlyVibrate();
+        VibrationService.softVibrate();
         Get.toNamed(Routes.myTontine);
       },
     ),
