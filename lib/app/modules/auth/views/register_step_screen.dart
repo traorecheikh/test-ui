@@ -1,7 +1,9 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:snt_ui_test/app/theme.dart';
 
 import '../controllers/register_step_controller.dart';
 
@@ -37,6 +39,7 @@ class RegisterStepScreen extends GetView<RegisterStepController> {
               totalSteps: controller.totalSteps,
             ),
           ),
+
           Expanded(
             child: PageView.builder(
               controller: controller.pageController,
@@ -123,9 +126,10 @@ class _Step2Location extends GetView<RegisterStepController> {
         _StepHeader(
           icon: CupertinoIcons.location_solid,
           title: 'Où êtes-vous ?',
-          subtitle: 'Ces informations nous aident à personnaliser votre expérience.',
+          subtitle:
+              'Ces informations nous aident à personnaliser votre expérience.',
         ),
-        const SizedBox(height: 32),
+        AppSpacing.extraLargeHeightSpacerWidget,
         _FluffyTextField(
           controller: controller.cityController,
           label: 'Ville',
@@ -134,7 +138,7 @@ class _Step2Location extends GetView<RegisterStepController> {
           onChanged: controller.onCityChanged,
           validator: (val) => controller.cityError.value,
         ),
-        const SizedBox(height: 24),
+        AppSpacing.largeHeightSpacer,
         _FluffyTextField(
           controller: controller.regionController,
           label: 'Région',
@@ -143,7 +147,7 @@ class _Step2Location extends GetView<RegisterStepController> {
           onChanged: controller.onRegionChanged,
           validator: (val) => controller.regionError.value,
         ),
-        const SizedBox(height: 24),
+        AppSpacing.largeHeightSpacer,
         _CountryPickerField(),
       ],
     );
@@ -162,18 +166,18 @@ class _Step3Preview extends GetView<RegisterStepController> {
           title: 'Tout est bon ?',
           subtitle: 'Vérifiez vos informations une dernière fois.',
         ),
-        const SizedBox(height: 24),
+        AppSpacing.largeHeightSpacer,
         Container(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24.sp),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(28.r),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.04),
                 blurRadius: 15,
                 offset: const Offset(0, 4),
-              )
+              ),
             ],
           ),
           child: Column(
@@ -212,14 +216,18 @@ class _Step3Preview extends GetView<RegisterStepController> {
   }
 
   Widget _buildPreviewRow(
-      ThemeData theme, String label, String value, IconData icon) {
+    ThemeData theme,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: theme.colorScheme.primary, size: 22),
-          const SizedBox(width: 16),
+          Icon(icon, color: theme.colorScheme.primary, size: 22.sp),
+          AppSpacing.mediumHeightSpacer,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,11 +238,12 @@ class _Step3Preview extends GetView<RegisterStepController> {
                     color: theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2.h),
                 Text(
                   value,
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
@@ -261,7 +270,7 @@ class _ProgressIndicator extends StatelessWidget {
     final theme = Theme.of(context);
     final percentage = (currentStep + 1) / totalSteps;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -283,15 +292,16 @@ class _ProgressIndicator extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          AppSpacing.smallHeightSpacer,
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: percentage,
-              minHeight: 12,
+              minHeight: 12.h,
               backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                theme.colorScheme.primary,
+              ),
             ),
           ),
         ],
@@ -317,17 +327,7 @@ class _StepHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Lottie Fallback
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: Icon(icon, color: theme.colorScheme.primary, size: 40),
-        ),
-        const SizedBox(height: 24),
+        AppSpacing.largeHeightSpacer,
         Text(
           title,
           style: theme.textTheme.displaySmall?.copyWith(
@@ -335,12 +335,12 @@ class _StepHeader extends StatelessWidget {
             color: theme.colorScheme.onSurface,
           ),
         ),
-        const SizedBox(height: 8),
+        AppSpacing.smallHeightSpacerWidget,
         Text(
           subtitle,
           style: theme.textTheme.titleMedium?.copyWith(
             color: theme.colorScheme.onSurface.withOpacity(0.6),
-            height: 1.5,
+            height: 1.5.h,
           ),
         ),
       ],
@@ -375,10 +375,11 @@ class _FluffyTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: theme.textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.w600),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        const SizedBox(height: 12),
+        AppSpacing.mediumHeightSpacerWidget,
         Obx(
           () => TextFormField(
             controller: controller,
@@ -387,13 +388,19 @@ class _FluffyTextField extends StatelessWidget {
             validator: (val) => validator?.call(val),
             decoration: InputDecoration(
               hintText: hint,
-              errorText: validator?.call(null) == '' ? null : validator?.call(null),
-              prefixIcon:
-                  Icon(icon, color: theme.colorScheme.primary.withOpacity(0.6)),
+              errorText: validator?.call(null) == ''
+                  ? null
+                  : validator?.call(null),
+              prefixIcon: Icon(
+                icon,
+                color: theme.colorScheme.primary.withOpacity(0.6),
+              ),
               filled: true,
               fillColor: theme.colorScheme.primary.withOpacity(0.05),
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 20.w,
+                vertical: 20.h,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
                 borderSide: BorderSide.none,
@@ -404,7 +411,10 @@ class _FluffyTextField extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.primary,
+                  width: 2.w,
+                ),
               ),
             ),
           ),
@@ -421,34 +431,39 @@ class _ImagePickerButton extends GetView<RegisterStepController> {
     return GestureDetector(
       onTap: controller.onPickProfilePicture,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: theme.colorScheme.primary.withOpacity(0.05),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Row(
           children: [
-            Icon(CupertinoIcons.camera_fill,
-                color: theme.colorScheme.primary.withOpacity(0.8)),
-            const SizedBox(width: 16),
+            Icon(
+              CupertinoIcons.camera_fill,
+              color: theme.colorScheme.primary.withOpacity(0.8),
+            ),
+            AppSpacing.largeWidthSpacer,
             Expanded(
               child: Obx(
                 () => Text(
                   controller.profilePicturePath.value.isEmpty
                       ? 'Ajouter une photo (optionnel)'
                       : 'Photo sélectionnée !',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
             Obx(() {
               if (controller.profilePicturePath.value.isNotEmpty) {
-                return const Icon(CupertinoIcons.check_mark_circled_solid,
-                    color: Colors.green);
+                return const Icon(
+                  CupertinoIcons.check_mark_circled_solid,
+                  color: Colors.green,
+                );
               }
               return const Icon(CupertinoIcons.add_circled);
-            })
+            }),
           ],
         ),
       ),
@@ -477,8 +492,9 @@ class _CountryPickerField extends GetView<RegisterStepController> {
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
-                borderSide:
-                    BorderSide(color: theme.colorScheme.primary.withOpacity(0.2)),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.primary.withOpacity(0.2),
+                ),
               ),
             ),
           ),
@@ -519,12 +535,10 @@ class _NavigationControls extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+      padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 32.h),
       decoration: BoxDecoration(
         color: theme.colorScheme.background,
-        border: Border(
-          top: BorderSide(color: Colors.grey.withOpacity(0.1)),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey.withOpacity(0.1))),
       ),
       child: Row(
         children: [
@@ -545,13 +559,13 @@ class _NavigationControls extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: Colors.white,
-              disabledBackgroundColor:
-                  theme.colorScheme.primary.withOpacity(0.4),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
+              disabledBackgroundColor: theme.colorScheme.primary.withOpacity(
+                0.4,
               ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24.r),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 20.h),
               elevation: 5,
               shadowColor: theme.colorScheme.primary.withOpacity(0.3),
             ),
@@ -561,14 +575,16 @@ class _NavigationControls extends StatelessWidget {
                 Text(
                   isLastStep ? 'Terminer' : 'Suivant',
                   style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const SizedBox(width: 12),
+                AppSpacing.mediumWidthSpacer,
                 Icon(
                   isLastStep
                       ? CupertinoIcons.check_mark_circled_solid
                       : CupertinoIcons.arrow_right,
-                  size: 22,
+                  size: AppIconSizes.medium,
                 ),
               ],
             ),

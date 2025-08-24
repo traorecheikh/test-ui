@@ -7,13 +7,21 @@ const Size kDesignSize = Size(390, 844);
 
 //<------------------- COLORS ------------------->
 class LightModeColors {
-  static const lightPrimary = Color(0xFF0D47A1); // Deeper, more professional blue
+  static const lightPrimary = Color(
+    0xFF0D47A1,
+  ); // Deeper, more professional blue
   static const lightOnPrimary = Color(0xFFFFFFFF);
-  static const lightPrimaryContainer = Color(0xFF1976D2); // A brighter blue for containers
+  static const lightPrimaryContainer = Color(
+    0xFF1976D2,
+  ); // A brighter blue for containers
   static const lightOnPrimaryContainer = Color(0xFFFFFFFF);
-  static const lightSecondary = Color(0xFF42A5F5); // A vibrant, yet soft blue for secondary elements
+  static const lightSecondary = Color(
+    0xFF42A5F5,
+  ); // A vibrant, yet soft blue for secondary elements
   static const lightOnSecondary = Color(0xFFFFFFFF);
-  static const lightTertiary = Color(0xFF66BB6A); // A slightly muted, calming green
+  static const lightTertiary = Color(
+    0xFF66BB6A,
+  ); // A slightly muted, calming green
   static const lightOnTertiary = Color(0xFFFFFFFF);
   static const lightError = Color(0xFFEF5350); // A softer red for errors
   static const lightOnError = Color(0xFFFFFFFF);
@@ -22,7 +30,9 @@ class LightModeColors {
   static const lightInversePrimary = Color(0xFF42A5F5);
   static const lightShadow = Color(0xFF000000);
   static const lightSurface = Color(0xFFFFFFFF); // Pure white for surfaces
-  static const lightBackground = Color(0xFFF5F5F5); // A very light grey for the background
+  static const lightBackground = Color(
+    0xFFF5F5F5,
+  ); // A very light grey for the background
   static const lightOnSurface = Color(0xFF212121); // A dark grey for text
   static const lightAppBarBackground = Color(0xFFFFFFFF);
 }
@@ -43,11 +53,12 @@ class DarkModeColors {
   static const darkInversePrimary = Color(0xFF0D47A1);
   static const darkShadow = Color(0xFF000000);
   static const darkSurface = Color(0xFF121212); // A very dark grey for surfaces
-  static const darkBackground = Color(0xFF000000); // Pure black for the background
+  static const darkBackground = Color(
+    0xFF000000,
+  ); // Pure black for the background
   static const darkOnSurface = Color(0xFFE0E0E0); // A light grey for text
   static const darkAppBarBackground = Color(0xFF121212);
 }
-
 
 //<------------------- SPACING ------------------->
 class AppSpacing {
@@ -68,12 +79,16 @@ class AppSpacing {
   static SizedBox get smallHeightSpacer => SizedBox(height: smallH);
   static SizedBox get mediumHeightSpacer => SizedBox(height: mediumH);
   static SizedBox get largeHeightSpacer => SizedBox(height: largeH);
+  static SizedBox get extraBitLargeHeightSpacer =>
+      SizedBox(height: extraBitLargeH);
   static SizedBox get extraLargeHeightSpacer => SizedBox(height: extraLargeH);
 
   // Responsive width spacers (SizedBox)
   static SizedBox get smallWidthSpacer => SizedBox(width: small);
   static SizedBox get mediumWidthSpacer => SizedBox(width: medium);
   static SizedBox get largeWidthSpacer => SizedBox(width: large);
+  static SizedBox get extraBitLargeWidthSpacer =>
+      SizedBox(width: extraBitLarge);
   static SizedBox get extraLargeWidthSpacer => SizedBox(width: extraLarge);
 
   // Responsive height spacer widgets (for direct use as Widgets)

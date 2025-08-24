@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../theme.dart';
 import '../controllers/otp_controller.dart';
 
 class OtpScreen extends GetView<OtpController> {
@@ -19,22 +21,22 @@ class OtpScreen extends GetView<OtpController> {
           icon: Icon(
             CupertinoIcons.back,
             color: theme.colorScheme.primary,
-            size: 32,
+            size: 32.sp,
           ),
           onPressed: () => Get.back(),
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(theme),
-            const SizedBox(height: 48),
+            AppSpacing.extraBitLargeHeightSpacer,
             _buildOtpInput(theme),
-            const SizedBox(height: 32),
+            AppSpacing.largeHeightSpacer,
             _buildValidateButton(theme),
-            const SizedBox(height: 24),
+            AppSpacing.largeHeightSpacer,
             _buildFooter(theme),
           ],
         ),
@@ -48,8 +50,8 @@ class OtpScreen extends GetView<OtpController> {
       children: [
         // Lottie animation fallback
         Container(
-          width: 80,
-          height: 80,
+          width: 80.w,
+          height: 80.h,
           decoration: BoxDecoration(
             color: theme.colorScheme.primary.withOpacity(0.1),
             borderRadius: BorderRadius.circular(28),
@@ -57,10 +59,10 @@ class OtpScreen extends GetView<OtpController> {
           child: Icon(
             CupertinoIcons.lock_shield_fill,
             color: theme.colorScheme.primary,
-            size: 40,
+            size: 40.sp,
           ),
         ),
-        const SizedBox(height: 24),
+        AppSpacing.largeHeightSpacer,
         Text(
           'Vérification',
           style: theme.textTheme.displaySmall?.copyWith(
@@ -110,12 +112,11 @@ class OtpScreen extends GetView<OtpController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(6, (index) {
                   final isFilled = controller.otpValue.value.length > index;
-                  final isFocused =
-                      controller.otpValue.value.length == index;
+                  final isFocused = controller.otpValue.value.length == index;
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    width: 52,
-                    height: 64,
+                    width: 52.w,
+                    height: 64.h,
                     decoration: BoxDecoration(
                       color: isFilled
                           ? theme.colorScheme.primary.withOpacity(0.1)
@@ -130,8 +131,9 @@ class OtpScreen extends GetView<OtpController> {
                       boxShadow: isFocused
                           ? [
                               BoxShadow(
-                                color: theme.colorScheme.primary
-                                    .withOpacity(0.1),
+                                color: theme.colorScheme.primary.withOpacity(
+                                  0.1,
+                                ),
                                 blurRadius: 10,
                               ),
                             ]
@@ -166,16 +168,16 @@ class OtpScreen extends GetView<OtpController> {
             backgroundColor: theme.colorScheme.primary,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(24.r),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 20.h),
             elevation: 5,
             shadowColor: theme.colorScheme.primary.withOpacity(0.3),
           ),
           child: controller.isLoading.value
-              ? const SizedBox(
-                  width: 24,
-                  height: 24,
+              ? SizedBox(
+                  width: 24.w,
+                  height: 24.h,
                   child: CircularProgressIndicator(
                     strokeWidth: 3,
                     color: Colors.white,
@@ -183,16 +185,16 @@ class OtpScreen extends GetView<OtpController> {
                 )
               : Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Text(
                       'Valider le code',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 12),
-                    Icon(CupertinoIcons.check_mark_circled, size: 22),
+                    AppSpacing.mediumHeightSpacer,
+                    Icon(CupertinoIcons.check_mark_circled, size: 22.sp),
                   ],
                 ),
         ),
@@ -205,18 +207,15 @@ class OtpScreen extends GetView<OtpController> {
       child: Obx(
         () => TextButton(
           onPressed: controller.canResend.value ? controller.onResendOtp : null,
-          child: controller.canResend.value
-              ? const Text('Renvoyer le code')
-              : Text('Renvoyer dans ${controller.resendSeconds.value}s'),
           style: TextButton.styleFrom(
             foregroundColor: controller.canResend.value
                 ? theme.colorScheme.primary
                 : theme.colorScheme.onSurface.withOpacity(0.5),
-            textStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
           ),
+          child: controller.canResend.value
+              ? const Text('Renvoyer le code')
+              : Text('Renvoyer dans ${controller.resendSeconds.value}s'),
         ),
       ),
     );
