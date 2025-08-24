@@ -20,7 +20,7 @@ dependencies:
   dio: ^5.9.0
   retrofit: ^4.7.2
   json_annotation: ^4.9.0
-  json_serializable: ^6.6.1
+  json_serializable: ^6.10.0
   pretty_dio_logger: ^1.4.0
   connectivity_plus: ^6.1.5
   hive_ce: ^2.11.3
@@ -39,7 +39,7 @@ dependencies:
   flutter_multi_formatter: ^2.13.9
   shimmer: ^3.0.0
   flutter_screenutil: ^5.9.3
-  font_awesome_flutter: ^10.6.0
+  font_awesome_flutter: ^10.10.0
   remixicon: ^1.4.1
   eva_icons_flutter: ^3.1.0
   heroicons: ^0.11.0
