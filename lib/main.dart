@@ -41,10 +41,9 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: settingsController.themeMode,
-            initialRoute: Routes.login,
+            initialRoute: Routes.home,
             getPages: AppPages.routes,
             builder: (context, child) {
-              // Ensure text scaling and accessibility
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
                 child: child!,
