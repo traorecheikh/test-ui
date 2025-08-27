@@ -1,11 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:snt_ui_test/app/theme.dart';
 
 import '../../../data/models/tontine.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/formatters.dart';
+import '../../../widgets/modern_pot_visual.dart';
 import '../controllers/tontine_detail_controller.dart';
 
 class TontineDetailScreen extends GetView<TontineDetailController> {
@@ -15,157 +16,297 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: _buildAppBar(theme),
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildLoadingState(theme);
           }
           final tontine = controller.tontine.value;
           if (tontine == null) {
-            return const Center(child: Text('Tontine non trouvée'));
+            return _buildErrorState(theme);
           }
-          return ListView(
-            padding: AppPaddings.pageHome,
-            children: [
-              _buildHeader(theme, tontine),
-              AppSpacing.extraLargeHeightSpacerWidget,
-              _buildTontineSummaryCard(theme, tontine),
-              AppSpacing.extraLargeHeightSpacerWidget,
-              _buildQuickActionsSection(theme),
-              AppSpacing.extraLargeHeightSpacerWidget,
-              _buildParticipantsSection(theme, tontine),
-            ],
+          return _AnimatedDetailView(
+            child: ListView(
+              padding: AppPaddings.pageHome,
+              children: [
+                _buildTontineHeader(theme, tontine),
+                AppSpacing.extraLargeHeightSpacerWidget,
+                _buildPotVisualSection(theme, tontine),
+                AppSpacing.extraLargeHeightSpacerWidget,
+                _buildStatsCards(theme, tontine),
+                AppSpacing.extraLargeHeightSpacerWidget,
+                _buildQuickActionsSection(theme),
+                AppSpacing.extraLargeHeightSpacerWidget,
+                _buildParticipantsSection(theme, tontine),
+                AppSpacing.extraLargeHeightSpacerWidget,
+              ],
+            ),
           );
         }),
       ),
     );
   }
 
-  Widget _buildHeader(ThemeData theme, Tontine tontine) {
-    return Row(
-      children: [
-        IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
-          onPressed: () => Get.back(),
+  PreferredSizeWidget _buildAppBar(ThemeData theme) {
+    return AppBar(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      elevation: 0,
+      leading: IconButton(
+        icon: Icon(
+          CupertinoIcons.xmark,
+          color: theme.colorScheme.primary,
+          size: 28,
         ),
-        AppSpacing.mediumWidthSpacer,
-        Expanded(
-          child: Text(
-            tontine.name,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-            overflow: TextOverflow.ellipsis,
+        onPressed: () => Get.back(),
+        tooltip: 'Retour',
+      ),
+      title: Obx(() {
+        final tontine = controller.tontine.value;
+        return Text(
+          tontine?.name ?? 'Détails Tontine',
+          style: theme.textTheme.headlineMedium?.copyWith(
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
           ),
-        ),
-        AppSpacing.mediumWidthSpacer,
+        );
+      }),
+      actions: [
         IconButton(
-          icon: Icon(Icons.more_vert, color: theme.colorScheme.primary),
+          icon: Icon(
+            CupertinoIcons.ellipsis_circle,
+            color: theme.colorScheme.primary,
+            size: 28,
+          ),
           onPressed: controller.showOptionsMenu,
           tooltip: 'Options',
+        ),
+        const SizedBox(width: 8),
+      ],
+    );
+  }
+
+  Widget _buildLoadingState(ThemeData theme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            color: theme.colorScheme.primary,
+          ),
+          AppSpacing.largeHeightSpacerWidget,
+          Text(
+            'Chargement...',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(ThemeData theme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.exclamationmark_triangle,
+              size: 80,
+              color: theme.colorScheme.error.withOpacity(0.3),
+            ),
+            AppSpacing.largeHeightSpacerWidget,
+            Text(
+              'Tontine introuvable',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            AppSpacing.mediumHeightSpacerWidget,
+            Text(
+              'Cette tontine n\'existe plus ou a été supprimée.',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            AppSpacing.extraLargeHeightSpacerWidget,
+            ElevatedButton(
+              onPressed: () => Get.back(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
+              ),
+              child: const Text('Retour'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTontineHeader(ThemeData theme, Tontine tontine) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: _getStatusColor(theme, tontine.status).withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                _getTontineIcon(tontine.frequency),
+                color: _getStatusColor(theme, tontine.status),
+                size: AppIconSizes.extraLarge,
+              ),
+            ),
+            AppSpacing.mediumWidthSpacer,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tontine.description,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                      height: 1.4,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  AppSpacing.smallHeightSpacer,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(theme, tontine.status).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      '${tontine.status.label} • ${tontine.frequency.label}',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: _getStatusColor(theme, tontine.status),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildTontineSummaryCard(ThemeData theme, Tontine tontine) {
+  Widget _buildPotVisualSection(ThemeData theme, Tontine tontine) {
+    final currentAmount = tontine.currentRound * tontine.contributionAmount;
+    final targetAmount = tontine.totalPot;
+    final paidCount = controller.currentRoundContributions
+        .where((c) => c.isPaid)
+        .length;
+
+    return ModernPotVisualWidget(
+      currentAmount: currentAmount.toDouble(),
+      targetAmount: targetAmount,
+      paidParticipants: paidCount,
+      totalParticipants: tontine.participantIds.length,
+      onTap: controller.showPotDetails,
+    );
+  }
+
+  Widget _buildStatsCards(ThemeData theme, Tontine tontine) {
     final myContribution = controller.myContribution;
     final isPaid = myContribution?.isPaid ?? false;
+    // Progress calculation - could be used for future enhancements
 
+    return Row(
+      children: [
+        Expanded(
+          child: _buildStatCard(
+            theme,
+            'Ma Contribution',
+            Formatters.formatCurrency(tontine.contributionAmount),
+            CupertinoIcons.money_dollar,
+            theme.colorScheme.primary,
+          ),
+        ),
+        AppSpacing.mediumWidthSpacer,
+        Expanded(
+          child: _buildStatCard(
+            theme,
+            'Mon Statut',
+            isPaid ? 'Payé' : 'En attente',
+            isPaid ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.clock_fill,
+            isPaid ? Colors.green : Colors.orange,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatCard(
+    ThemeData theme,
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [AppShadows.large],
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [AppShadows.small],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Icon(
+                icon,
+                color: color,
+                size: 24,
+              ),
+              const Spacer(),
+            ],
+          ),
+          AppSpacing.mediumHeightSpacer,
           Text(
-            'Pot Actuel',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: Colors.white.withOpacity(0.8),
+            title,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              fontWeight: FontWeight.w500,
             ),
           ),
           AppSpacing.smallHeightSpacer,
           Text(
-            Formatters.formatCurrency(tontine.totalPot),
-            style: theme.textTheme.displaySmall?.copyWith(
+            value,
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: theme.colorScheme.onSurface,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
             ),
-            textAlign: TextAlign.center,
-          ),
-          AppSpacing.largeHeightSpacer,
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: AppPaddings.cardContent,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.10),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Ma Part',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      AppSpacing.smallHeightSpacer,
-                      Text(
-                        Formatters.formatCurrency(tontine.contributionAmount),
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              AppSpacings.cardGap,
-              Expanded(
-                child: Container(
-                  padding: AppPaddings.cardContent,
-                  decoration: BoxDecoration(
-                    color: isPaid
-                        ? Colors.green.withOpacity(0.2)
-                        : Colors.orange.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Mon Statut',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      AppSpacing.smallHeightSpacer,
-                      Text(
-                        isPaid ? 'Payé' : 'En attente',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -175,70 +316,111 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
   Widget _buildQuickActionsSection(ThemeData theme) {
     final actions = [
       {
-        'icon': Icons.payment_outlined,
+        'icon': CupertinoIcons.creditcard,
         'title': 'Payer',
+        'subtitle': 'Effectuer un paiement',
         'onTap': controller.showPaymentDialog,
         'color': AppActionColors.create,
       },
       {
-        'icon': Icons.person_add_alt_1_outlined,
+        'icon': CupertinoIcons.person_add,
         'title': 'Inviter',
+        'subtitle': 'Partager le code',
         'onTap': controller.showInviteDialog,
         'color': AppActionColors.join,
       },
       {
-        'icon': Icons.history_outlined,
+        'icon': CupertinoIcons.time,
         'title': 'Historique',
+        'subtitle': 'Voir les transactions',
         'onTap': controller.showTransactionHistory,
         'color': AppActionColors.history,
       },
     ];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final itemWidth = (constraints.maxWidth - 32.sp) / 3;
-        return Wrap(
-          spacing: 16.sp,
-          runSpacing: 16.sp,
-          alignment: WrapAlignment.center,
-          children: actions.map((action) {
-            return SizedBox(
-              width: itemWidth,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(24),
-                onTap: action['onTap'] as VoidCallback?,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              CupertinoIcons.bolt,
+              color: theme.colorScheme.primary.withOpacity(0.8),
+              size: AppIconSizes.medium,
+            ),
+            AppSpacing.smallWidthSpacer,
+            Text(
+              'Actions Rapides',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+        AppSpacing.largeHeightSpacer,
+        ...actions.map(
+          (action) => Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: action['onTap'] as VoidCallback?,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [AppShadows.small],
+                ),
+                child: Row(
                   children: [
                     Container(
-                      width: AppSpacing.superExtraLarge,
-                      height: AppSpacing.superExtraLargeH,
+                      width: 56,
+                      height: 56,
                       decoration: BoxDecoration(
                         color: (action['color'] as Color).withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        action['icon'] as IconData?,
-                        color: action['color'] as Color?,
-                        size: AppIconSizes.large,
+                        action['icon'] as IconData,
+                        color: action['color'] as Color,
+                        size: 28,
                       ),
                     ),
-                    AppSpacing.mediumHeightSpacer,
-                    Text(
-                      action['title'] as String,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onSurface,
+                    AppSpacing.mediumWidthSpacer,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            action['title'] as String,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                          AppSpacing.smallHeightSpacer,
+                          Text(
+                            action['subtitle'] as String,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            ),
+                          ),
+                        ],
                       ),
-                      textAlign: TextAlign.center,
+                    ),
+                    Icon(
+                      CupertinoIcons.chevron_right,
+                      color: theme.colorScheme.onSurface.withOpacity(0.3),
+                      size: 20,
                     ),
                   ],
                 ),
               ),
-            );
-          }).toList(),
-        );
-      },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -249,7 +431,7 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
         Row(
           children: [
             Icon(
-              Icons.group_outlined,
+              CupertinoIcons.group,
               color: theme.colorScheme.primary.withOpacity(0.8),
               size: AppIconSizes.medium,
             ),
@@ -259,6 +441,24 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: theme.colorScheme.primary,
+              ),
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
+              ),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                '${tontine.participantIds.length}/${tontine.maxParticipants}',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
@@ -293,29 +493,64 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
     dynamic contribution,
     int index,
   ) {
-    final name =
-        AppConstants.sampleParticipantNames[index %
-            AppConstants.sampleParticipantNames.length];
+    final name = AppConstants.sampleParticipantNames[
+        index % AppConstants.sampleParticipantNames.length];
     final isPaid = contribution?.isPaid ?? false;
+    final initials = name.split(' ').map((n) => n[0]).take(2).join();
 
     return Container(
-      padding: EdgeInsets.all(AppSpacing.medium),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.large),
+        borderRadius: BorderRadius.circular(18),
         boxShadow: [AppShadows.small],
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 24.r,
-            backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
-            child: Text(
-              name.split(' ').map((n) => n[0]).take(2).join(),
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-              ),
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: isPaid
+                  ? Colors.green.withOpacity(0.1)
+                  : theme.colorScheme.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Text(
+                  initials,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: isPaid
+                        ? Colors.green.shade600
+                        : theme.colorScheme.primary,
+                  ),
+                ),
+                if (isPaid)
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade600,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: theme.colorScheme.surface,
+                          width: 2,
+                        ),
+                      ),
+                      child: const Icon(
+                        CupertinoIcons.checkmark,
+                        color: Colors.white,
+                        size: 10,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
           AppSpacing.mediumWidthSpacer,
@@ -323,42 +558,148 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                    if (isOrganizer)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              CupertinoIcons.star_fill,
+                              color: Colors.amber.shade600,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Organisateur',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: Colors.amber.shade600,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
+                AppSpacing.smallHeightSpacer,
                 Text(
-                  name,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+                  isPaid ? 'Contribution payée' : 'En attente de paiement',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: isPaid
+                        ? Colors.green.shade600
+                        : theme.colorScheme.onSurface.withOpacity(0.6),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (isOrganizer)
-                  Text(
-                    'Organisateur',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.secondary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
               ],
             ),
           ),
-          AppSpacing.mediumWidthSpacer,
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSpacing.medium,
-              vertical: AppSpacing.small,
-            ),
-            decoration: BoxDecoration(
-              color: (isPaid ? Colors.green : Colors.orange).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(AppRadius.medium),
-            ),
-            child: Text(
-              isPaid ? 'Payé' : 'En attente',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: isPaid ? Colors.green : Colors.orange,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
         ],
+      ),
+    );
+  }
+
+  // Helper methods
+  Color _getStatusColor(ThemeData theme, TontineStatus status) {
+    switch (status) {
+      case TontineStatus.active:
+        return Colors.green.shade600;
+      case TontineStatus.pending:
+        return Colors.blue.shade600;
+      case TontineStatus.completed:
+        return theme.colorScheme.primary;
+      case TontineStatus.cancelled:
+        return theme.colorScheme.error;
+    }
+  }
+
+  IconData _getTontineIcon(TontineFrequency frequency) {
+    switch (frequency) {
+      case TontineFrequency.daily:
+        return CupertinoIcons.sun_max_fill;
+      case TontineFrequency.weekly:
+        return CupertinoIcons.calendar_today;
+      case TontineFrequency.monthly:
+        return CupertinoIcons.moon_fill;
+      default:
+        return CupertinoIcons.group_solid;
+    }
+  }
+}
+
+// Animation Widget for smooth entrance
+class _AnimatedDetailView extends StatefulWidget {
+  final Widget child;
+
+  const _AnimatedDetailView({required this.child});
+
+  @override
+  State<_AnimatedDetailView> createState() => _AnimatedDetailViewState();
+}
+
+class _AnimatedDetailViewState extends State<_AnimatedDetailView>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    ));
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    ));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: widget.child,
       ),
     );
   }

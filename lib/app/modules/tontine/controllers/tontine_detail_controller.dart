@@ -357,4 +357,79 @@ class TontineDetailController extends GetxController {
       success: false,
     );
   }
+
+  void showPotDetails() {
+    final t = tontine.value;
+    if (t == null) return;
+    
+    VibrationService.softVibrate();
+    
+    final currentAmount = t.currentRound * t.contributionAmount;
+    final targetAmount = t.totalPot;
+    final progress = (currentAmount / targetAmount * 100).toInt();
+    final paidCount = currentRoundContributions.where((c) => c.isPaid).length;
+    final pendingCount = t.participantIds.length - paidCount;
+    
+    Get.dialog(
+      AlertDialog(
+        title: Row(
+          children: [
+            Icon(
+              Icons.savings,
+              color: Get.theme.colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+            const Expanded(child: Text('Détails du Pot')),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildDetailRow('Cagnotte Actuelle', Formatters.formatCurrency(currentAmount.toDouble())),
+            _buildDetailRow('Objectif Total', Formatters.formatCurrency(targetAmount)),
+            _buildDetailRow('Progression', '$progress%'),
+            const Divider(),
+            _buildDetailRow('Tour Actuel', '${t.currentRound} / ${t.totalRounds}'),
+            _buildDetailRow('Paiements Effectués', '$paidCount / ${t.participantIds.length}'),
+            if (pendingCount > 0)
+              _buildDetailRow('En Attente', '$pendingCount participant${pendingCount > 1 ? 's' : ''}'),
+            const Divider(),
+            _buildDetailRow('Prochain Tirage', t.formattedNextPaymentDate),
+            _buildDetailRow('Fréquence', t.frequency.label),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Fermer'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              color: Get.theme.colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Get.theme.colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
