@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: settingsController.themeMode,
-            initialRoute: Routes.PAYMENT_METHOD,
+            initialRoute: Routes.onboarding,
             getPages: AppPages.routes,
             builder: (context, child) {
               return MediaQuery(

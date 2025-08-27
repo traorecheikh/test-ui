@@ -10,6 +10,7 @@ class Assets {
       'assets/lotties/onboarding3.json';
   static const String authAuth = 'assets/images/auth/auth.png';
   static const String authOtp = 'assets/images/auth/otp.png';
+  static const String imagesCommunity = 'assets/images/community.png';
   static const String imagesPaymentOrangeMoney =
       'assets/images/payment/orange_money.png';
   static const String imagesPaymentWave = 'assets/images/payment/wave.png';

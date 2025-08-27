@@ -5,7 +5,6 @@ import 'package:snt_ui_test/app/modules/auth/views/otp_screen.dart';
 import 'package:snt_ui_test/app/modules/auth/views/register_step_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_failed_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_history_screen.dart';
-import 'package:snt_ui_test/app/modules/payment/payment_method_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_receipt_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_status_screen.dart';
 import 'package:snt_ui_test/app/modules/tontines/views/my_tontines_view.dart';
@@ -117,11 +116,6 @@ class AppPages {
       page: () => const PotVisualScreen(),
       binding: PotVisualBinding(),
       transition: Transition.fadeIn,
-    ),
-    GetPage(
-      name: _Paths.PAYMENT_METHOD,
-      page: () => const PaymentMethodScreen(),
-      transition: Transition.rightToLeft,
     ),
     GetPage(
       name: _Paths.PAYMENT_STATUS,

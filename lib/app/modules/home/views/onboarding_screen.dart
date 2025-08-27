@@ -46,7 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'Rappels, suivi des paiements, calendrier partagé... L\'app s\'occupe de tout pour que vous puissiez vous concentrer sur vos projets, pas sur la gestion.',
     ),
     _OnboardingPageData(
-      lottie: 'assets/lotties/onboarding3.json',
+      lottie: 'assets/images/community.png',
       subtitle: 'Bâtir l\'avenir, ensemble',
       title: 'Rejoignez une communauté qui avance.',
       desc:
@@ -199,13 +199,15 @@ class _OnboardingPage extends StatelessWidget {
         children: [
           Expanded(
             flex: 3,
-            child: Lottie.asset(
-              data.lottie,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              backgroundLoading: false,
-              repeat: false,
-            ),
+            child: data.lottie.contains("lottie")
+                ? Lottie.asset(
+                    data.lottie,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    backgroundLoading: false,
+                    repeat: false,
+                  )
+                : Image.asset(data.lottie, fit: BoxFit.fitWidth),
           ),
           Expanded(
             flex: 2,

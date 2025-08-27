@@ -1,43 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart'; // Import Get for navigation
-import 'package:google_fonts/google_fonts.dart';
-import 'package:snt_ui_test/app/modules/payment/payment_status_screen.dart';
-import 'package:snt_ui_test/app/routes/app_pages.dart'; // Import app_pages for routes
 import 'package:snt_ui_test/app/theme.dart';
 
-// Main screen widget to launch the bottom sheet
-class PaymentMethodScreen extends StatelessWidget {
-  const PaymentMethodScreen({super.key});
+import '../../widgets/payment_status_modal.dart';
 
-  void _showPaymentSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const PaymentMethodSheet(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Paiement',
-          style: GoogleFonts.inter(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () => _showPaymentSheet(context),
-          child: const Text('Sélectionner une méthode de paiement'),
-        ),
-      ),
-    );
-  }
+void showPaymentSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: false, // Set to false for standard bottom sheet
+    backgroundColor: Colors.transparent,
+    builder: (context) => const PaymentMethodSheet(),
+    isDismissible: true,
+  );
 }
 
 // The content of the bottom sheet
@@ -66,72 +40,66 @@ class _PaymentMethodSheetState extends State<PaymentMethodSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return DraggableScrollableSheet(
-      initialChildSize: 0.55, // Reduced height for thumb friendliness
-      minChildSize: 0.4,
-      maxChildSize: 0.8,
-      builder: (_, controller) {
-        return Container(
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, -5),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
           ),
-          child: Column(
-            children: [
-              // Drag Handle
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Container(
-                  width: 60,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Drag Handle
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Container(
+              width: 60,
+              height: 6,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(10),
               ),
-              Expanded(
-                child: ListView.separated(
-                  controller: controller,
-                  padding: AppPaddings.pageHome.copyWith(
-                    top: 0,
-                  ), // Adjust padding
-                  itemCount: _paymentMethods.length,
-                  separatorBuilder: (context, index) => AppSpacing
-                      .mediumHeightSpacerWidget, // Use AppSpacing for separation
-                  itemBuilder: (context, index) {
+            ),
+          ),
+          Flexible(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: AppPaddings.pageHome.copyWith(top: 0),
+                child: Column(
+                  children: List.generate(_paymentMethods.length, (index) {
                     final method = _paymentMethods[index];
-                    return _buildMethodRow(method, theme);
-                  },
+                    return Column(
+                      children: [
+                        _buildMethodRow(method, theme),
+                        if (index < _paymentMethods.length - 1)
+                          AppSpacing.mediumHeightSpacerWidget,
+                      ],
+                    );
+                  }),
                 ),
               ),
-            ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 
   Widget _buildMethodRow(Map<String, dynamic> method, ThemeData theme) {
     return InkWell(
       onTap: () {
-        Get.toNamed(
-          Routes.PAYMENT_STATUS,
-          arguments: {
-            'paymentMethod': method['name'],
-            'paymentMethodImage': method['image'],
-            'amount': 10000.0,
-            'status': PaymentStatus
-                .successful, // or 'failed' based on actual payment result
-          },
+        // Show payment status modal matching Coming Soon Teaser style
+        PaymentStatusModal.show(
+          context,
+          status: PaymentStatus
+              .successful, // or PaymentStatus.failed based on actual payment result
         );
+        // If you want to handle payment result dynamically, replace with actual logic
       },
       borderRadius: BorderRadius.circular(
         AppRadius.medium,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:snt_ui_test/app/modules/payment/payment_method_screen.dart';
 import 'package:snt_ui_test/app/theme.dart';
 
 import '../../../data/models/tontine.dart';
@@ -93,9 +94,7 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            color: theme.colorScheme.primary,
-          ),
+          CircularProgressIndicator(color: theme.colorScheme.primary),
           AppSpacing.largeHeightSpacerWidget,
           Text(
             'Chargement...',
@@ -198,7 +197,10 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(theme, tontine.status).withOpacity(0.1),
+                      color: _getStatusColor(
+                        theme,
+                        tontine.status,
+                      ).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
@@ -256,7 +258,9 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
             theme,
             'Mon Statut',
             isPaid ? 'Payé' : 'En attente',
-            isPaid ? CupertinoIcons.checkmark_circle_fill : CupertinoIcons.clock_fill,
+            isPaid
+                ? CupertinoIcons.checkmark_circle_fill
+                : CupertinoIcons.clock_fill,
             isPaid ? Colors.green : Colors.orange,
           ),
         ),
@@ -283,11 +287,7 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
         children: [
           Row(
             children: [
-              Icon(
-                icon,
-                color: color,
-                size: 24,
-              ),
+              Icon(icon, color: color, size: 24),
               const Spacer(),
             ],
           ),
@@ -319,7 +319,11 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
         'icon': CupertinoIcons.creditcard,
         'title': 'Payer',
         'subtitle': 'Effectuer un paiement',
-        'onTap': controller.showPaymentDialog,
+        'onTap': () {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            showPaymentSheet(Get.context!);
+          });
+        },
         'color': AppActionColors.create,
       },
       {
@@ -403,7 +407,9 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
                           Text(
                             action['subtitle'] as String,
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.6),
+                              color: theme.colorScheme.onSurface.withOpacity(
+                                0.6,
+                              ),
                             ),
                           ),
                         ],
@@ -445,10 +451,7 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
             ),
             const Spacer(),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: theme.colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(16),
@@ -493,8 +496,9 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
     dynamic contribution,
     int index,
   ) {
-    final name = AppConstants.sampleParticipantNames[
-        index % AppConstants.sampleParticipantNames.length];
+    final name =
+        AppConstants.sampleParticipantNames[index %
+            AppConstants.sampleParticipantNames.length];
     final isPaid = contribution?.isPaid ?? false;
     final initials = name.split(' ').map((n) => n[0]).take(2).join();
 
@@ -673,17 +677,11 @@ class _AnimatedDetailViewState extends State<_AnimatedDetailView>
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
     _controller.forward();
   }
 
@@ -697,10 +695,7 @@ class _AnimatedDetailViewState extends State<_AnimatedDetailView>
   Widget build(BuildContext context) {
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: widget.child,
-      ),
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
     );
   }
 }
