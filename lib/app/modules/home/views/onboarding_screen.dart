@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:snt_ui_test/generated/assets.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -32,21 +33,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // Content aligned with the PRD and marketing strategy
   final List<_OnboardingPageData> _pages = [
     _OnboardingPageData(
-      lottie: 'assets/lotties/onboarding1.json',
+      lottie: Assets.assetsLottiesOnboarding1,
       subtitle: 'Bienvenue dans SunuTontine',
       title: 'La tontine, simple et transparente.',
       desc:
           'Fini les calculs compliqués et les oublis. Suivez tout en temps réel, pour que la confiance règne.',
     ),
     _OnboardingPageData(
-      lottie: 'assets/lotties/onboarding2.json',
+      lottie: Assets.assetsLottiesOnboarding2,
       subtitle: 'La tontine sans stress',
       title: 'Tout est automatisé, vous n\'oubliez rien.',
       desc:
           'Rappels, suivi des paiements, calendrier partagé... L\'app s\'occupe de tout pour que vous puissiez vous concentrer sur vos projets, pas sur la gestion.',
     ),
     _OnboardingPageData(
-      lottie: 'assets/images/community.png',
+      lottie: Assets.imagesCommunity,
       subtitle: 'Bâtir l\'avenir, ensemble',
       title: 'Rejoignez une communauté qui avance.',
       desc:
