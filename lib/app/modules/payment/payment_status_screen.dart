@@ -48,72 +48,78 @@ class PaymentStatusScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      body: Padding(
-        padding: AppPaddings.pageHome,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Spacer(),
-            statusWidget
-                .animate()
-                .fadeIn(duration: 500.ms)
-                .scale(begin: const Offset(0.5, 0.5)),
-            AppSpacing.largeHeightSpacerWidget,
-            Text(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(color: Colors.white),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Status animation with soft shadow
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  child: statusWidget
+                      .animate()
+                      .fadeIn(duration: 400.ms)
+                      .scale(begin: const Offset(0.8, 0.8)),
+                ),
+                Text(
                   title,
                   style: theme.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
                     color: statusColor,
+                    letterSpacing: 0.5,
                   ),
                   textAlign: TextAlign.center,
-                )
-                .animate()
-                .fadeIn(duration: 500.ms, delay: 200.ms)
-                .slideY(begin: 0.2, end: 0),
-            AppSpacing.mediumHeightSpacerWidget,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child:
-                  Text(
-                        message,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                        textAlign: TextAlign.center,
-                      )
-                      .animate()
-                      .fadeIn(duration: 500.ms, delay: 400.ms)
-                      .slideY(begin: 0.2, end: 0),
-            ),
-            const Spacer(flex: 2),
-            SizedBox(
+                ).animate().fadeIn(duration: 400.ms, delay: 100.ms),
+                AppSpacing.mediumHeightSpacerWidget,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    message,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                    ),
+                    textAlign: TextAlign.center,
+                  ).animate().fadeIn(duration: 400.ms, delay: 200.ms),
+                ),
+                AppSpacing.largeHeightSpacerWidget,
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Navigate back to home
+                      Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      padding: const EdgeInsets.symmetric(vertical: 20),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.medium),
+                        borderRadius: BorderRadius.circular(AppRadius.large),
                       ),
                       backgroundColor: statusColor,
+                      elevation: 8,
+                      shadowColor: statusColor.withOpacity(0.25),
                     ),
                     child: Text(
                       'Retour à l\'accueil',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
+                        fontSize: 18,
+                        letterSpacing: 0.2,
                       ),
                     ),
                   ),
-                )
-                .animate()
-                .fadeIn(duration: 500.ms, delay: 600.ms)
-                .slideY(begin: 0.5, end: 0),
-            AppSpacing.mediumHeightSpacerWidget,
-          ],
+                ).animate().fadeIn(duration: 400.ms, delay: 300.ms),
+              ],
+            ),
+          ),
         ),
       ),
     );
