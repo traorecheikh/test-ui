@@ -74,10 +74,10 @@ class SettingsController extends GetxController {
     );
   }
 
-  void logout() {
+  Future<void> logout() async {
     // TODO: Implement logout logic (e.g., clear user session, navigate to login)
-    Get.snackbar('Déconnexion', 'Déconnexion réussie (simulation).');
-    // Example: Get.offAllNamed('/login');
+    // await FlutterSecureStorage().deleteAll();
+    Get.offAllNamed('/login');
   }
 
   void showLanguageDialog() {

@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: settingsController.themeMode,
-            initialRoute: Routes.onboarding,
+            initialRoute: Routes.home,
             getPages: AppPages.routes,
             builder: (context, child) {
               return MediaQuery(

@@ -8,9 +8,6 @@ import 'package:snt_ui_test/app/theme.dart';
 
 import '../controllers/login_controller.dart';
 
-// Note: This screen reuses widgets from the new Create Tontine UI for consistency.
-// You might want to move them to a common 'widgets' directory.
-
 class LoginScreen extends GetView<LoginController> {
   const LoginScreen({super.key});
 
@@ -24,6 +21,7 @@ class LoginScreen extends GetView<LoginController> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +45,7 @@ class LoginScreen extends GetView<LoginController> {
       children: [
         Image.asset(
           'assets/images/auth/auth.png',
-          height: 260.h,
+          height: 320.h,
           width: double.infinity,
           fit: BoxFit.cover,
           semanticLabel: 'Illustration de connexion',
@@ -171,6 +169,13 @@ class LoginScreen extends GetView<LoginController> {
                 ),
               ),
             ),
+            onTap: () => {
+              Scrollable.ensureVisible(
+                context,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              ),
+            },
           ),
         ],
       ),
@@ -187,7 +192,7 @@ class LoginScreen extends GetView<LoginController> {
             backgroundColor: theme.colorScheme.primary,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(24.r),
             ),
             padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 20.h),
             elevation: 5,
