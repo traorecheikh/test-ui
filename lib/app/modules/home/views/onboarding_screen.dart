@@ -199,15 +199,32 @@ class _OnboardingPage extends StatelessWidget {
         children: [
           Expanded(
             flex: 3,
-            child: data.lottie.contains("lottie")
-                ? Lottie.asset(
-                    data.lottie,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    backgroundLoading: false,
-                    repeat: false,
-                  )
-                : Image.asset(data.lottie, fit: BoxFit.fitWidth),
+            child: SizedBox(
+              height: 240,
+              child: Center(
+                child: data.lottie.contains("lottie")
+                    ? Lottie.asset(
+                        data.lottie,
+                        fit: BoxFit.contain,
+                        backgroundLoading: false,
+                        repeat: false,
+                        errorBuilder: (context, error, stack) => Icon(
+                          Icons.image_not_supported,
+                          size: 80,
+                          color: theme.colorScheme.onSurface.withOpacity(0.2),
+                        ),
+                      )
+                    : Image.asset(
+                        data.lottie,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stack) => Icon(
+                          Icons.image_not_supported,
+                          size: 80,
+                          color: theme.colorScheme.onSurface.withOpacity(0.2),
+                        ),
+                      ),
+              ),
+            ),
           ),
           Expanded(
             flex: 2,

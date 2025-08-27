@@ -10,7 +10,7 @@ class LoginController extends GetxController {
   final RxString phoneError = RxString('');
   final RxBool isValid = false.obs;
   final RxBool isLoading = false.obs;
-  final Rx<Country> selectedCountry = Country.parse("FR").obs;
+  final Rx<Country> selectedCountry = Country.parse("SN").obs;
 
   void onCountrySelected(Country country) {
     selectedCountry.value = country;
