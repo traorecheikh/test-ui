@@ -20,21 +20,29 @@ class PaymentStatusScreen extends StatelessWidget {
 
     switch (status) {
       case PaymentStatus.successful:
-        statusWidget = Lottie.asset('assets/lotties/success.json', repeat: false, height: 180);
+        statusWidget = Lottie.asset(
+          'assets/lotties/payment-success.json',
+          repeat: false,
+          height: 200,
+        );
         title = 'Paiement Réussi !';
         message = 'Votre paiement a été traité avec succès.';
         statusColor = Colors.green;
         break;
       case PaymentStatus.pending:
-        statusWidget = Lottie.asset('assets/lotties/pending.json', height: 180);
+        statusWidget = Lottie.asset('assets/lotties/pending.json', height: 200);
         title = 'Paiement en Attente';
-        message = 'Votre paiement est en cours de traitement. Nous vous informerons une fois terminé.';
+        message = 'Votre paiement est en cours de traitement.';
         statusColor = Colors.orange;
         break;
       case PaymentStatus.failed:
-        statusWidget = Lottie.asset('assets/lotties/failed.json', repeat: false, height: 180);
+        statusWidget = Lottie.asset(
+          'assets/lotties/failed.json',
+          repeat: false,
+          height: 200,
+        );
         title = 'Paiement Échoué';
-        message = 'Malheureusement, votre paiement n\'a pas pu être traité. Veuillez réessayer.';
+        message = 'Malheureusement, votre paiement n\'a pas pu être traité.';
         statusColor = Colors.red;
         break;
     }
@@ -46,40 +54,65 @@ class PaymentStatusScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            statusWidget.animate().fadeIn(duration: 500.ms).scale(begin: const Offset(0.5, 0.5)),
-            AppSpacing.largeHeightSpacer,
-            Text(
-              title,
-              style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold, color: statusColor),
-              textAlign: TextAlign.center,
-            ).animate().fadeIn(duration: 500.ms, delay: 200.ms).slideY(begin: 0.2, end: 0),
-            AppSpacing.mediumHeightSpacer,
-            Text(
-              message,
-              style: theme.textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ).animate().fadeIn(duration: 500.ms, delay: 400.ms).slideY(begin: 0.2, end: 0),
             const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Navigate back to home or tontine details
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(28),
+            statusWidget
+                .animate()
+                .fadeIn(duration: 500.ms)
+                .scale(begin: const Offset(0.5, 0.5)),
+            AppSpacing.largeHeightSpacerWidget,
+            Text(
+                  title,
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: statusColor,
                   ),
-                  backgroundColor: statusColor,
-                ),
-                child: Text(
-                  'Retour à l\'accueil',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
-            ).animate().fadeIn(duration: 500.ms, delay: 600.ms).slideY(begin: 0.5, end: 0),
-            AppSpacing.mediumHeightSpacer,
+                  textAlign: TextAlign.center,
+                )
+                .animate()
+                .fadeIn(duration: 500.ms, delay: 200.ms)
+                .slideY(begin: 0.2, end: 0),
+            AppSpacing.mediumHeightSpacerWidget,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child:
+                  Text(
+                        message,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                      .animate()
+                      .fadeIn(duration: 500.ms, delay: 400.ms)
+                      .slideY(begin: 0.2, end: 0),
+            ),
+            const Spacer(flex: 2),
+            SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigate back to home
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.medium),
+                      ),
+                      backgroundColor: statusColor,
+                    ),
+                    child: Text(
+                      'Retour à l\'accueil',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+                .animate()
+                .fadeIn(duration: 500.ms, delay: 600.ms)
+                .slideY(begin: 0.5, end: 0),
+            AppSpacing.mediumHeightSpacerWidget,
           ],
         ),
       ),

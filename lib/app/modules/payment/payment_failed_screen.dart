@@ -18,12 +18,13 @@ class PaymentFailedScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const Spacer(),
             Lottie.asset(
               'assets/lotties/failed.json',
               repeat: false,
-              height: 180,
+              height: 200,
             ),
-            AppSpacing.largeHeightSpacer,
+            AppSpacing.largeHeightSpacerWidget,
             Text(
                   'Paiement Échoué',
                   style: theme.textTheme.displaySmall?.copyWith(
@@ -35,19 +36,23 @@ class PaymentFailedScreen extends StatelessWidget {
                 .animate()
                 .fadeIn(duration: 500.ms, delay: 200.ms)
                 .slideY(begin: 0.2, end: 0),
-            AppSpacing.mediumHeightSpacer,
-            Text(
-                  errorMessage ??
-                      'Nous n\'avons pas pu traiter votre paiement. Veuillez vérifier vos informations et réessayer.',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-                  textAlign: TextAlign.center,
-                )
-                .animate()
-                .fadeIn(duration: 500.ms, delay: 400.ms)
-                .slideY(begin: 0.2, end: 0),
-            const Spacer(),
+            AppSpacing.mediumHeightSpacerWidget,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child:
+                  Text(
+                        errorMessage ??
+                            'Nous n avons pas pu traiter votre paiement. Veuillez vérifier vos informations et réessayer.',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                      .animate()
+                      .fadeIn(duration: 500.ms, delay: 400.ms)
+                      .slideY(begin: 0.2, end: 0),
+            ),
+            const Spacer(flex: 2),
             SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -55,9 +60,9 @@ class PaymentFailedScreen extends StatelessWidget {
                       // Logic to retry payment
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 18),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
+                        borderRadius: BorderRadius.circular(AppRadius.medium),
                       ),
                       backgroundColor: theme.colorScheme.primary,
                     ),
@@ -73,7 +78,7 @@ class PaymentFailedScreen extends StatelessWidget {
                 .animate()
                 .fadeIn(duration: 500.ms, delay: 600.ms)
                 .slideY(begin: 0.5, end: 0),
-            AppSpacing.smallHeightSpacer,
+            AppSpacing.smallHeightSpacerWidget,
             SizedBox(
               width: double.infinity,
               child: TextButton(
@@ -88,7 +93,7 @@ class PaymentFailedScreen extends StatelessWidget {
                 ),
               ),
             ),
-            AppSpacing.mediumHeightSpacer,
+            AppSpacing.mediumHeightSpacerWidget,
           ],
         ),
       ),
