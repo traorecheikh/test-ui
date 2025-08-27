@@ -3,6 +3,12 @@ import 'package:snt_ui_test/app/modules/auth/bindings/auth_binding.dart';
 import 'package:snt_ui_test/app/modules/auth/views/login_screen.dart';
 import 'package:snt_ui_test/app/modules/auth/views/otp_screen.dart';
 import 'package:snt_ui_test/app/modules/auth/views/register_step_screen.dart';
+import 'package:snt_ui_test/app/modules/payment/payment_confirmation_screen.dart';
+import 'package:snt_ui_test/app/modules/payment/payment_failed_screen.dart';
+import 'package:snt_ui_test/app/modules/payment/payment_history_screen.dart';
+import 'package:snt_ui_test/app/modules/payment/payment_method_screen.dart';
+import 'package:snt_ui_test/app/modules/payment/payment_receipt_screen.dart';
+import 'package:snt_ui_test/app/modules/payment/payment_status_screen.dart';
 import 'package:snt_ui_test/app/modules/tontines/views/my_tontines_view.dart';
 
 import '../modules/history/bindings/history_binding.dart';
@@ -112,6 +118,36 @@ class AppPages {
       page: () => const PotVisualScreen(),
       binding: PotVisualBinding(),
       transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_METHOD,
+      page: () => const PaymentMethodScreen(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_CONFIRMATION,
+      page: () => PaymentConfirmationScreen(paymentMethod: Get.arguments['paymentMethod'], paymentMethodImage: Get.arguments['paymentMethodImage'], amount: Get.arguments['amount']),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_STATUS,
+      page: () => PaymentStatusScreen(status: Get.arguments['status']),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_HISTORY,
+      page: () => const PaymentHistoryScreen(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_FAILED,
+      page: () => PaymentFailedScreen(errorMessage: Get.arguments['errorMessage']),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: _Paths.PAYMENT_RECEIPT,
+      page: () => PaymentReceiptScreen(transactionId: Get.arguments['transactionId'], amount: Get.arguments['amount'], date: Get.arguments['date'], paymentMethod: Get.arguments['paymentMethod'], recipient: Get.arguments['recipient']),
+      transition: Transition.rightToLeft,
     ),
   ];
 }

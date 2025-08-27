@@ -43,24 +43,17 @@ abstract class ApiClient {
 
   /// User Endpoints
   @GET("user/profile")
-  Future<UserProfile> getUserProfile(@Header("Authorization") String authToken);
+  Future<UserProfile> getUserProfile();
 
   @PUT("user/profile")
-  Future<UserProfile> updateUserProfile(
-    @Header("Authorization") String authToken,
-    @Body() UpdateUserProfileBody body,
-  );
+  Future<UserProfile> updateUserProfile(@Body() UpdateUserProfileBody body);
 
   /// Tontine Endpoints
   @POST("tontines")
-  Future<Tontine> createTontine(
-    @Header("Authorization") String authToken,
-    @Body() CreateTontineBody body,
-  );
+  Future<Tontine> createTontine(@Body() CreateTontineBody body);
 
   @GET("tontines")
   Future<List<Tontine>> getUserTontines(
-    @Header("Authorization") String authToken,
     @Query("status") String? status,
     @Query("page") int? page,
     @Query("size") int? size,
@@ -69,76 +62,44 @@ abstract class ApiClient {
   );
 
   @GET("tontines/{id}")
-  Future<Tontine> getTontineDetails(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<Tontine> getTontineDetails(@Path("id") int id);
 
   @PUT("tontines/{id}")
   Future<Tontine> updateTontine(
-    @Header("Authorization") String authToken,
     @Path("id") int id,
     @Body() UpdateTontineBody body,
   );
 
   @DELETE("tontines/{id}")
-  Future<void> deleteTontine(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<void> deleteTontine(@Path("id") int id);
 
   @POST("tontines/{id}/activate")
-  Future<void> activateTontine(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<void> activateTontine(@Path("id") int id);
 
   @POST("tontines/join")
-  Future<void> joinTontine(
-    @Header("Authorization") String authToken,
-    @Body() JoinTontineBody body,
-  );
+  Future<void> joinTontine(@Body() JoinTontineBody body);
 
   @DELETE("tontines/{id}/leave")
-  Future<void> leaveTontine(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<void> leaveTontine(@Path("id") int id);
 
   @POST("tontines/{id}/contribute")
   Future<void> contributeToTontine(
-    @Header("Authorization") String authToken,
     @Path("id") int id,
     @Body() ContributeToTontineBody body,
   );
 
   @GET("tontines/{id}/drawing-order")
-  Future<void> getTontineDrawingOrder(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<void> getTontineDrawingOrder(@Path("id") int id);
 
   @POST("tontines/{id}/rounds/start")
-  Future<void> startFirstRound(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<void> startFirstRound(@Path("id") int id);
 
   @GET("tontines/{id}/rounds/current")
-  Future<void> getCurrentRoundStatus(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<void> getCurrentRoundStatus(@Path("id") int id);
 
   @POST("tontines/{id}/rounds/draw")
-  Future<void> conductDrawing(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<void> conductDrawing(@Path("id") int id);
 
   @POST("tontines/{id}/rounds/force-advance")
-  Future<void> forceAdvanceDrawing(
-    @Header("Authorization") String authToken,
-    @Path("id") int id,
-  );
+  Future<void> forceAdvanceDrawing(@Path("id") int id);
 }

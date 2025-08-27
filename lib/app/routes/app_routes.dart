@@ -19,6 +19,12 @@ abstract class Routes {
   static const register = _Paths.register;
   static const history = _Paths.history;
   static const potVisual = _Paths.potVisual;
+  static const PAYMENT_METHOD = _Paths.PAYMENT_METHOD;
+  static const PAYMENT_CONFIRMATION = _Paths.PAYMENT_CONFIRMATION;
+  static const PAYMENT_STATUS = _Paths.PAYMENT_STATUS;
+  static const PAYMENT_HISTORY = _Paths.PAYMENT_HISTORY;
+  static const PAYMENT_FAILED = _Paths.PAYMENT_FAILED;
+  static const PAYMENT_RECEIPT = _Paths.PAYMENT_RECEIPT;
 }
 
 abstract class _Paths {
@@ -39,4 +45,10 @@ abstract class _Paths {
   static const register = '/register';
   static const history = '/history';
   static const potVisual = '/pot-visual';
+  static const PAYMENT_METHOD = '/payment-method';
+  static const PAYMENT_CONFIRMATION = '/payment-confirmation';
+  static const PAYMENT_STATUS = '/payment-status';
+  static const PAYMENT_HISTORY = '/payment-history';
+  static const PAYMENT_FAILED = '/payment-failed';
+  static const PAYMENT_RECEIPT = '/payment-receipt';
 }
