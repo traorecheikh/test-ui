@@ -49,6 +49,7 @@ class TontineService {
     required TontineDrawOrder drawOrder,
     required double penaltyPercentage,
     required int organizerId,
+    required TontineCategory category,
     List<String> rules = const [],
   }) async {
     final tontine = Tontine(
@@ -68,6 +69,7 @@ class TontineService {
       rules: rules,
       inviteCode: _generateInviteCode(),
       createdAt: DateTime.now(),
+      category: category,
     );
 
     _tontines.add(tontine);
@@ -305,6 +307,7 @@ class TontineService {
       currentRound: 4,
       nextContributionDate: DateTime.now().add(const Duration(days: 12)),
       currentWinnerId: 5,
+      category: TontineCategory.regular,
     );
 
     // 2. Tontine où l'utilisateur est participant - ACTIVE début de cycle
@@ -349,6 +352,7 @@ class TontineService {
       currentRound: 2,
       nextContributionDate: DateTime.now().add(const Duration(days: 3)),
       currentWinnerId: 10,
+      category: TontineCategory.regular,
     );
 
     // 3. Tontine en attente de participants - PENDING (organisateur)
@@ -377,6 +381,7 @@ class TontineService {
       currentRound: 0,
       nextContributionDate: null,
       currentWinnerId: null,
+      category: TontineCategory.regular,
     );
 
     // 4. Tontine quotidienne rapide - ACTIVE (participant)
@@ -416,6 +421,7 @@ class TontineService {
       currentRound: 4,
       nextContributionDate: DateTime.now().add(const Duration(hours: 18)),
       currentWinnerId: 32,
+      category: TontineCategory.regular,
     );
 
     // 5. Tontine terminée avec succès - COMPLETED (organisateur)
@@ -444,6 +450,7 @@ class TontineService {
       currentRound: 6,
       nextContributionDate: null,
       currentWinnerId: null,
+      category: TontineCategory.regular,
     );
 
     // 6. Tontine trimestrielle haut montant - ACTIVE (participant)
@@ -472,6 +479,7 @@ class TontineService {
       currentRound: 1,
       nextContributionDate: DateTime.now().add(const Duration(days: 60)),
       currentWinnerId: 1003,
+      category: TontineCategory.regular,
     );
 
     // 7. Tontine famille étendue - ACTIVE (organisateur)
@@ -513,6 +521,7 @@ class TontineService {
       currentRound: 6,
       nextContributionDate: DateTime.now().add(const Duration(days: 8)),
       currentWinnerId: 103,
+      category: TontineCategory.regular,
     );
 
     _tontines.addAll([

@@ -14,6 +14,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(ContributionAdapter());
     registerAdapter(ContributionStatusAdapter());
     registerAdapter(TontineAdapter());
+    registerAdapter(TontineCategoryAdapter());
     registerAdapter(TontineDrawOrderAdapter());
     registerAdapter(TontineFrequencyAdapter());
     registerAdapter(TontineStatusAdapter());
@@ -29,6 +30,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(ContributionAdapter());
     registerAdapter(ContributionStatusAdapter());
     registerAdapter(TontineAdapter());
+    registerAdapter(TontineCategoryAdapter());
     registerAdapter(TontineDrawOrderAdapter());
     registerAdapter(TontineFrequencyAdapter());
     registerAdapter(TontineStatusAdapter());

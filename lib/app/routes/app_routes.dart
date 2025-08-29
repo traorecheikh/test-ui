@@ -25,6 +25,8 @@ abstract class Routes {
   static const PAYMENT_HISTORY = _Paths.PAYMENT_HISTORY;
   static const PAYMENT_FAILED = _Paths.PAYMENT_FAILED;
   static const PAYMENT_RECEIPT = _Paths.PAYMENT_RECEIPT;
+  static const CREATE_TONTINE_OPTIONS = _Paths.CREATE_TONTINE_OPTIONS;
+  static const CREATE_CAGNOTTE = _Paths.CREATE_CAGNOTTE;
 }
 
 abstract class _Paths {
@@ -51,4 +53,6 @@ abstract class _Paths {
   static const PAYMENT_HISTORY = '/payment-history';
   static const PAYMENT_FAILED = '/payment-failed';
   static const PAYMENT_RECEIPT = '/payment-receipt';
+  static const CREATE_TONTINE_OPTIONS = '/create-tontine-options';
+  static const CREATE_CAGNOTTE = '/create-cagnotte';
 }

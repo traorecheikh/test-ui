@@ -34,7 +34,7 @@ class MyTontinesView extends GetView<HomeController> {
               color: theme.colorScheme.primary,
               size: 28,
             ),
-            onPressed: () => Get.toNamed(Routes.create),
+            onPressed: () => Get.toNamed(Routes.CREATE_TONTINE_OPTIONS),
             tooltip: 'Créer une tontine',
           ),
           const SizedBox(width: 8),
@@ -122,7 +122,7 @@ class MyTontinesView extends GetView<HomeController> {
             ),
             const SizedBox(height: 40),
             ElevatedButton.icon(
-              onPressed: () => Get.toNamed(Routes.create),
+              onPressed: () => Get.toNamed(Routes.CREATE_TONTINE_OPTIONS),
               icon: const Icon(CupertinoIcons.add, size: 20),
               label: const Text('Créer une Tontine'),
               style: ElevatedButton.styleFrom(

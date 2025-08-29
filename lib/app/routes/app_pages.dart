@@ -27,7 +27,11 @@ import '../modules/tontine/bindings/tontine_detail_binding.dart';
 import '../modules/tontine/views/create_tontine_screen.dart';
 import '../modules/tontine/views/join_tontine_screen.dart';
 import '../modules/tontine/views/pot_visual_screen.dart';
-import '../modules/tontine/views/tontine_detail_screen.dart';
+import 'package:snt_ui_test/app/modules/tontine/views/tontine_detail_screen.dart';
+import 'package:snt_ui_test/app/modules/tontine/bindings/create_tontine_options_binding.dart';
+import 'package:snt_ui_test/app/modules/tontine/views/create_tontine_options_screen.dart';
+import 'package:snt_ui_test/app/modules/tontine/bindings/create_cagnotte_binding.dart';
+import 'package:snt_ui_test/app/modules/tontine/views/create_cagnotte_screen.dart';
 
 part 'app_routes.dart';
 
@@ -142,6 +146,18 @@ class AppPages {
         paymentMethod: Get.arguments['paymentMethod'],
         recipient: Get.arguments['recipient'],
       ),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.CREATE_TONTINE_OPTIONS,
+      page: () => const CreateTontineOptionsScreen(),
+      binding: CreateTontineOptionsBinding(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: Routes.CREATE_CAGNOTTE,
+      page: () => const CreateCagnotteScreen(),
+      binding: CreateCagnotteBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

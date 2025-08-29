@@ -44,6 +44,8 @@ class Tontine {
   final DateTime? nextContributionDate;
   @HiveField(19)
   final int? currentWinnerId;
+  @HiveField(20)
+  final TontineCategory category;
 
   // Transient field to indicate if the current user has paid for the current round
   bool? isPaidByCurrentUser;
@@ -70,6 +72,7 @@ class Tontine {
     this.nextContributionDate,
     this.currentWinnerId,
     this.isPaidByCurrentUser,
+    required this.category,
   });
 
   int get totalRounds => participantIds.length;
@@ -110,6 +113,7 @@ class Tontine {
     DateTime? nextContributionDate,
     int? currentWinnerId,
     bool? isPaidByCurrentUser,
+    TontineCategory? category,
   }) => Tontine(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -132,6 +136,7 @@ class Tontine {
     nextContributionDate: nextContributionDate ?? this.nextContributionDate,
     currentWinnerId: currentWinnerId ?? this.currentWinnerId,
     isPaidByCurrentUser: isPaidByCurrentUser ?? this.isPaidByCurrentUser,
+    category: category ?? this.category,
   );
 }
 
@@ -182,5 +187,16 @@ enum TontineStatus {
 
   const TontineStatus(this.label);
 
+  final String label;
+}
+
+@HiveType(typeId: 7)
+enum TontineCategory {
+  @HiveField(0)
+  regular('Normale'),
+  @HiveField(1)
+  cagnotte('Cagnotte');
+
+  const TontineCategory(this.label);
   final String label;
 }

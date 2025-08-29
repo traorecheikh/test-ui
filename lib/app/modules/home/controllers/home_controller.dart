@@ -99,7 +99,7 @@ class HomeController extends GetxController {
       color: Colors.greenAccent,
       onTap: () {
         VibrationService.softVibrate();
-        Get.toNamed(Routes.create);
+        Get.toNamed(Routes.CREATE_TONTINE_OPTIONS);
       },
     ),
     _ActionButtonData(

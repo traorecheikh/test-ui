@@ -37,13 +37,14 @@ class TontineAdapter extends TypeAdapter<Tontine> {
       currentRound: fields[17] == null ? 0 : (fields[17] as num).toInt(),
       nextContributionDate: fields[18] as DateTime?,
       currentWinnerId: (fields[19] as num?)?.toInt(),
+      category: fields[20] as TontineCategory? ?? TontineCategory.regular,
     );
   }
 
   @override
   void write(BinaryWriter writer, Tontine obj) {
     writer
-      ..writeByte(20)
+      ..writeByte(21)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -83,7 +84,9 @@ class TontineAdapter extends TypeAdapter<Tontine> {
       ..writeByte(18)
       ..write(obj.nextContributionDate)
       ..writeByte(19)
-      ..write(obj.currentWinnerId);
+      ..write(obj.currentWinnerId)
+      ..writeByte(20)
+      ..write(obj.category);
   }
 
   @override
@@ -232,6 +235,43 @@ class TontineStatusAdapter extends TypeAdapter<TontineStatus> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is TontineStatusAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TontineCategoryAdapter extends TypeAdapter<TontineCategory> {
+  @override
+  final typeId = 7;
+
+  @override
+  TontineCategory read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return TontineCategory.regular;
+      case 1:
+        return TontineCategory.cagnotte;
+      default:
+        return TontineCategory.regular;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, TontineCategory obj) {
+    switch (obj) {
+      case TontineCategory.regular:
+        writer.writeByte(0);
+      case TontineCategory.cagnotte:
+        writer.writeByte(1);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TontineCategoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
