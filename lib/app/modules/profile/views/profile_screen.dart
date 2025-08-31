@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../data/models/user.dart';
@@ -14,15 +15,43 @@ class ProfileScreen extends GetView<ProfileController> {
       if (controller.isLoading.value) {
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
+
+      final theme = Theme.of(context);
       final user = controller.currentUser.value;
       if (user == null) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Profil')),
+          appBar: AppBar(
+            toolbarHeight: 70.h,
+            backgroundColor: theme.colorScheme.background,
+            elevation: 0,
+            centerTitle: true,
+            title: Text(
+              'Profil',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           body: const Center(child: Text('Utilisateur non trouv��')),
         );
       }
-      final theme = Theme.of(context);
       return Scaffold(
+        appBar: AppBar(
+          backgroundColor: theme.colorScheme.background,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
+            onPressed: () => Get.back(),
+          ),
+          title: Text(
+            'Profil',
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         backgroundColor: theme.colorScheme.background,
         body: SafeArea(
           child: ListView(
