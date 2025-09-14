@@ -96,7 +96,7 @@ class HomeController extends GetxController {
     _ActionButtonData(
       title: 'Créer',
       icon: Icons.add_circle,
-      color: Colors.teal,
+      color: Color(0xFFFF6B6B), // Coral
       onTap: () {
         VibrationService.softVibrate();
         Get.toNamed(Routes.CREATE_TONTINE_OPTIONS);
@@ -105,7 +105,7 @@ class HomeController extends GetxController {
     _ActionButtonData(
       title: 'Rejoindre',
       icon: Icons.group_add,
-      color: Colors.blueAccent,
+      color: Color(0xFF4ECDC4), // Teal
       onTap: () {
         VibrationService.softVibrate();
         Get.toNamed(Routes.joinScanner);
@@ -115,7 +115,7 @@ class HomeController extends GetxController {
     _ActionButtonData(
       title: 'Mes Tontines',
       icon: Icons.group_add,
-      color: Colors.indigo,
+      color: Color(0xFFFFD166), // Amber
       onTap: () {
         VibrationService.softVibrate();
         Get.toNamed(Routes.myTontine);
@@ -124,7 +124,7 @@ class HomeController extends GetxController {
     _ActionButtonData(
       title: 'Historique',
       icon: Icons.history,
-      color: Color(0xFFFFC107),
+      color: Color(0xFF81C995), // Mint
       onTap: () {
         VibrationService.softVibrate();
         Get.toNamed(Routes.history);
@@ -133,7 +133,7 @@ class HomeController extends GetxController {
     _ActionButtonData(
       title: 'Sunu Points',
       icon: Icons.stars,
-      color: Color(0xFFFF9800),
+      color: Color(0xFF6A4C93), // Lavender
       onTap: () {
         VibrationService.softVibrate();
         CustomSnackbar.show(
@@ -146,7 +146,7 @@ class HomeController extends GetxController {
     _ActionButtonData(
       title: 'Rapports',
       icon: Icons.trending_up,
-      color: Colors.purple,
+      color: Color(0xFFFF9E80), // Peach
       onTap: () {
         VibrationService.softVibrate();
         CustomSnackbar.show(
