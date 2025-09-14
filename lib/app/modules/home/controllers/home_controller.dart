@@ -96,7 +96,7 @@ class HomeController extends GetxController {
     _ActionButtonData(
       title: 'Créer',
       icon: Icons.add_circle,
-      color: Colors.greenAccent,
+      color: Colors.teal,
       onTap: () {
         VibrationService.softVibrate();
         Get.toNamed(Routes.CREATE_TONTINE_OPTIONS);
