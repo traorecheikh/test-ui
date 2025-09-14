@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -300,12 +301,14 @@ class TontineDetailScreen extends GetView<TontineDetailController> {
             ),
           ),
           AppSpacing.smallHeightSpacer,
-          Text(
+          AutoSizeText(
             value,
             style: theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onSurface,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
             ),
+            maxLines: 1,
+            minFontSize: 12,
             overflow: TextOverflow.ellipsis,
           ),
         ],
