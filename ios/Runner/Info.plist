@@ -45,5 +45,8 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Face ID usage description -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>Utilisez Face ID pour vous authentifier rapidement et en toute sécurité</string>
 </dict>
 </plist>

@@ -27,6 +27,9 @@ abstract class Routes {
   static const PAYMENT_RECEIPT = _Paths.PAYMENT_RECEIPT;
   static const CREATE_TONTINE_OPTIONS = _Paths.CREATE_TONTINE_OPTIONS;
   static const CREATE_CAGNOTTE = _Paths.CREATE_CAGNOTTE;
+  static const PIN_AUTH = _Paths.PIN_AUTH;
+  static const PIN_SETUP = _Paths.PIN_SETUP;
+  static const SPLASH = _Paths.SPLASH;
 }
 
 abstract class _Paths {
@@ -55,4 +58,7 @@ abstract class _Paths {
   static const PAYMENT_RECEIPT = '/payment-receipt';
   static const CREATE_TONTINE_OPTIONS = '/create-tontine-options';
   static const CREATE_CAGNOTTE = '/create-cagnotte';
+  static const PIN_AUTH = '/pin-auth';
+  static const PIN_SETUP = '/pin-setup';
+  static const SPLASH = '/splash';
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:snt_ui_test/app/modules/settings/controllers/settings_controller.dart';
 
 import '../../../routes/app_pages.dart';
+import '../../../services/auth_service.dart';
+import '../../auth/views/pin_setup_screen.dart';
 // import 'package:snt_ui_test/app/theme.dart'; // Assuming AppPaddings, AppRadius etc. were intended to be here
 
 class SettingsScreen extends GetView<SettingsController> {
@@ -12,6 +15,7 @@ class SettingsScreen extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authService = Get.find<AuthService>();
 
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
@@ -60,11 +64,63 @@ class SettingsScreen extends GetView<SettingsController> {
                   ),
                 ),
                 SizedBox(height: 20.h),
+
+                // Security Section
                 _buildSettingsSection(
                   theme,
                   controller,
                   showSection: controller.showToggles.value,
                   children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
+                      child: Text(
+                        'Sécurité',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => _buildSecurityToggleItem(
+                        theme,
+                        Icons.pin_outlined,
+                        'Code PIN',
+                        'Sécurisez l\'accès avec un PIN à 4 chiffres',
+                        authService.isPinEnabled,
+                        (value) => _handlePinToggle(value, authService),
+                      ),
+                    ),
+                    Obx(
+                      () => authService.isBiometricAvailable.value
+                          ? _buildBiometricToggleItem(theme, authService)
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 32.h),
+
+                _buildSettingsSection(
+                  theme,
+                  controller,
+                  showSection: controller.showToggles.value,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
+                      child: Text(
+                        'Préférences',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
                     _buildInfoItem(
                       theme,
                       Icons.person_outline,
@@ -100,6 +156,19 @@ class SettingsScreen extends GetView<SettingsController> {
                   controller,
                   showSection: controller.showInfo.value,
                   children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
+                      child: Text(
+                        'Informations',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
                     _buildInfoItem(
                       theme,
                       Icons.info_outline,
@@ -115,7 +184,7 @@ class SettingsScreen extends GetView<SettingsController> {
                     _buildInfoItem(
                       theme,
                       Icons.description_outlined,
-                      'Conditions d’utilisation',
+                      'Conditions d\'utilisation',
                       onTap: controller.openTermsOfService,
                     ),
                     ListTile(
@@ -158,6 +227,115 @@ class SettingsScreen extends GetView<SettingsController> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _handlePinToggle(bool value, AuthService authService) async {
+    if (value) {
+      // Navigate to PIN setup screen
+      final result = await Get.to(() => const PinSetupScreen());
+      if (result != true) {
+        // If PIN setup was cancelled or failed, don't enable PIN
+        return;
+      }
+    } else {
+      // Show confirmation dialog before disabling PIN
+      final confirmed = await Get.dialog<bool>(
+        AlertDialog(
+          title: const Text('Désactiver le PIN'),
+          content: const Text(
+            'Êtes-vous sûr de vouloir désactiver la protection par PIN ?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(result: false),
+              child: const Text('Annuler'),
+            ),
+            TextButton(
+              onPressed: () => Get.back(result: true),
+              child: const Text('Désactiver'),
+            ),
+          ],
+        ),
+      );
+
+      if (confirmed == true) {
+        await authService.togglePinAuth(false);
+      }
+    }
+  }
+
+  Widget _buildSecurityToggleItem(
+    ThemeData theme,
+    IconData icon,
+    String title,
+    String subtitle,
+    RxBool value,
+    ValueChanged<bool> onChanged,
+  ) {
+    return SwitchListTile(
+      secondary: Icon(icon, color: theme.colorScheme.primary),
+      title: Text(
+        title,
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurface.withOpacity(0.7),
+        ),
+      ),
+      value: value.value,
+      onChanged: onChanged,
+      activeColor: theme.colorScheme.primary,
+      inactiveThumbColor: theme.colorScheme.onSurface.withOpacity(0.4),
+      inactiveTrackColor: theme.colorScheme.onSurface.withOpacity(0.1),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+    );
+  }
+
+  Widget _buildBiometricToggleItem(ThemeData theme, AuthService authService) {
+    return FutureBuilder<List<BiometricType>>(
+      future: authService.getAvailableBiometrics(),
+      builder: (context, snapshot) {
+        final biometrics = snapshot.data ?? [];
+        IconData icon = Icons.fingerprint;
+        String title = 'Biométrie';
+        String subtitle = 'Authentification biométrique';
+
+        if (biometrics.contains(BiometricType.face)) {
+          icon = Icons.face;
+          title = 'Face ID';
+          subtitle = 'Utilisez Face ID pour vous authentifier';
+        } else if (biometrics.contains(BiometricType.fingerprint)) {
+          icon = Icons.fingerprint;
+          title = 'Empreinte digitale';
+          subtitle = 'Utilisez votre empreinte pour vous authentifier';
+        }
+
+        return _buildSecurityToggleItem(
+          theme,
+          icon,
+          title,
+          subtitle,
+          authService.isBiometricEnabled,
+          (value) async {
+            if (value && !authService.isPinEnabled.value) {
+              Get.snackbar(
+                'PIN requis',
+                'Vous devez d\'abord configurer un PIN avant d\'activer l\'authentification biométrique',
+                backgroundColor: theme.colorScheme.error,
+                colorText: Colors.white,
+                snackPosition: SnackPosition.TOP,
+              );
+              return;
+            }
+            await authService.toggleBiometricAuth(value);
+          },
+        );
+      },
     );
   }
 

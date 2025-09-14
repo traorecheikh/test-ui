@@ -121,55 +121,150 @@ class TontineDetailController extends GetxController {
 
   void showOptionsMenu() {
     Get.bottomSheet(
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.share),
-            title: const Text('Partager'),
-            onTap: () {
-              Get.back();
-              VibrationService.softVibrate();
-              showShareDialog();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.history),
-            title: const Text('Voir l\'historique'),
-            onTap: () {
-              Get.back();
-              showTransactionHistory();
-            },
-          ),
-          if (isOrganizer.value)
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Gérer la tontine'),
-              onTap: () {
-                Get.back();
-                // TODO: Navigate to tontine management screen
-                CustomSnackbar.show(
-                  title: 'Info',
-                  message: 'Écran de gestion à venir.',
-                );
-              },
+      Container(
+        decoration: BoxDecoration(
+          color: Get.theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
             ),
-          ListTile(
-            leading: const Icon(Icons.exit_to_app, color: Colors.red),
-            title: Text(
-              'Quitter la tontine',
-              style: TextStyle(color: Colors.red),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Drag Handle
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Container(
+                width: 60,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
-            onTap: () {
-              Get.back();
-              showLeaveConfirmation();
-            },
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+              child: Column(
+                children: [
+                  _buildOptionTile(
+                    icon: Icons.share,
+                    title: 'Partager',
+                    onTap: () {
+                      Get.back();
+                      VibrationService.softVibrate();
+                      showShareDialog();
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _buildOptionTile(
+                    icon: Icons.history,
+                    title: 'Voir l\'historique',
+                    onTap: () {
+                      Get.back();
+                      showTransactionHistory();
+                    },
+                  ),
+                  if (isOrganizer.value) ...[
+                    const SizedBox(height: 16),
+                    _buildOptionTile(
+                      icon: Icons.settings,
+                      title: 'Gérer la tontine',
+                      onTap: () {
+                        Get.back();
+                        // TODO: Navigate to tontine management screen
+                        CustomSnackbar.show(
+                          title: 'Info',
+                          message: 'Écran de gestion à venir.',
+                        );
+                      },
+                    ),
+                  ],
+                  const SizedBox(height: 16),
+                  _buildOptionTile(
+                    icon: Icons.exit_to_app,
+                    title: 'Quitter la tontine',
+                    isDestructive: true,
+                    onTap: () {
+                      Get.back();
+                      showLeaveConfirmation();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-      backgroundColor: Get.theme.colorScheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+    );
+  }
+
+  Widget _buildOptionTile({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    final theme = Get.theme;
+    final color = isDestructive ? Colors.red : theme.colorScheme.onSurface;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: isDestructive
+                    ? Colors.red.withOpacity(0.1)
+                    : theme.colorScheme.primary.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: isDestructive ? Colors.red : theme.colorScheme.primary,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              size: 16,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -361,23 +456,20 @@ class TontineDetailController extends GetxController {
   void showPotDetails() {
     final t = tontine.value;
     if (t == null) return;
-    
+
     VibrationService.softVibrate();
-    
+
     final currentAmount = t.currentRound * t.contributionAmount;
     final targetAmount = t.totalPot;
     final progress = (currentAmount / targetAmount * 100).toInt();
     final paidCount = currentRoundContributions.where((c) => c.isPaid).length;
     final pendingCount = t.participantIds.length - paidCount;
-    
+
     Get.dialog(
       AlertDialog(
         title: Row(
           children: [
-            Icon(
-              Icons.savings,
-              color: Get.theme.colorScheme.primary,
-            ),
+            Icon(Icons.savings, color: Get.theme.colorScheme.primary),
             const SizedBox(width: 8),
             const Expanded(child: Text('Détails du Pot')),
           ],
@@ -386,24 +478,36 @@ class TontineDetailController extends GetxController {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildDetailRow('Cagnotte Actuelle', Formatters.formatCurrency(currentAmount.toDouble())),
-            _buildDetailRow('Objectif Total', Formatters.formatCurrency(targetAmount)),
+            _buildDetailRow(
+              'Cagnotte Actuelle',
+              Formatters.formatCurrency(currentAmount.toDouble()),
+            ),
+            _buildDetailRow(
+              'Objectif Total',
+              Formatters.formatCurrency(targetAmount),
+            ),
             _buildDetailRow('Progression', '$progress%'),
             const Divider(),
-            _buildDetailRow('Tour Actuel', '${t.currentRound} / ${t.totalRounds}'),
-            _buildDetailRow('Paiements Effectués', '$paidCount / ${t.participantIds.length}'),
+            _buildDetailRow(
+              'Tour Actuel',
+              '${t.currentRound} / ${t.totalRounds}',
+            ),
+            _buildDetailRow(
+              'Paiements Effectués',
+              '$paidCount / ${t.participantIds.length}',
+            ),
             if (pendingCount > 0)
-              _buildDetailRow('En Attente', '$pendingCount participant${pendingCount > 1 ? 's' : ''}'),
+              _buildDetailRow(
+                'En Attente',
+                '$pendingCount participant${pendingCount > 1 ? 's' : ''}',
+              ),
             const Divider(),
             _buildDetailRow('Prochain Tirage', t.formattedNextPaymentDate),
             _buildDetailRow('Fréquence', t.frequency.label),
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Fermer'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Fermer')),
         ],
       ),
     );

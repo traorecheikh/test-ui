@@ -2,11 +2,19 @@ import 'package:get/get.dart';
 import 'package:snt_ui_test/app/modules/auth/bindings/auth_binding.dart';
 import 'package:snt_ui_test/app/modules/auth/views/login_screen.dart';
 import 'package:snt_ui_test/app/modules/auth/views/otp_screen.dart';
+import 'package:snt_ui_test/app/modules/auth/views/pin_auth_screen.dart';
+import 'package:snt_ui_test/app/modules/auth/views/pin_setup_screen.dart';
 import 'package:snt_ui_test/app/modules/auth/views/register_step_screen.dart';
+import 'package:snt_ui_test/app/modules/auth/views/splash_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_failed_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_history_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_receipt_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_status_screen.dart';
+import 'package:snt_ui_test/app/modules/tontine/bindings/create_cagnotte_binding.dart';
+import 'package:snt_ui_test/app/modules/tontine/bindings/create_tontine_options_binding.dart';
+import 'package:snt_ui_test/app/modules/tontine/views/create_cagnotte_screen.dart';
+import 'package:snt_ui_test/app/modules/tontine/views/create_tontine_options_screen.dart';
+import 'package:snt_ui_test/app/modules/tontine/views/tontine_detail_screen.dart';
 import 'package:snt_ui_test/app/modules/tontines/views/my_tontines_view.dart';
 
 import '../modules/history/bindings/history_binding.dart';
@@ -27,20 +35,22 @@ import '../modules/tontine/bindings/tontine_detail_binding.dart';
 import '../modules/tontine/views/create_tontine_screen.dart';
 import '../modules/tontine/views/join_tontine_screen.dart';
 import '../modules/tontine/views/pot_visual_screen.dart';
-import 'package:snt_ui_test/app/modules/tontine/views/tontine_detail_screen.dart';
-import 'package:snt_ui_test/app/modules/tontine/bindings/create_tontine_options_binding.dart';
-import 'package:snt_ui_test/app/modules/tontine/views/create_tontine_options_screen.dart';
-import 'package:snt_ui_test/app/modules/tontine/bindings/create_cagnotte_binding.dart';
-import 'package:snt_ui_test/app/modules/tontine/views/create_cagnotte_screen.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.HOME;
+  static const INITIAL = Routes.SPLASH;
 
   static final routes = [
+    // Splash screen - initial route
+    GetPage(
+      name: Routes.SPLASH,
+      page: () => const SplashScreen(),
+      transition: Transition.fadeIn,
+    ),
+
     GetPage(
       name: _Paths.HOME,
       page: () => const HomeView(),
@@ -158,6 +168,20 @@ class AppPages {
       name: Routes.CREATE_CAGNOTTE,
       page: () => const CreateCagnotteScreen(),
       binding: CreateCagnotteBinding(),
+      transition: Transition.rightToLeft,
+    ),
+
+    // Authentication routes
+    GetPage(
+      name: Routes.PIN_AUTH,
+      page: () => const PinAuthScreen(),
+      binding: AuthBinding(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: Routes.PIN_SETUP,
+      page: () => const PinSetupScreen(),
+      binding: AuthBinding(),
       transition: Transition.rightToLeft,
     ),
   ];
