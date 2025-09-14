@@ -7,7 +7,6 @@ import 'package:snt_ui_test/app/modules/settings/controllers/settings_controller
 import '../../../routes/app_pages.dart';
 import '../../../services/auth_service.dart';
 import '../../auth/views/pin_setup_screen.dart';
-// import 'package:snt_ui_test/app/theme.dart'; // Assuming AppPaddings, AppRadius etc. were intended to be here
 
 class SettingsScreen extends GetView<SettingsController> {
   const SettingsScreen({super.key});
@@ -18,209 +17,364 @@ class SettingsScreen extends GetView<SettingsController> {
     final authService = Get.find<AuthService>();
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
-      body: SafeArea(
-        child: Obx(
-          () => AnimatedOpacity(
-            // Use one of the controller's flags for the root animation
-            opacity: controller.showHeader.value
-                ? 1.0
-                : 0.0, // Or a dedicated 'showScreen' flag if preferred
-            duration: const Duration(
-              milliseconds: 300,
-            ), // Short overall fade-in
-            curve: Curves.easeIn,
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              children: [
-                AnimatedSlide(
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeOutCubic,
-                  offset: controller.showHeader.value
-                      ? Offset.zero
-                      : const Offset(0, 0.2),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.h),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios_new,
-                            color: theme.colorScheme.primary,
-                          ),
-                          onPressed: () => Get.back(),
-                          tooltip: 'Retour',
-                        ),
-                        SizedBox(width: 8.w),
-                        Text(
-                          'Paramètres',
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                      ],
+      backgroundColor: theme.colorScheme.surface,
+      appBar: _buildAppBar(theme),
+      body: Obx(
+        () => AnimatedOpacity(
+          opacity: controller.showHeader.value ? 1.0 : 0.0,
+          duration: const Duration(milliseconds: 200),
+          child: ListView(
+            padding: EdgeInsets.all(20.w),
+            children: [
+              // Profile Section
+              _buildProfileSection(theme),
+              SizedBox(height: 32.h),
+
+              // Settings Groups
+              _buildSettingsGroup(
+                theme,
+                title: 'Préférences',
+                children: [
+                  _buildSettingItem(
+                    theme,
+                    Icons.dark_mode_outlined,
+                    'Mode sombre',
+                    trailing: Obx(
+                      () => Switch(
+                        value: controller.darkMode.value,
+                        onChanged: controller.toggleDarkMode,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20.h),
+                  _buildSettingItem(
+                    theme,
+                    Icons.notifications_outlined,
+                    'Notifications',
+                    trailing: Obx(
+                      () => Switch(
+                        value: controller.notificationsEnabled.value,
+                        onChanged: controller.toggleNotifications,
+                      ),
+                    ),
+                  ),
+                  _buildSettingItem(
+                    theme,
+                    Icons.volume_up_outlined,
+                    'Sons',
+                    trailing: Obx(
+                      () => Switch(
+                        value: controller.soundEnabled.value,
+                        onChanged: controller.toggleSound,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
 
-                // Security Section
-                _buildSettingsSection(
-                  theme,
-                  controller,
-                  showSection: controller.showToggles.value,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 8.h,
-                      ),
-                      child: Text(
-                        'Sécurité',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    Obx(
-                      () => _buildSecurityToggleItem(
-                        theme,
-                        Icons.pin_outlined,
-                        'Code PIN',
-                        'Sécurisez l\'accès avec un PIN à 4 chiffres',
-                        authService.isPinEnabled,
-                        (value) => _handlePinToggle(value, authService),
-                      ),
-                    ),
-                    Obx(
-                      () => authService.isBiometricAvailable.value
-                          ? _buildBiometricToggleItem(theme, authService)
-                          : const SizedBox.shrink(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 32.h),
+              SizedBox(height: 24.h),
 
-                _buildSettingsSection(
-                  theme,
-                  controller,
-                  showSection: controller.showToggles.value,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 8.h,
+              // Security Section
+              _buildSettingsGroup(
+                theme,
+                title: 'Sécurité',
+                children: [
+                  Obx(
+                    () => _buildSettingItem(
+                      theme,
+                      Icons.pin_outlined,
+                      'Code PIN',
+                      subtitle: 'Protection par code à 4 chiffres',
+                      trailing: Switch(
+                        value: authService.isPinEnabled.value,
+                        onChanged: (value) =>
+                            _handlePinToggle(value, authService),
                       ),
-                      child: Text(
-                        'Préférences',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.primary,
-                        ),
-                      ),
                     ),
-                    _buildInfoItem(
-                      theme,
-                      Icons.person_outline,
-                      'Compte utilisateur',
-                      onTap: () => Get.toNamed(Routes.profile),
-                    ),
-                    _buildToggleItem(
-                      theme,
-                      Icons.brightness_6,
-                      'Mode sombre',
-                      controller.darkMode,
-                      controller.toggleDarkMode,
-                    ),
-                    _buildToggleItem(
-                      theme,
-                      Icons.notifications_none,
-                      'Notifications',
-                      controller.notificationsEnabled,
-                      controller.toggleNotifications,
-                    ),
-                    _buildToggleItem(
-                      theme,
-                      Icons.volume_up_outlined,
-                      'Sons',
-                      controller.soundEnabled,
-                      controller.toggleSound,
-                    ),
-                  ],
+                  ),
+                  Obx(
+                    () => authService.isBiometricAvailable.value
+                        ? _buildBiometricItem(theme, authService)
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 24.h),
+
+              // Info Section
+              _buildSettingsGroup(
+                theme,
+                title: 'Informations',
+                children: [
+                  _buildSettingItem(
+                    theme,
+                    Icons.person_outline,
+                    'Mon compte',
+                    onTap: () => Get.toNamed(Routes.profile),
+                  ),
+                  _buildSettingItem(
+                    theme,
+                    Icons.info_outline,
+                    'À propos',
+                    onTap: controller.openAboutDialog,
+                  ),
+                  _buildSettingItem(
+                    theme,
+                    Icons.privacy_tip_outlined,
+                    'Confidentialité',
+                    onTap: controller.openPrivacyPolicy,
+                  ),
+                  _buildSettingItem(
+                    theme,
+                    Icons.description_outlined,
+                    'Conditions d\'utilisation',
+                    onTap: controller.openTermsOfService,
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 32.h),
+
+              // Logout Button
+              _buildLogoutButton(theme),
+
+              SizedBox(height: 24.h),
+
+              // Version Info
+              _buildVersionInfo(theme),
+
+              SizedBox(height: 40.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(ThemeData theme) {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: theme.colorScheme.surface,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back_ios, color: theme.colorScheme.onSurface),
+        onPressed: () => Get.back(),
+      ),
+      title: Text(
+        'Paramètres',
+        style: theme.textTheme.titleLarge?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: theme.colorScheme.onSurface,
+        ),
+      ),
+      centerTitle: false,
+    );
+  }
+
+  Widget _buildProfileSection(ThemeData theme) {
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary,
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 60.w,
+            height: 60.w,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(30.r),
+            ),
+            child: Icon(Icons.person, color: Colors.white, size: 30.sp),
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Mon Compte',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                SizedBox(height: 32.h), // Changed from 24.h
-                _buildSettingsSection(
-                  theme,
-                  controller,
-                  showSection: controller.showInfo.value,
+                SizedBox(height: 4.h),
+                Text(
+                  'Gérez vos informations',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16.sp),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsGroup(
+    ThemeData theme, {
+    required String title,
+    required List<Widget> children,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 16.w, bottom: 12.h),
+          child: Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Column(children: children.map((child) => child).toList()),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingItem(
+    ThemeData theme,
+    IconData icon,
+    String title, {
+    String? subtitle,
+    Widget? trailing,
+    VoidCallback? onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12.r),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+          child: Row(
+            children: [
+              Icon(icon, color: theme.colorScheme.primary, size: 24.sp),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 8.h,
-                      ),
-                      child: Text(
-                        'Informations',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.primary,
-                        ),
+                    Text(
+                      title,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.onSurface,
                       ),
                     ),
-                    _buildInfoItem(
-                      theme,
-                      Icons.info_outline,
-                      'À propos de l\'application',
-                      onTap: controller.openAboutDialog,
-                    ),
-                    _buildInfoItem(
-                      theme,
-                      Icons.privacy_tip_outlined,
-                      'Confidentialité',
-                      onTap: controller.openPrivacyPolicy,
-                    ),
-                    _buildInfoItem(
-                      theme,
-                      Icons.description_outlined,
-                      'Conditions d\'utilisation',
-                      onTap: controller.openTermsOfService,
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.logout,
-                        color: theme.colorScheme.error,
-                      ),
-                      title: Text(
-                        'Se déconnecter',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: theme.colorScheme.error,
-                        ),
-                      ),
-                      onTap: controller.logout,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 20.h, // Changed from 8.h
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 12.h,
-                        horizontal: 16.w,
-                      ),
-                      child: Obx(
-                        () => Text(
-                          'Version ${controller.appVersion.value}',
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.5),
+                    if (subtitle != null) ...[
+                      SizedBox(height: 2.h),
+                      Text(
+                        subtitle,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ],
+                ),
+              ),
+              if (trailing != null)
+                trailing
+              else if (onTap != null)
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                  size: 16.sp,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBiometricItem(ThemeData theme, AuthService authService) {
+    return FutureBuilder<List<BiometricType>>(
+      future: authService.getAvailableBiometrics(),
+      builder: (context, snapshot) {
+        final biometrics = snapshot.data ?? [];
+        IconData icon = Icons.fingerprint;
+        String title = 'Biométrie';
+        String subtitle = 'Authentification biométrique';
+
+        if (biometrics.contains(BiometricType.face)) {
+          icon = Icons.face;
+          title = 'Face ID';
+          subtitle = 'Authentification par reconnaissance faciale';
+        } else if (biometrics.contains(BiometricType.fingerprint)) {
+          icon = Icons.fingerprint;
+          title = 'Empreinte digitale';
+          subtitle = 'Authentification par empreinte';
+        }
+
+        return _buildSettingItem(
+          theme,
+          icon,
+          title,
+          subtitle: subtitle,
+          trailing: Obx(
+            () => Switch(
+              value: authService.isBiometricEnabled.value,
+              onChanged: (value) async {
+                if (value && !authService.isPinEnabled.value) {
+                  Get.snackbar(
+                    'PIN requis',
+                    'Configurez d\'abord un PIN',
+                    backgroundColor: theme.colorScheme.error,
+                    colorText: Colors.white,
+                  );
+                  return;
+                }
+                await authService.toggleBiometricAuth(value);
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLogoutButton(ThemeData theme) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: controller.logout,
+          borderRadius: BorderRadius.circular(12.r),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.logout, color: theme.colorScheme.error, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text(
+                  'Se déconnecter',
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.error,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
@@ -230,16 +384,26 @@ class SettingsScreen extends GetView<SettingsController> {
     );
   }
 
+  Widget _buildVersionInfo(ThemeData theme) {
+    return Center(
+      child: Obx(
+        () => Text(
+          'Version ${controller.appVersion.value}',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _handlePinToggle(bool value, AuthService authService) async {
     if (value) {
-      // Navigate to PIN setup screen
       final result = await Get.to(() => const PinSetupScreen());
       if (result != true) {
-        // If PIN setup was cancelled or failed, don't enable PIN
         return;
       }
     } else {
-      // Show confirmation dialog before disabling PIN
       final confirmed = await Get.dialog<bool>(
         AlertDialog(
           title: const Text('Désactiver le PIN'),
@@ -263,195 +427,5 @@ class SettingsScreen extends GetView<SettingsController> {
         await authService.togglePinAuth(false);
       }
     }
-  }
-
-  Widget _buildSecurityToggleItem(
-    ThemeData theme,
-    IconData icon,
-    String title,
-    String subtitle,
-    RxBool value,
-    ValueChanged<bool> onChanged,
-  ) {
-    return SwitchListTile(
-      secondary: Icon(icon, color: theme.colorScheme.primary),
-      title: Text(
-        title,
-        style: theme.textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.onSurface.withOpacity(0.7),
-        ),
-      ),
-      value: value.value,
-      onChanged: onChanged,
-      activeColor: theme.colorScheme.primary,
-      inactiveThumbColor: theme.colorScheme.onSurface.withOpacity(0.4),
-      inactiveTrackColor: theme.colorScheme.onSurface.withOpacity(0.1),
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-    );
-  }
-
-  Widget _buildBiometricToggleItem(ThemeData theme, AuthService authService) {
-    return FutureBuilder<List<BiometricType>>(
-      future: authService.getAvailableBiometrics(),
-      builder: (context, snapshot) {
-        final biometrics = snapshot.data ?? [];
-        IconData icon = Icons.fingerprint;
-        String title = 'Biométrie';
-        String subtitle = 'Authentification biométrique';
-
-        if (biometrics.contains(BiometricType.face)) {
-          icon = Icons.face;
-          title = 'Face ID';
-          subtitle = 'Utilisez Face ID pour vous authentifier';
-        } else if (biometrics.contains(BiometricType.fingerprint)) {
-          icon = Icons.fingerprint;
-          title = 'Empreinte digitale';
-          subtitle = 'Utilisez votre empreinte pour vous authentifier';
-        }
-
-        return _buildSecurityToggleItem(
-          theme,
-          icon,
-          title,
-          subtitle,
-          authService.isBiometricEnabled,
-          (value) async {
-            if (value && !authService.isPinEnabled.value) {
-              Get.snackbar(
-                'PIN requis',
-                'Vous devez d\'abord configurer un PIN avant d\'activer l\'authentification biométrique',
-                backgroundColor: theme.colorScheme.error,
-                colorText: Colors.white,
-                snackPosition: SnackPosition.TOP,
-              );
-              return;
-            }
-            await authService.toggleBiometricAuth(value);
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildSettingsSection(
-    ThemeData theme,
-    SettingsController controller, {
-    required bool showSection,
-    required List<Widget> children,
-  }) {
-    return AnimatedSlide(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOutCubic,
-      offset: showSection ? Offset.zero : const Offset(0, 0.3),
-      child: AnimatedOpacity(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOutCubic,
-        opacity: showSection ? 1.0 : 0.0,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8.h), // Added this padding
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(12.r),
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withOpacity(0.05),
-                blurRadius: 6.r,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            children: children, // Removed the map and divider logic
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildToggleItem(
-    ThemeData theme,
-    IconData icon,
-    String title,
-    RxBool value,
-    ValueChanged<bool> onChanged,
-  ) {
-    // Removed showDivider parameter
-    return Obx(
-      () => SwitchListTile(
-        secondary: Icon(icon, color: theme.colorScheme.primary),
-        title: Text(
-          title,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        value: value.value,
-        onChanged: onChanged,
-        activeColor: theme.colorScheme.primary,
-        inactiveThumbColor: theme.colorScheme.onSurface.withOpacity(0.4),
-        inactiveTrackColor: theme.colorScheme.onSurface.withOpacity(0.1),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 16.h,
-        ), // Changed from 8.h
-      ),
-    );
-  }
-
-  Widget _buildInfoItem(
-    ThemeData theme,
-    IconData icon,
-    String title, {
-    String? subtitle,
-    VoidCallback? onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: theme.colorScheme.primary),
-      title: Text(
-        title,
-        style: theme.textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      subtitle: subtitle != null
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 4.h),
-                Text(
-                  subtitle,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
-                  ),
-                ),
-              ],
-            )
-          : null,
-      trailing: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        transitionBuilder: (child, animation) =>
-            ScaleTransition(scale: animation, child: child),
-        child: Icon(
-          Icons.arrow_forward_ios,
-          key: ValueKey(
-            theme.iconTheme.color,
-          ), // Ensures animation on theme change
-          size: 16.sp,
-          color: theme.iconTheme.color?.withOpacity(0.5),
-        ),
-      ),
-      onTap: onTap,
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: 16.w,
-        vertical: 20.h,
-      ), // Changed from 12.h
-    );
   }
 }

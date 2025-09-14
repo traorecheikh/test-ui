@@ -5,10 +5,9 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 
 import '../../../services/auth_service.dart';
-import '../../../theme.dart';
 import '../controllers/auth_controller.dart';
 
-/// PIN authentication screen with biometric support
+/// PIN authentication screen with automatic biometric support
 class PinAuthScreen extends StatelessWidget {
   const PinAuthScreen({super.key});
 
@@ -56,13 +55,18 @@ class PinAuthScreen extends StatelessWidget {
 
                   SizedBox(height: 8.h),
 
-                  Text(
-                    'Saisissez votre PIN pour continuer',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
-                    ),
-                    textAlign: TextAlign.center,
-                  ).animate().fadeIn(delay: 500.ms),
+                  // Dynamic subtitle based on available authentication methods
+                  Obx(
+                    () => Text(
+                      _getSubtitleText(authService),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.7,
+                        ),
+                      ),
+                      textAlign: TextAlign.center,
+                    ).animate().fadeIn(delay: 500.ms),
+                  ),
                 ],
               ),
 
@@ -82,11 +86,15 @@ class PinAuthScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: isFilled
                                 ? theme.colorScheme.primary
-                                : theme.colorScheme.outline.withOpacity(0.3),
+                                : theme.colorScheme.outline.withValues(
+                                    alpha: 0.3,
+                                  ),
                             border: Border.all(
                               color: controller.showError.value
                                   ? theme.colorScheme.error
-                                  : theme.colorScheme.outline.withOpacity(0.5),
+                                  : theme.colorScheme.outline.withValues(
+                                      alpha: 0.5,
+                                    ),
                               width: 1.5,
                             ),
                           ),
@@ -118,29 +126,15 @@ class PinAuthScreen extends StatelessWidget {
 
               const Spacer(),
 
-              // Biometric Authentication Button
+              // Biometric status indicator (only when biometric is enabled)
               Obx(
                 () =>
                     authService.isBiometricEnabled.value &&
                         authService.isBiometricAvailable.value
-                    ? Column(
-                        children: [
-                          _buildBiometricButton(
-                            context,
-                            controller,
-                            authService,
-                          ),
-                          SizedBox(height: 32.h),
-                          Text(
-                            'Ou utilisez votre PIN',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(
-                                0.6,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 24.h),
-                        ],
+                    ? _buildBiometricStatusIndicator(
+                        theme,
+                        authService,
+                        controller,
                       )
                     : const SizedBox.shrink(),
               ),
@@ -156,13 +150,19 @@ class PinAuthScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBiometricButton(
-    BuildContext context,
-    AuthController controller,
-    AuthService authService,
-  ) {
-    final theme = Theme.of(context);
+  String _getSubtitleText(AuthService authService) {
+    if (authService.isBiometricEnabled.value &&
+        authService.isBiometricAvailable.value) {
+      return 'Authentification automatique en cours...';
+    }
+    return 'Saisissez votre PIN pour continuer';
+  }
 
+  Widget _buildBiometricStatusIndicator(
+    ThemeData theme,
+    AuthService authService,
+    AuthController controller,
+  ) {
     return FutureBuilder<List<BiometricType>>(
       future: authService.getAvailableBiometrics(),
       builder: (context, snapshot) {
@@ -173,38 +173,57 @@ class PinAuthScreen extends StatelessWidget {
         if (biometrics.contains(BiometricType.face)) {
           icon = Icons.face;
           text = 'Face ID';
-        } else if (biometrics.contains(BiometricType.fingerprint)) {
-          icon = Icons.fingerprint;
-          text = 'Empreinte digitale';
         }
 
         return Obx(
-          () => GestureDetector(
-            onTap: controller.isLoading.value || controller.isLockedOut
-                ? null
-                : () async {
-                    final success = await controller
-                        .authenticateWithBiometrics();
-                    if (success) {
-                      Get.offAllNamed('/home');
-                    }
-                  },
-            child: Container(
-              width: 80.w,
-              height: 80.h,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.1),
-                shape: BoxShape.circle,
-                border: Border.all(color: theme.colorScheme.primary, width: 2),
+          () => Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (controller.isLoading.value)
+                      SizedBox(
+                        width: 16.w,
+                        height: 16.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: theme.colorScheme.primary,
+                        ),
+                      )
+                    else
+                      Icon(icon, color: theme.colorScheme.primary, size: 16.sp),
+                    SizedBox(width: 8.w),
+                    Text(
+                      controller.isLoading.value
+                          ? 'Authentification...'
+                          : '$text activé',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: controller.isLoading.value
-                  ? CircularProgressIndicator(
-                      color: theme.colorScheme.primary,
-                      strokeWidth: 2,
-                    )
-                  : Icon(icon, color: theme.colorScheme.primary, size: 32.sp),
-            ),
-          ).animate().scale(delay: 700.ms),
+              SizedBox(height: 16.h),
+              Text(
+                'Ou utilisez votre PIN ci-dessous',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+              ),
+              SizedBox(height: 24.h),
+            ],
+          ),
         );
       },
     );
@@ -288,12 +307,12 @@ class PinAuthScreen extends StatelessWidget {
             color: theme.colorScheme.surface,
             shape: BoxShape.circle,
             border: Border.all(
-              color: theme.colorScheme.outline.withOpacity(0.2),
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow.withOpacity(0.1),
+                color: theme.colorScheme.shadow.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -321,31 +340,40 @@ class PinAuthScreen extends StatelessWidget {
 
     return Obx(
       () => GestureDetector(
-        onTap: controller.isLoading.value || controller.isLockedOut
+        onTap:
+            controller.isLoading.value ||
+                controller.isLockedOut ||
+                controller.enteredPin.value.isEmpty
             ? null
-            : () => controller.removeDigit(),
+            : controller.removeDigit,
         child: Container(
           width: 70.w,
           height: 70.h,
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
+            color: controller.enteredPin.value.isEmpty
+                ? theme.colorScheme.surface.withValues(alpha: 0.5)
+                : theme.colorScheme.surface,
             shape: BoxShape.circle,
             border: Border.all(
-              color: theme.colorScheme.outline.withOpacity(0.2),
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
               width: 1,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.shadow.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            boxShadow: controller.enteredPin.value.isEmpty
+                ? []
+                : [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
           ),
           child: Center(
             child: Icon(
               Icons.backspace_outlined,
-              color: theme.colorScheme.onSurface,
+              color: controller.enteredPin.value.isEmpty
+                  ? theme.colorScheme.onSurface.withValues(alpha: 0.3)
+                  : theme.colorScheme.onSurface,
               size: 24.sp,
             ),
           ),

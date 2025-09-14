@@ -22,6 +22,22 @@ class AuthController extends GetxController {
     super.onInit();
     // Clear any previous authentication state when controller is initialized
     clearPin();
+    // Auto-trigger biometric authentication if enabled
+    _autoTriggerBiometricAuth();
+  }
+
+  /// Automatically trigger biometric authentication if available and enabled
+  Future<void> _autoTriggerBiometricAuth() async {
+    // Wait a moment for the UI to render
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (_authService.isBiometricEnabled.value &&
+        _authService.isBiometricAvailable.value) {
+      final success = await authenticateWithBiometrics();
+      if (success) {
+        Get.offAllNamed('/home');
+      }
+    }
   }
 
   /// Add digit to PIN
@@ -168,18 +184,21 @@ class AuthController extends GetxController {
 
   /// Authenticate with biometrics
   Future<bool> authenticateWithBiometrics() async {
+    if (!_authService.isBiometricEnabled.value ||
+        !_authService.isBiometricAvailable.value) {
+      return false;
+    }
+
     isLoading.value = true;
     try {
       final success = await _authService.authenticateWithBiometrics();
       if (success) {
         await _authService.setAuthenticated(true);
-        return true;
-      } else {
-        showErrorMessage('Authentification biométrique échouée');
-        return false;
+        attemptCount.value = 0;
       }
+      return success;
     } catch (e) {
-      showErrorMessage('Erreur lors de l\'authentification biométrique');
+      showErrorMessage('Erreur d\'authentification biométrique');
       return false;
     } finally {
       isLoading.value = false;
@@ -224,19 +243,19 @@ class AuthController extends GetxController {
     }
   }
 
-  /// Start lockout timer
-  void _startLockoutTimer() {
-    Future.delayed(Duration(seconds: lockoutDuration), () {
-      attemptCount.value = 0;
-      clearError();
-    });
-  }
-
   /// Check if user is locked out
   bool get isLockedOut => attemptCount.value >= maxAttempts;
 
   /// Get remaining attempts
   int get remainingAttempts => maxAttempts - attemptCount.value;
+
+  /// Start lockout timer
+  void _startLockoutTimer() {
+    Future.delayed(const Duration(seconds: lockoutDuration), () {
+      attemptCount.value = 0;
+      clearError();
+    });
+  }
 
   // Getters for auth service state
   bool get isPinEnabled => _authService.isPinEnabled.value;

@@ -4,35 +4,20 @@ import 'package:get/get.dart';
 import '../routes/app_pages.dart';
 import '../services/auth_service.dart';
 
-/// Middleware to handle authentication checks
+/// Middleware to handle authentication checks for protected routes
 class AuthMiddleware extends GetMiddleware {
+  @override
+  int? get priority => 1;
+
   @override
   RouteSettings? redirect(String? route) {
     final authService = Get.find<AuthService>();
 
-    // If user needs authentication and trying to access protected routes
-    if (authService.needsAuthentication && route != Routes.PIN_AUTH) {
-      return const RouteSettings(name: Routes.PIN_AUTH);
+    // If authentication is required and user is not authenticated
+    if (authService.needsAuthentication) {
+      return RouteSettings(name: Routes.PIN_AUTH);
     }
 
     return null;
-  }
-}
-
-/// Auth guard for protecting routes
-class AuthGuard {
-  static bool isAuthenticated() {
-    try {
-      final authService = Get.find<AuthService>();
-      return !authService.needsAuthentication;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  static void checkAuth() {
-    if (!isAuthenticated()) {
-      Get.offAllNamed(Routes.PIN_AUTH);
-    }
   }
 }

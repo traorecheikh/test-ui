@@ -12,14 +12,13 @@ import 'app/services/auth_service.dart';
 import 'app/services/storage_service.dart';
 import 'app/services/tontine_service.dart';
 import 'app/theme.dart';
-import 'app/utils/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await initializeDateFormatting('fr_FR', null);
   Hive.registerAdapters();
-  await StorageService.init(); // Ensure Hive boxes are open
+  await StorageService.init();
   await TontineService.init();
 
   // Initialize authentication service
@@ -49,39 +48,51 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    _lifecycleObserver.dispose();
+    WidgetsBinding.instance.removeObserver(_lifecycleObserver);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final settingsController = Get.find<SettingsController>();
-
     return ScreenUtilInit(
-      designSize: kDesignSize,
+      designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return Obx(
-          () => GetMaterialApp(
-            title: AppConstants.appName,
-            debugShowCheckedModeBanner: false,
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: settingsController.themeMode,
-            initialRoute: AppPages.INITIAL,
-            getPages: AppPages.routes,
-            builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(
-                  context,
-                ).copyWith(textScaler: TextScaler.linear(1.0)),
-                child: child!,
-              );
-            },
-          ),
+        return GetMaterialApp(
+          title: 'Sunutontine',
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
+          debugShowCheckedModeBanner: false,
+          getPages: AppPages.routes,
+          initialRoute: _getInitialRoute(),
+          routingCallback: (routing) {
+            // Reset authentication when navigating away from auth screens
+            if (routing?.current != Routes.PIN_AUTH &&
+                routing?.current != Routes.PIN_SETUP) {
+              final authService = Get.find<AuthService>();
+              if (authService.needsAuthentication) {
+                // If auth is required but user is not on auth screen, redirect
+                Future.delayed(Duration.zero, () {
+                  Get.offAllNamed(Routes.PIN_AUTH);
+                });
+              }
+            }
+          },
         );
       },
     );
+  }
+
+  String _getInitialRoute() {
+    final authService = Get.find<AuthService>();
+
+    // Check if authentication is required
+    if (authService.needsAuthentication) {
+      return Routes.PIN_AUTH;
+    }
+
+    return Routes.SPLASH;
   }
 }
