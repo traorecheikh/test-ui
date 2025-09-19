@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -5,7 +6,6 @@ import 'package:snt_ui_test/app/theme.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../../utils/formatters.dart';
-import '../../../widgets/celebration_overlay.dart';
 import '../../../widgets/coming_soon_teaser.dart';
 import '../controllers/home_controller.dart';
 
@@ -17,15 +17,11 @@ class HomeView extends GetView<HomeController> {
     final theme = Theme.of(context);
     return Obx(() {
       final user = controller.currentUser.value;
-      if (controller.showCelebration.value) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          CelebrationOverlay.show(
-            context,
-            message: 'Bravo ! Première tontine créée 🎉',
-          );
-          controller.showCelebration.value = false;
-        });
-      }
+      /*
+      *
+      *   Celebration overlay logic temporarily disabled as requested.
+      *   To re-enable, restore the original logic for showing the overlay.
+      * */
       return Scaffold(
         body: SafeArea(
           child: ListView(
@@ -57,9 +53,9 @@ class HomeView extends GetView<HomeController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        AutoSizeText(
                           '${Formatters.getGreeting()}, ${user?.name.split(' ').first ?? 'Utilisateur'}',
-                          style: theme.textTheme.titleLarge?.copyWith(
+                          style: theme.textTheme.titleMedium?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ),
@@ -69,21 +65,6 @@ class HomeView extends GetView<HomeController> {
                       ],
                     ),
                   ),
-                  /*
-                *
-                *   IconButton(
-                    icon: Icon(
-                      Icons.refresh,
-                      color: theme.colorScheme.secondary,
-                      size: 28,
-                    ),
-                    onPressed: () {
-                      controller.refreshTontines();
-                    },
-                    tooltip: 'Recharger les tontines',
-                  ),   c
-                * */
-                  // AppSpacing.smallWidthSpacerWidget,
                   Spacer(flex: 3),
                   IconButton(
                     icon: Icon(
@@ -99,7 +80,7 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
               AppSpacing.extraLargeHeightSpacerWidget,
-              _buildFinanceDataCard(theme),
+              _buildFinanceDataCardElevated(theme),
               // _buildPrimaryTontineSection(theme),
               AppSpacing.extraLargeHeightSpacerWidget,
               _buildQuickActionsSection(theme),
@@ -112,7 +93,7 @@ class HomeView extends GetView<HomeController> {
     });
   }
 
-  Widget _buildFinanceDataCard(ThemeData theme) {
+  Widget _buildFinanceDataCardElevated(ThemeData theme) {
     final totalSavings = controller.getTotalSavings();
     final tontinesCount = controller.userTontines.length;
     final nextPaymentDate = tontinesCount > 0
@@ -123,111 +104,129 @@ class HomeView extends GetView<HomeController> {
             controller.userTontines.first.contributionAmount,
           )
         : '--';
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+      margin: EdgeInsets.symmetric(horizontal: 4.w),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(28.r),
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.primary.withOpacity(0.08),
-            blurRadius: 18.sp,
-            offset: const Offset(0, 4),
+            blurRadius: 16.sp,
+            offset: const Offset(0, 2),
+            spreadRadius: -2,
+          ),
+          BoxShadow(
+            color: theme.colorScheme.primary.withOpacity(0.12),
+            blurRadius: 32.sp,
+            offset: const Offset(0, 12),
+            spreadRadius: -8,
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.account_balance_wallet, size: 32, color: Colors.white),
-              AppSpacing.smallWidthSpacerWidget,
-              Text(
-                'Épargne Totale',
-                style: theme.textTheme.headlineMedium?.copyWith(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 22.h),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primary,
+          borderRadius: BorderRadius.circular(28.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.account_balance_wallet,
+                  size: 32,
                   color: Colors.white,
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.sp),
-          Text(
-            totalSavings,
-            style: theme.textTheme.headlineLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+                AppSpacing.smallWidthSpacerWidget,
+                Text(
+                  'Épargne Totale',
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
-            textAlign: TextAlign.center,
-          ),
-          AppSpacing.mediumHeightSpacer,
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: AppPaddings.cardContent,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.10),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Prochain paiement',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
+            SizedBox(height: 12.sp),
+            Text(
+              totalSavings,
+              style: theme.textTheme.headlineLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            AppSpacing.mediumHeightSpacer,
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: AppPaddings.cardContent,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.10),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Prochain paiement',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      AppSpacings.small,
-                      Text(
-                        nextPaymentDate,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                        AppSpacings.small,
+                        Text(
+                          nextPaymentDate,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              AppSpacings.cardGap,
-              Expanded(
-                child: Container(
-                  padding: AppPaddings.cardContent,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.10),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Montant à payer',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
+                AppSpacings.cardGap,
+                Expanded(
+                  child: Container(
+                    padding: AppPaddings.cardContent,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.10),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Montant à payer',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      AppSpacings.small,
-                      Text(
-                        nextPaymentAmount,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                        AppSpacings.small,
+                        Text(
+                          nextPaymentAmount,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
