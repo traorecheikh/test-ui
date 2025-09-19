@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -33,12 +34,12 @@ class SettingsScreen extends GetView<SettingsController> {
               // Settings Groups
               _buildSettingsGroup(
                 theme,
-                title: 'Préférences',
+                title: 'preferences'.tr,
                 children: [
                   _buildSettingItem(
                     theme,
                     Icons.dark_mode_outlined,
-                    'Mode sombre',
+                    'dark_mode'.tr,
                     trailing: Obx(
                       () => Switch(
                         value: controller.darkMode.value,
@@ -49,7 +50,7 @@ class SettingsScreen extends GetView<SettingsController> {
                   _buildSettingItem(
                     theme,
                     Icons.notifications_outlined,
-                    'Notifications',
+                    'notifications'.tr,
                     trailing: Obx(
                       () => Switch(
                         value: controller.notificationsEnabled.value,
@@ -60,13 +61,19 @@ class SettingsScreen extends GetView<SettingsController> {
                   _buildSettingItem(
                     theme,
                     Icons.volume_up_outlined,
-                    'Sons',
+                    'sound'.tr,
                     trailing: Obx(
                       () => Switch(
                         value: controller.soundEnabled.value,
                         onChanged: controller.toggleSound,
                       ),
                     ),
+                  ),
+                  _buildSettingItem(
+                    theme,
+                    Icons.language,
+                    'language'.tr,
+                    trailing: _buildLanguageDropdown(theme),
                   ),
                 ],
               ),
@@ -76,14 +83,14 @@ class SettingsScreen extends GetView<SettingsController> {
               // Security Section
               _buildSettingsGroup(
                 theme,
-                title: 'Sécurité',
+                title: 'security'.tr,
                 children: [
                   Obx(
                     () => _buildSettingItem(
                       theme,
                       Icons.pin_outlined,
-                      'Code PIN',
-                      subtitle: 'Protection par code à 4 chiffres',
+                      'pin_code'.tr,
+                      subtitle: 'pin_protection_subtitle'.tr,
                       trailing: Switch(
                         value: authService.isPinEnabled.value,
                         onChanged: (value) =>
@@ -104,30 +111,30 @@ class SettingsScreen extends GetView<SettingsController> {
               // Info Section
               _buildSettingsGroup(
                 theme,
-                title: 'Informations',
+                title: 'information'.tr,
                 children: [
                   _buildSettingItem(
                     theme,
                     Icons.person_outline,
-                    'Mon compte',
+                    'my_account'.tr,
                     onTap: () => Get.toNamed(Routes.profile),
                   ),
                   _buildSettingItem(
                     theme,
                     Icons.info_outline,
-                    'À propos',
+                    'about'.tr,
                     onTap: controller.openAboutDialog,
                   ),
                   _buildSettingItem(
                     theme,
                     Icons.privacy_tip_outlined,
-                    'Confidentialité',
+                    'privacy_policy'.tr,
                     onTap: controller.openPrivacyPolicy,
                   ),
                   _buildSettingItem(
                     theme,
                     Icons.description_outlined,
-                    'Conditions d\'utilisation',
+                    'terms_of_service'.tr,
                     onTap: controller.openTermsOfService,
                   ),
                 ],
@@ -160,7 +167,7 @@ class SettingsScreen extends GetView<SettingsController> {
         onPressed: () => Get.back(),
       ),
       title: Text(
-        'Paramètres',
+        'settings'.tr,
         style: theme.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w600,
           color: theme.colorScheme.onSurface,
@@ -183,7 +190,6 @@ class SettingsScreen extends GetView<SettingsController> {
             width: 60.w,
             height: 60.w,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(30.r),
             ),
             child: Icon(Icons.person, color: Colors.white, size: 30.sp),
@@ -194,7 +200,7 @@ class SettingsScreen extends GetView<SettingsController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Mon Compte',
+                  'my_account'.tr,
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
@@ -202,9 +208,9 @@ class SettingsScreen extends GetView<SettingsController> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'Gérez vos informations',
+                  'manage_your_info'.tr,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.8),
+                    color: Colors.white.withOpacity(0.8),
                   ),
                 ),
               ],
@@ -310,17 +316,17 @@ class SettingsScreen extends GetView<SettingsController> {
       builder: (context, snapshot) {
         final biometrics = snapshot.data ?? [];
         IconData icon = Icons.fingerprint;
-        String title = 'Biométrie';
-        String subtitle = 'Authentification biométrique';
+        String title = 'biometric'.tr;
+        String subtitle = 'biometric_auth'.tr;
 
         if (biometrics.contains(BiometricType.face)) {
           icon = Icons.face;
-          title = 'Face ID';
-          subtitle = 'Authentification par reconnaissance faciale';
+          title = 'face_id'.tr;
+          subtitle = 'face_id_auth'.tr;
         } else if (biometrics.contains(BiometricType.fingerprint)) {
           icon = Icons.fingerprint;
-          title = 'Empreinte digitale';
-          subtitle = 'Authentification par empreinte';
+          title = 'fingerprint'.tr;
+          subtitle = 'fingerprint_auth'.tr;
         }
 
         return _buildSettingItem(
@@ -334,8 +340,8 @@ class SettingsScreen extends GetView<SettingsController> {
               onChanged: (value) async {
                 if (value && !authService.isPinEnabled.value) {
                   Get.snackbar(
-                    'PIN requis',
-                    'Configurez d\'abord un PIN',
+                    'pin_required'.tr,
+                    'setup_pin_first'.tr,
                     backgroundColor: theme.colorScheme.error,
                     colorText: Colors.white,
                   );
@@ -370,7 +376,7 @@ class SettingsScreen extends GetView<SettingsController> {
                 Icon(Icons.logout, color: theme.colorScheme.error, size: 20.sp),
                 SizedBox(width: 8.w),
                 Text(
-                  'Se déconnecter',
+                  'logout'.tr,
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: theme.colorScheme.error,
                     fontWeight: FontWeight.w600,
@@ -388,11 +394,51 @@ class SettingsScreen extends GetView<SettingsController> {
     return Center(
       child: Obx(
         () => Text(
-          'Version ${controller.appVersion.value}',
+          'version'.trParams({'version': controller.appVersion.value}),
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            color: theme.colorScheme.onSurface.withOpacity(0.5),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLanguageDropdown(ThemeData theme) {
+    final languages = [
+      {'code': 'fr_FR', 'label': 'Français'},
+      {'code': 'en_US', 'label': 'English'},
+      {'code': 'wo_SN', 'label': 'Wolof'},
+    ];
+    return Obx(
+      () => DropdownButton2<String>(
+        value: controller.selectedLanguage.value,
+        items: languages
+            .map(
+              (lang) => DropdownMenuItem<String>(
+                value: lang['code']!,
+                child: Text(lang['label']!, style: theme.textTheme.bodyMedium),
+              ),
+            )
+            .toList(),
+        onChanged: (value) {
+          if (value != null) controller.changeLanguage(value);
+        },
+        dropdownStyleData: DropdownStyleData(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+        ),
+        buttonStyleData: ButtonStyleData(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+        ),
+        iconStyleData: IconStyleData(
+          icon: Icon(Icons.arrow_drop_down, color: theme.colorScheme.primary),
+        ),
+        underline: SizedBox(),
       ),
     );
   }
@@ -406,18 +452,16 @@ class SettingsScreen extends GetView<SettingsController> {
     } else {
       final confirmed = await Get.dialog<bool>(
         AlertDialog(
-          title: const Text('Désactiver le PIN'),
-          content: const Text(
-            'Êtes-vous sûr de vouloir désactiver la protection par PIN ?',
-          ),
+          title: Text('disable_pin'.tr),
+          content: Text('disable_pin_confirm'.tr),
           actions: [
             TextButton(
               onPressed: () => Get.back(result: false),
-              child: const Text('Annuler'),
+              child: Text('cancel'.tr),
             ),
             TextButton(
               onPressed: () => Get.back(result: true),
-              child: const Text('Désactiver'),
+              child: Text('disable'.tr),
             ),
           ],
         ),

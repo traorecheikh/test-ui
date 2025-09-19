@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsController extends GetxController {
   // Observables for settings values
@@ -13,14 +14,45 @@ class SettingsController extends GetxController {
   final showToggles = false.obs;
   final showInfo = false.obs;
 
+  final selectedLanguage = ''.obs;
+
   // final showAnimations = false.obs; // This will be handled by showHeader or a new composite if needed
 
   @override
   void onInit() {
     super.onInit();
-    // Simulate fetching app version or other initial setup
-    // appVersion.value = "1.0.1"; // Example if fetched
+    _loadLanguage();
     _triggerAnimations();
+  }
+
+  Future<void> _loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final langCode =
+        prefs.getString('selectedLanguage') ??
+        Get.locale?.languageCode ??
+        'fr_FR';
+    selectedLanguage.value = langCode;
+    Get.updateLocale(_localeFromCode(langCode));
+  }
+
+  void changeLanguage(String code) async {
+    selectedLanguage.value = code;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedLanguage', code);
+    Get.updateLocale(_localeFromCode(code));
+  }
+
+  Locale _localeFromCode(String code) {
+    switch (code) {
+      case 'en_US':
+        return const Locale('en', 'US');
+      case 'fr_FR':
+        return const Locale('fr', 'FR');
+      case 'wo_SN':
+        return const Locale('wo', 'SN');
+      default:
+        return const Locale('fr', 'FR');
+    }
   }
 
   void _triggerAnimations() async {
@@ -83,6 +115,11 @@ class SettingsController extends GetxController {
   void showLanguageDialog() {
     // TODO: Implement language selection dialog
     Get.snackbar('Langue', 'Sélection de la langue à venir.');
+  }
+
+  // Method to change app locale
+  void changeLocale(Locale locale) {
+    Get.updateLocale(locale);
   }
 
   ThemeMode get themeMode => darkMode.value ? ThemeMode.dark : ThemeMode.light;
