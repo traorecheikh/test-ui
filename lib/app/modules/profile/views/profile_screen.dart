@@ -33,7 +33,7 @@ class ProfileScreen extends GetView<ProfileController> {
               ),
             ),
           ),
-          body: const Center(child: Text('Utilisateur non trouv��')),
+          body: Center(child: Text('user_not_found'.tr)),
         );
       }
       return Scaffold(
@@ -149,7 +149,7 @@ class ProfileScreen extends GetView<ProfileController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Informations Personnelles',
+              'personal_info'.tr,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -157,20 +157,20 @@ class ProfileScreen extends GetView<ProfileController> {
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.phone),
-              title: const Text('Téléphone'),
+              title: Text('phone'.tr),
               subtitle: Text(Formatters.formatPhoneNumber(user.phone)),
               contentPadding: EdgeInsets.zero,
             ),
             if (user.email != null && user.email!.isNotEmpty)
               ListTile(
                 leading: const Icon(Icons.email),
-                title: const Text('Email'),
+                title: Text('email'.tr),
                 subtitle: Text(user.email!),
                 contentPadding: EdgeInsets.zero,
               ),
             ListTile(
               leading: const Icon(Icons.calendar_today),
-              title: const Text('Inscrit depuis'),
+              title: Text('member_since'.tr),
               subtitle: Text(Formatters.formatDate(user.createdAt)),
               contentPadding: EdgeInsets.zero,
             ),
@@ -202,7 +202,7 @@ class ProfileScreen extends GetView<ProfileController> {
                   ),
                 ),
                 Text(
-                  'Points',
+                  'points'.tr,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: Colors.white,
                   ),
@@ -221,7 +221,7 @@ class ProfileScreen extends GetView<ProfileController> {
                   ),
                 ),
                 Text(
-                  'Fiabilité',
+                  'reliability'.tr,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: Colors.white,
                   ),
@@ -245,7 +245,7 @@ class ProfileScreen extends GetView<ProfileController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Succès',
+              'achievements'.tr,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -285,7 +285,7 @@ class ProfileScreen extends GetView<ProfileController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Participation',
+              'participation'.tr,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -310,7 +310,7 @@ class ProfileScreen extends GetView<ProfileController> {
                       ),
                     ),
                     Text(
-                      'Tontines rejointes',
+                      'tontines_joined'.tr,
                       style: theme.textTheme.bodyMedium,
                     ),
                   ],
@@ -331,7 +331,7 @@ class ProfileScreen extends GetView<ProfileController> {
                       ),
                     ),
                     Text(
-                      'Tontines organisées',
+                      'tontines_organized'.tr,
                       style: theme.textTheme.bodyMedium,
                     ),
                   ],

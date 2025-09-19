@@ -14,15 +14,15 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingPageData {
   final String lottie;
-  final String title;
-  final String subtitle;
-  final String desc;
+  final String titleKey;
+  final String subtitleKey;
+  final String descKey;
 
   const _OnboardingPageData({
     required this.lottie,
-    required this.title,
-    required this.subtitle,
-    required this.desc,
+    required this.titleKey,
+    required this.subtitleKey,
+    required this.descKey,
   });
 }
 
@@ -34,24 +34,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<_OnboardingPageData> _pages = [
     _OnboardingPageData(
       lottie: Assets.assetsLottiesOnboarding1,
-      subtitle: 'Bienvenue dans SunuTontine',
-      title: 'La tontine, simple et transparente.',
-      desc:
-          'Fini les calculs compliqués et les oublis. Suivez tout en temps réel, pour que la confiance règne.',
+      subtitleKey: 'onboarding_subtitle_1',
+      titleKey: 'onboarding_title_1',
+      descKey: 'onboarding_desc_1',
     ),
     _OnboardingPageData(
       lottie: Assets.assetsLottiesOnboarding2,
-      subtitle: 'La tontine sans stress',
-      title: 'Tout est automatisé, vous n\'oubliez rien.',
-      desc:
-          'Rappels, suivi des paiements, calendrier partagé... L\'app s\'occupe de tout pour que vous puissiez vous concentrer sur vos projets, pas sur la gestion.',
+      subtitleKey: 'onboarding_subtitle_2',
+      titleKey: 'onboarding_title_2',
+      descKey: 'onboarding_desc_2',
     ),
     _OnboardingPageData(
       lottie: Assets.imagesCommunity,
-      subtitle: 'Bâtir l\'avenir, ensemble',
-      title: 'Rejoignez une communauté qui avance.',
-      desc:
-          'Plus qu\'une application, un réseau d\'entraide pour réaliser vos projets les plus chers.',
+      subtitleKey: 'onboarding_subtitle_3',
+      titleKey: 'onboarding_title_3',
+      descKey: 'onboarding_desc_3',
     ),
   ];
 
@@ -98,7 +95,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     TextButton(
                       onPressed: _onGetStarted,
                       child: Text(
-                        'Passer',
+                        'onboarding_skip'.tr,
                         style: TextStyle(color: theme.colorScheme.primary),
                       ),
                     )
@@ -170,8 +167,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       child: Text(
                         _currentPage == _pages.length - 1
-                            ? 'Commencer l\'aventure'
-                            : 'Suivant',
+                            ? 'onboarding_get_started'.tr
+                            : 'onboarding_next'.tr,
                       ),
                     ),
                   ),
@@ -233,7 +230,7 @@ class _OnboardingPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  data.subtitle,
+                  data.subtitleKey.tr,
                   style: (theme.textTheme.titleMedium ?? const TextStyle())
                       .copyWith(
                         color: theme.colorScheme.primary,
@@ -242,7 +239,7 @@ class _OnboardingPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  data.title,
+                  data.titleKey.tr,
                   style: (theme.textTheme.headlineMedium ?? const TextStyle())
                       .copyWith(
                         fontWeight: FontWeight.bold,
@@ -252,7 +249,7 @@ class _OnboardingPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 18),
                 Text(
-                  data.desc,
+                  data.descKey.tr,
                   style: (theme.textTheme.bodyLarge ?? const TextStyle())
                       .copyWith(
                         color: theme.colorScheme.onSurface.withValues(
