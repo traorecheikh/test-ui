@@ -54,7 +54,7 @@ class HomeView extends GetView<HomeController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AutoSizeText(
-                          '${Formatters.getGreeting()}, ${user?.name.split(' ').first ?? 'Utilisateur'}',
+                          '${'hello'.tr}, ${user?.name.split(' ').first ?? 'user'.tr}',
                           style: theme.textTheme.titleMedium?.copyWith(
                             color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w600,
@@ -75,7 +75,7 @@ class HomeView extends GetView<HomeController> {
                     onPressed: () {
                       Get.toNamed(Routes.settings);
                     },
-                    tooltip: 'Paramètres',
+                    tooltip: 'settings'.tr,
                   ),
                 ],
               ),
@@ -143,7 +143,7 @@ class HomeView extends GetView<HomeController> {
                 ),
                 AppSpacing.smallWidthSpacerWidget,
                 Text(
-                  'Épargne Totale',
+                  'total_savings'.tr,
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: Colors.white,
                   ),
@@ -172,7 +172,7 @@ class HomeView extends GetView<HomeController> {
                     child: Column(
                       children: [
                         Text(
-                          'Prochain paiement',
+                          'next_payment'.tr,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -203,7 +203,7 @@ class HomeView extends GetView<HomeController> {
                     child: Column(
                       children: [
                         Text(
-                          'Montant à payer',
+                          'amount'.tr,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -294,26 +294,26 @@ class HomeView extends GetView<HomeController> {
     final activities = [
       {
         'icon': Icons.payment,
-        'text': 'Paiement 25,000 FCFA',
-        'subtitle': 'Tontine Famille (+10 pts)',
+        'textKey': 'activity_payment',
+        'subtitleKey': 'activity_payment_subtitle',
         'time': '2h',
       },
       {
         'icon': Icons.celebration,
-        'text': 'Tirage gagné',
-        'subtitle': 'Moussa gagne 125,000 FCFA',
+        'textKey': 'activity_draw',
+        'subtitleKey': 'activity_draw_subtitle',
         'time': '1j',
       },
       {
         'icon': Icons.schedule,
-        'text': 'Rappel cotisation',
-        'subtitle': 'Demain à 14h00',
+        'textKey': 'activity_reminder',
+        'subtitleKey': 'activity_reminder_subtitle',
         'time': '2j',
       },
       {
         'icon': Icons.group_add,
-        'text': 'Nouveau membre',
-        'subtitle': 'Fatou a rejoint Tontine Amis',
+        'textKey': 'activity_new_member',
+        'subtitleKey': 'activity_new_member_subtitle',
         'time': '3j',
       },
     ];
@@ -330,7 +330,7 @@ class HomeView extends GetView<HomeController> {
             ),
             const SizedBox(width: 8),
             Text(
-              'Activités Récentes',
+              'recent_activities'.tr,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: theme.colorScheme.primary,
@@ -375,7 +375,7 @@ class HomeView extends GetView<HomeController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        activity['text'] as String,
+                        (activity['textKey'] as String).tr,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface,
@@ -383,7 +383,7 @@ class HomeView extends GetView<HomeController> {
                       ),
                       SizedBox(height: 2.sp),
                       Text(
-                        activity['subtitle'] as String,
+                        (activity['subtitleKey'] as String).tr,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),

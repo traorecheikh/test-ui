@@ -94,7 +94,7 @@ class HomeController extends GetxController {
 
   List<dynamic> get quickActions => [
     _ActionButtonData(
-      title: 'Créer',
+      title: 'create'.tr,
       icon: Icons.add_circle,
       color: Color(0xFFFF6B6B), // Coral
       onTap: () {
@@ -103,7 +103,7 @@ class HomeController extends GetxController {
       },
     ),
     _ActionButtonData(
-      title: 'Rejoindre',
+      title: 'join'.tr,
       icon: Icons.group_add,
       color: Color(0xFF4ECDC4), // Teal
       onTap: () {
@@ -113,7 +113,7 @@ class HomeController extends GetxController {
       },
     ),
     _ActionButtonData(
-      title: 'Mes Tontines',
+      title: 'my_tontines'.tr,
       icon: Icons.group_add,
       color: Color(0xFFFFD166), // Amber
       onTap: () {
@@ -122,7 +122,7 @@ class HomeController extends GetxController {
       },
     ),
     _ActionButtonData(
-      title: 'Historique',
+      title: 'history'.tr,
       icon: Icons.history,
       color: Color(0xFF81C995), // Mint
       onTap: () {
@@ -131,27 +131,27 @@ class HomeController extends GetxController {
       },
     ),
     _ActionButtonData(
-      title: 'Sunu Points',
+      title: 'sunu_points'.tr,
       icon: Icons.stars,
       color: Color(0xFF6A4C93), // Lavender
       onTap: () {
         VibrationService.softVibrate();
         CustomSnackbar.show(
-          title: 'Sunu Points',
-          message: 'Fonctionnalité à venir !',
+          title: 'sunu_points'.tr,
+          message: 'feature_coming_soon'.tr,
           success: true,
         );
       },
     ),
     _ActionButtonData(
-      title: 'Rapports',
+      title: 'reports'.tr,
       icon: Icons.trending_up,
       color: Color(0xFFFF9E80), // Peach
       onTap: () {
         VibrationService.softVibrate();
         CustomSnackbar.show(
-          title: 'Rapports',
-          message: 'Fonctionnalité à venir !',
+          title: 'reports'.tr,
+          message: 'feature_coming_soon'.tr,
           success: true,
         );
       },
