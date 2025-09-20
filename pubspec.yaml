@@ -16,7 +16,6 @@ dependencies:
   flutter_animate: ^4.5.2
   lottie: ^3.3.2
   google_fonts: ^6.3.1
-  shared_preferences: ^2.5.3
   dio: ^5.9.0
   retrofit: ^4.7.2
   json_annotation: ^4.9.0

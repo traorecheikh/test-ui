@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsController extends GetxController {
   // Observables for settings values
@@ -18,6 +18,14 @@ class SettingsController extends GetxController {
 
   // final showAnimations = false.obs; // This will be handled by showHeader or a new composite if needed
 
+  static const String _selectedLanguageKey = 'selectedLanguage';
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
+  );
+
   @override
   void onInit() {
     super.onInit();
@@ -26,9 +34,8 @@ class SettingsController extends GetxController {
   }
 
   Future<void> _loadLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
     final langCode =
-        prefs.getString('selectedLanguage') ??
+        await _secureStorage.read(key: _selectedLanguageKey) ??
         Get.locale?.languageCode ??
         'fr_FR';
     selectedLanguage.value = langCode;
@@ -37,8 +44,7 @@ class SettingsController extends GetxController {
 
   void changeLanguage(String code) async {
     selectedLanguage.value = code;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('selectedLanguage', code);
+    await _secureStorage.write(key: _selectedLanguageKey, value: code);
     Get.updateLocale(_localeFromCode(code));
   }
 
