@@ -16,10 +16,6 @@ class LoginScreen extends GetView<LoginController> {
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
-      appBar: AppBar(
-        backgroundColor: theme.colorScheme.background,
-        elevation: 0,
-      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
@@ -211,7 +207,7 @@ class LoginScreen extends GetView<LoginController> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Recevoir le code',
+                      'Se Connecter',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

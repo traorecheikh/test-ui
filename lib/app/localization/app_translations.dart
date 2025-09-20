@@ -70,6 +70,15 @@ class AppTranslations extends Translations {
       'activity_reminder_subtitle': 'Tomorrow at 14:00',
       'activity_new_member': 'New member',
       'activity_new_member_subtitle': 'Fatou joined Friends Tontine',
+      'login_illustration': 'Login illustration',
+      'login_welcome': 'Welcome back!',
+      'login_subtitle':
+          'Enter your phone number to sign in or create an account.',
+      'login_phone_label': 'Phone number',
+      'login_phone_hint': 'e.g. 77 123 45 67',
+      'login_phone_error_short': 'Phone number is too short',
+      'login_button': 'Continue',
+      'login_help': 'Need help?',
     },
     'fr_FR': {
       'hello': 'Bonjour',
@@ -139,6 +148,15 @@ class AppTranslations extends Translations {
       'activity_reminder_subtitle': 'Demain à 14h00',
       'activity_new_member': 'Nouveau membre',
       'activity_new_member_subtitle': 'Fatou a rejoint Tontine Amis',
+      'login_illustration': 'Illustration de connexion',
+      'login_welcome': 'Bienvenue !',
+      'login_subtitle':
+          'Entrez votre numéro de téléphone pour vous connecter ou créer un compte.',
+      'login_phone_label': 'Numéro de téléphone',
+      'login_phone_hint': 'ex. 77 123 45 67',
+      'login_phone_error_short': 'Numéro trop court',
+      'login_button': 'Continuer',
+      'login_help': 'Besoin d’aide ?',
     },
     'wo_SN': {
       'hello': 'Jàmm',
@@ -206,6 +224,14 @@ class AppTranslations extends Translations {
       'activity_reminder_subtitle': 'Suba ci 14:00',
       'activity_new_member': 'Jëfandikoo bu bees',
       'activity_new_member_subtitle': 'Fatou bokk ci Tontine Amis',
+      'login_illustration': 'Saxal ci login',
+      'login_welcome': 'Nioo!',
+      'login_subtitle': 'Bindal sa nummëru telefoon ngir dugg walla sos akont.',
+      'login_phone_label': 'Nummëru telefoon',
+      'login_phone_hint': 'mësal: 77 123 45 67',
+      'login_phone_error_short': 'Nummëru gàtt',
+      'login_button': 'Jëfandikoo',
+      'login_help': 'So amee jafe-jafe?',
     },
     // Add more languages here
   };

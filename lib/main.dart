@@ -104,6 +104,6 @@ class _MyAppState extends State<MyApp> {
       return Routes.PIN_AUTH;
     }
 
-    return Routes.SPLASH;
+    return Routes.login;
   }
 }

@@ -65,7 +65,7 @@ class HomeView extends GetView<HomeController> {
                       ],
                     ),
                   ),
-                  Spacer(flex: 3),
+                  Spacer(flex: 4),
                   IconButton(
                     icon: Icon(
                       Icons.settings,
@@ -106,7 +106,7 @@ class HomeView extends GetView<HomeController> {
         : '--';
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4.w),
+      margin: EdgeInsets.symmetric(horizontal: 0.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28.r),
         boxShadow: [
@@ -125,7 +125,7 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 22.h),
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: theme.colorScheme.primary,
           borderRadius: BorderRadius.circular(28.r),
