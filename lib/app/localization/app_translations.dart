@@ -79,6 +79,16 @@ class AppTranslations extends Translations {
       'login_phone_error_short': 'Phone number is too short',
       'login_button': 'Continue',
       'login_help': 'Need help?',
+      // Login screen keys
+      'welcome': 'Welcome!',
+      'login_subtitle': 'Log in to manage your tontines easily.',
+      'phone_label': 'Phone number',
+      'phone_hint': 'Your number',
+      'phone_error_short': 'Number too short',
+      'login_button': 'Log In',
+      'help': 'Need help?',
+      'help_title': 'Help',
+      'help_message': 'Contact support if you have login issues.',
     },
     'fr_FR': {
       'hello': 'Bonjour',
@@ -157,6 +167,18 @@ class AppTranslations extends Translations {
       'login_phone_error_short': 'Numéro trop court',
       'login_button': 'Continuer',
       'login_help': 'Besoin d’aide ?',
+      // Login screen keys
+      'welcome': 'Bienvenue !',
+      'login_subtitle':
+          'Connectez-vous pour gérer vos tontines en toute simplicité.',
+      'phone_label': 'Numéro de téléphone',
+      'phone_hint': 'Votre numéro',
+      'phone_error_short': 'Numéro trop court',
+      'login_button': 'Se Connecter',
+      'help': 'Besoin d\'aide ?',
+      'help_title': 'Aide',
+      'help_message':
+          'Contactez le support si vous avez des problèmes de connexion.',
     },
     'wo_SN': {
       'hello': 'Jàmm',

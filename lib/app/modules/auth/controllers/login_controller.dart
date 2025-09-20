@@ -12,6 +12,17 @@ class LoginController extends GetxController {
   final RxBool isLoading = false.obs;
   final Rx<Country> selectedCountry = Country.parse("SN").obs;
 
+  final RxList<Country> countries = <Country>[
+    Country.parse('SN'), // Senegal
+    Country.parse('CI'), // Côte d'Ivoire
+    Country.parse('ML'), // Mali
+    Country.parse('BF'), // Burkina Faso
+    Country.parse('TG'), // Togo
+    Country.parse('BJ'), // Benin
+    Country.parse('NE'), // Niger
+    Country.parse('GW'), // Guinea-Bissau
+  ].obs;
+
   void onCountrySelected(Country country) {
     selectedCountry.value = country;
     VibrationService.softVibrate();
@@ -23,7 +34,7 @@ class LoginController extends GetxController {
     // Validate: must be digits, at least 6 digits, no leading zero
     final phone = value.replaceAll(RegExp(r'[^0-9]'), '');
     if (phone.length < 6) {
-      phoneError.value = 'Numéro trop court';
+      phoneError.value = 'phone_error_short'.tr;
       isValid.value = false;
       VibrationService.softVibrate();
     } else {
@@ -47,8 +58,8 @@ class LoginController extends GetxController {
   void onHelp() {
     VibrationService.softVibrate();
     CustomSnackbar.show(
-      title: 'Aide',
-      message: 'Contactez le support si vous avez des problèmes de connexion.',
+      title: 'help_title'.tr,
+      message: 'help_message'.tr,
       success: true,
     );
   }

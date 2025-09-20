@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service for handling PIN and biometric authentication
 class AuthService extends GetxService {
@@ -19,8 +18,6 @@ class AuthService extends GetxService {
     ),
   );
 
-  late SharedPreferences _prefs;
-
   // Reactive variables
   final RxBool isPinEnabled = false.obs;
   final RxBool isBiometricEnabled = false.obs;
@@ -30,7 +27,6 @@ class AuthService extends GetxService {
   @override
   Future<void> onInit() async {
     super.onInit();
-    _prefs = await SharedPreferences.getInstance();
     await _loadSettings();
     await _checkBiometricAvailability();
   }
@@ -42,11 +38,19 @@ class AuthService extends GetxService {
     return service;
   }
 
-  /// Load authentication settings from storage
+  /// Load authentication settings from secure storage
   Future<void> _loadSettings() async {
-    isPinEnabled.value = _prefs.getBool(_pinEnabledKey) ?? false;
-    isBiometricEnabled.value = _prefs.getBool(_biometricEnabledKey) ?? false;
-    isAuthenticated.value = _prefs.getBool(_isAuthenticatedKey) ?? false;
+    isPinEnabled.value =
+        (await _secureStorage.read(key: _pinEnabledKey)) == 'true';
+    isBiometricEnabled.value =
+        (await _secureStorage.read(key: _biometricEnabledKey)) == 'true';
+    isAuthenticated.value =
+        (await _secureStorage.read(key: _isAuthenticatedKey)) == 'true';
+  }
+
+  /// Set a boolean value in secure storage
+  Future<void> _setBool(String key, bool value) async {
+    await _secureStorage.write(key: key, value: value ? 'true' : 'false');
   }
 
   /// Check if biometric authentication is available on the device
@@ -75,9 +79,8 @@ class AuthService extends GetxService {
       if (pin.length != 4 || !RegExp(r'^\d{4}$').hasMatch(pin)) {
         throw Exception('PIN must be exactly 4 digits');
       }
-
       await _secureStorage.write(key: _pinKey, value: pin);
-      await _prefs.setBool(_pinEnabledKey, true);
+      await _setBool(_pinEnabledKey, true);
       isPinEnabled.value = true;
       return true;
     } catch (e) {
@@ -101,7 +104,7 @@ class AuthService extends GetxService {
       if (!enabled) {
         await _secureStorage.delete(key: _pinKey);
       }
-      await _prefs.setBool(_pinEnabledKey, enabled);
+      await _setBool(_pinEnabledKey, enabled);
       isPinEnabled.value = enabled;
       return true;
     } catch (e) {
@@ -115,7 +118,7 @@ class AuthService extends GetxService {
       if (enabled && !isBiometricAvailable.value) {
         return false;
       }
-      await _prefs.setBool(_biometricEnabledKey, enabled);
+      await _setBool(_biometricEnabledKey, enabled);
       isBiometricEnabled.value = enabled;
       return true;
     } catch (e) {
@@ -162,7 +165,7 @@ class AuthService extends GetxService {
 
   /// Set authentication status
   Future<void> setAuthenticated(bool authenticated) async {
-    await _prefs.setBool(_isAuthenticatedKey, authenticated);
+    await _setBool(_isAuthenticatedKey, authenticated);
     isAuthenticated.value = authenticated;
   }
 
@@ -189,10 +192,9 @@ class AuthService extends GetxService {
   /// Delete all authentication data
   Future<void> clearAllAuthData() async {
     await _secureStorage.delete(key: _pinKey);
-    await _prefs.setBool(_pinEnabledKey, false);
-    await _prefs.setBool(_biometricEnabledKey, false);
-    await _prefs.setBool(_isAuthenticatedKey, false);
-
+    await _setBool(_pinEnabledKey, false);
+    await _setBool(_biometricEnabledKey, false);
+    await _setBool(_isAuthenticatedKey, false);
     isPinEnabled.value = false;
     isBiometricEnabled.value = false;
     isAuthenticated.value = false;
