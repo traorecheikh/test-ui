@@ -37,19 +37,38 @@ class RegisterStepController extends GetxController {
   // Step validation
   final RxBool isStepValid = false.obs;
 
+  // Rx variables for UI reactivity
+  final RxString name = ''.obs;
+  final RxString email = ''.obs;
+  final RxString city = ''.obs;
+  final RxString country = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
     pageController = PageController();
     _validateStep();
-    nameController.addListener(_validateStep);
-    emailController.addListener(_validateStep);
-    cityController.addListener(_validateStep);
+    nameController.addListener(() {
+      name.value = nameController.text;
+      _validateStep();
+    });
+    emailController.addListener(() {
+      email.value = emailController.text;
+      _validateStep();
+    });
+    cityController.addListener(() {
+      city.value = cityController.text;
+      _validateStep();
+    });
+    countryController.addListener(() {
+      country.value = countryController.text;
+      _validateStep();
+    });
     regionController.addListener(_validateStep);
-    countryController.addListener(_validateStep);
   }
 
   void onNameChanged(String value) {
+    name.value = value;
     if (value.trim().length < 3) {
       nameError.value = 'Le nom doit contenir au moins 3 caractères';
     } else {
@@ -59,6 +78,7 @@ class RegisterStepController extends GetxController {
   }
 
   void onEmailChanged(String value) {
+    email.value = value;
     if (value.isNotEmpty && !GetUtils.isEmail(value)) {
       emailError.value = 'Adresse email invalide';
     } else {
@@ -83,6 +103,7 @@ class RegisterStepController extends GetxController {
   }
 
   void onCityChanged(String value) {
+    city.value = value;
     if (value.trim().isEmpty) {
       cityError.value = 'La ville est requise';
     } else {
@@ -101,6 +122,7 @@ class RegisterStepController extends GetxController {
   }
 
   void onCountryChanged(String value) {
+    country.value = value;
     if (value.trim().isEmpty) {
       countryError.value = 'Le pays est requis';
     } else {
@@ -120,7 +142,6 @@ class RegisterStepController extends GetxController {
       case 1:
         isStepValid.value =
             cityController.text.trim().isNotEmpty &&
-            regionController.text.trim().isNotEmpty &&
             countryController.text.trim().isNotEmpty &&
             cityError.value.isEmpty &&
             regionError.value.isEmpty &&

@@ -15,9 +15,9 @@ class RegisterStepScreen extends GetView<RegisterStepController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: theme.colorScheme.background,
+        backgroundColor: theme.colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -146,7 +146,9 @@ class _Step1BasicInfo extends GetView<RegisterStepController> {
                   ? null
                   : controller.phoneError.value,
               filled: true,
-              fillColor: theme.colorScheme.primary.withOpacity(0.05),
+              fillColor: theme.colorScheme.primary.withAlpha(
+                (255 * 0.05).toInt(),
+              ),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 20.w,
                 vertical: 20.h,
@@ -176,7 +178,7 @@ class _Step1BasicInfo extends GetView<RegisterStepController> {
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
-                      dropdownColor: theme.colorScheme.background,
+                      dropdownColor: theme.colorScheme.surface,
                       borderRadius: BorderRadius.circular(18),
                       items: controller.countries.map((country) {
                         return DropdownMenuItem<Country>(
@@ -277,7 +279,7 @@ class _Step3Preview extends GetView<RegisterStepController> {
             borderRadius: BorderRadius.circular(28.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withAlpha((255 * 0.04).toInt()),
                 blurRadius: 15,
                 offset: const Offset(0, 4),
               ),
@@ -285,32 +287,36 @@ class _Step3Preview extends GetView<RegisterStepController> {
           ),
           child: Column(
             children: [
-              Obx(
-                () => _buildPreviewRow(
+              Obx(() {
+                final name = controller.name.value;
+                return _buildPreviewRow(
                   theme,
                   'Nom complet',
-                  controller.nameController.text,
+                  name,
                   CupertinoIcons.person_fill,
-                ),
-              ),
-              Obx(
-                () => _buildPreviewRow(
+                );
+              }),
+              Obx(() {
+                final email = controller.email.value;
+                return _buildPreviewRow(
                   theme,
                   'Email',
-                  controller.emailController.text.isNotEmpty
-                      ? controller.emailController.text
-                      : 'Non fourni',
+                  email.isNotEmpty ? email : 'Non fourni',
                   CupertinoIcons.mail_solid,
-                ),
-              ),
-              Obx(
-                () => _buildPreviewRow(
+                );
+              }),
+              Obx(() {
+                final city = controller.city.value;
+                final country = controller.country.value;
+                return _buildPreviewRow(
                   theme,
                   'Localisation',
-                  '${controller.cityController.text}, ${controller.countryController.text}',
+                  city.isNotEmpty && country.isNotEmpty
+                      ? '$city, $country'
+                      : 'Non fourni',
                   CupertinoIcons.location_solid,
-                ),
-              ),
+                );
+              }),
             ],
           ),
         ),
@@ -338,7 +344,9 @@ class _Step3Preview extends GetView<RegisterStepController> {
                 Text(
                   label,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withAlpha(
+                      (255 * 0.6).toInt(),
+                    ),
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -357,7 +365,7 @@ class _Step3Preview extends GetView<RegisterStepController> {
   }
 }
 
-// --- UI Building Blocks ---
+// --- UI Building BLOCKS ---
 
 class _ProgressIndicator extends StatelessWidget {
   final int currentStep;
@@ -390,7 +398,9 @@ class _ProgressIndicator extends StatelessWidget {
               Text(
                 '${(percentage * 100).toInt()}%',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withAlpha(
+                    (255 * 0.6).toInt(),
+                  ),
                 ),
               ),
             ],
@@ -401,7 +411,9 @@ class _ProgressIndicator extends StatelessWidget {
             child: LinearProgressIndicator(
               value: percentage,
               minHeight: 12.h,
-              backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+              backgroundColor: theme.colorScheme.primary.withAlpha(
+                (255 * 0.1).toInt(),
+              ),
               valueColor: AlwaysStoppedAnimation<Color>(
                 theme.colorScheme.primary,
               ),
@@ -442,7 +454,7 @@ class _StepHeader extends StatelessWidget {
         Text(
           subtitle,
           style: theme.textTheme.titleMedium?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withAlpha((255 * 0.6).toInt()),
             height: 1.5.h,
           ),
         ),
@@ -483,41 +495,41 @@ class _FluffyTextField extends StatelessWidget {
           ),
         ),
         AppSpacing.mediumHeightSpacerWidget,
-        Obx(
-          () => TextFormField(
-            controller: controller,
-            onChanged: onChanged,
-            keyboardType: keyboardType,
-            validator: (val) => validator?.call(val),
-            decoration: InputDecoration(
-              hintText: hint,
-              errorText: validator?.call(null) == ''
-                  ? null
-                  : validator?.call(null),
-              prefixIcon: Icon(
-                icon,
-                color: theme.colorScheme.primary.withOpacity(0.6),
-              ),
-              filled: true,
-              fillColor: theme.colorScheme.primary.withOpacity(0.05),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 20.w,
-                vertical: 20.h,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.primary,
-                  width: 2.w,
-                ),
+        TextFormField(
+          controller: controller,
+          onChanged: onChanged,
+          keyboardType: keyboardType,
+          validator: validator,
+          decoration: InputDecoration(
+            hintText: hint,
+            errorText: validator?.call(controller.text) == ''
+                ? null
+                : validator?.call(controller.text),
+            prefixIcon: Icon(
+              icon,
+              color: theme.colorScheme.primary.withAlpha((255 * 0.6).toInt()),
+            ),
+            filled: true,
+            fillColor: theme.colorScheme.primary.withAlpha(
+              (255 * 0.05).toInt(),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 20.h,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide(
+                color: theme.colorScheme.primary,
+                width: 2.w,
               ),
             ),
           ),
@@ -555,92 +567,79 @@ class _CountryPickerField extends GetView<RegisterStepController> {
           ),
         ),
         AppSpacing.mediumHeightSpacerWidget,
-        Obx(
-          () => TextFormField(
-            controller: controller.countryController,
-            readOnly: true,
-            decoration: InputDecoration(
-              hintText: 'Sélectionnez votre pays',
-              errorText: controller.countryError.value.isEmpty
-                  ? null
-                  : controller.countryError.value,
-              prefixIcon: Icon(
-                CupertinoIcons.flag_fill,
-                color: theme.colorScheme.primary.withOpacity(0.6),
-              ),
-              filled: true,
-              fillColor: theme.colorScheme.primary.withOpacity(0.05),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 20.w,
-                vertical: 20.h,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide(
-                  color: theme.colorScheme.primary,
-                  width: 2.w,
-                ),
-              ),
+        Obx(() {
+          final selectedCountryName = controller.country.value;
+          final selectedCountry = uemoaCountries.firstWhereOrNull(
+            (c) => c.name == selectedCountryName,
+          );
+          return Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary.withAlpha((255 * 0.05).toInt()),
+              borderRadius: BorderRadius.circular(18),
             ),
-            onTap: () {
-              FocusScope.of(context).unfocus();
-              showModalBottomSheet(
-                context: context,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<Country>(
+                value: selectedCountry,
+                isExpanded: true,
+                icon: const Icon(Icons.arrow_drop_down),
+                borderRadius: BorderRadius.circular(18),
+                dropdownColor: theme.colorScheme.surface,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-                builder: (context) {
-                  return Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 16.h,
-                      horizontal: 24.w,
-                    ),
-                    child: ListView.builder(
-                      itemCount: uemoaCountries.length,
-                      itemBuilder: (context, index) {
-                        final country = uemoaCountries[index];
-                        return ListTile(
-                          leading: Text(
-                            country.flagEmoji,
-                            style: TextStyle(
-                              fontSize: AppFontSize.headlineMedium,
-                            ),
+                items: uemoaCountries.map((country) {
+                  return DropdownMenuItem<Country>(
+                    value: country,
+                    child: Row(
+                      children: [
+                        Text(
+                          country.flagEmoji,
+                          style: TextStyle(
+                            fontSize: AppFontSize.headlineMedium,
                           ),
-                          title: Text(
-                            country.name,
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        ),
+                        AppSpacing.smallWidthSpacerWidget,
+                        Text(
+                          country.name,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
                           ),
-                          subtitle: Text(
-                            '+${country.phoneCode}',
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                          onTap: () {
-                            controller.countryController.text = country.name;
-                            controller.onCountryChanged(country.name);
-                            Navigator.pop(context);
-                          },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        );
-                      },
+                        ),
+                        AppSpacing.smallWidthSpacerWidget,
+                        Text(
+                          '+${country.phoneCode}',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
                     ),
                   );
+                }).toList(),
+                onChanged: (country) {
+                  if (country != null) {
+                    controller.countryController.text = country.name;
+                    controller.onCountryChanged(country.name);
+                  }
                 },
-              );
-            },
-          ),
-        ),
+              ),
+            ),
+          );
+        }),
+        Obx(() {
+          final error = controller.countryError.value;
+          if (error.isNotEmpty) {
+            return Padding(
+              padding: EdgeInsets.only(top: 8.h, left: 8.w),
+              child: Text(
+                error,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
+              ),
+            );
+          }
+          return SizedBox.shrink();
+        }),
       ],
     );
   }
@@ -669,8 +668,10 @@ class _NavigationControls extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(24.w, 20.h, 24.w, 32.h),
       decoration: BoxDecoration(
-        color: theme.colorScheme.background,
-        border: Border(top: BorderSide(color: Colors.grey.withOpacity(0.1))),
+        color: theme.colorScheme.surface,
+        border: Border(
+          top: BorderSide(color: Colors.grey.withAlpha((255 * 0.1).toInt())),
+        ),
       ),
       child: Row(
         children: [
@@ -680,7 +681,9 @@ class _NavigationControls extends StatelessWidget {
               icon: const Icon(CupertinoIcons.arrow_left),
               label: const Text('Retour'),
               style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.onSurface.withOpacity(0.7),
+                foregroundColor: theme.colorScheme.onSurface.withAlpha(
+                  (255 * 0.7).toInt(),
+                ),
               ),
             ),
           const Spacer(),
@@ -691,15 +694,17 @@ class _NavigationControls extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: Colors.white,
-              disabledBackgroundColor: theme.colorScheme.primary.withOpacity(
-                0.4,
+              disabledBackgroundColor: theme.colorScheme.primary.withAlpha(
+                (255 * 0.4).toInt(),
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.r),
               ),
               padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 20.h),
               elevation: 5,
-              shadowColor: theme.colorScheme.primary.withOpacity(0.3),
+              shadowColor: theme.colorScheme.primary.withAlpha(
+                (255 * 0.3).toInt(),
+              ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
