@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snt_ui_test/generated/assets.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -67,8 +67,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _onGetStarted() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_done', true);
+    const storage = FlutterSecureStorage(
+      aOptions: AndroidOptions(encryptedSharedPreferences: true),
+      iOptions: IOSOptions(
+        accessibility: KeychainAccessibility.first_unlock_this_device,
+      ),
+    );
+    await storage.write(key: 'onboarding_done', value: 'true');
     Get.offAllNamed('/login'); // Assuming '/login' is the correct route
   }
 
