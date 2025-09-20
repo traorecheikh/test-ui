@@ -1,14 +1,12 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/phone_input_formatter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:snt_ui_test/app/theme.dart';
 
 import '../controllers/register_step_controller.dart';
-
-// Note: This screen reuses widgets from the new Create Tontine UI for consistency.
-// You might want to move them to a common 'widgets' directory.
 
 class RegisterStepScreen extends GetView<RegisterStepController> {
   const RegisterStepScreen({super.key});
@@ -25,7 +23,7 @@ class RegisterStepScreen extends GetView<RegisterStepController> {
           icon: Icon(
             CupertinoIcons.xmark,
             color: theme.colorScheme.primary,
-            size: 28,
+            size: 28.sp,
           ),
           onPressed: () => Get.back(),
           tooltip: 'Annuler',
@@ -83,6 +81,7 @@ class RegisterStepScreen extends GetView<RegisterStepController> {
 class _Step1BasicInfo extends GetView<RegisterStepController> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,7 +90,7 @@ class _Step1BasicInfo extends GetView<RegisterStepController> {
           title: 'Créez votre profil',
           subtitle: 'Pour commencer, entrez vos informations de base.',
         ),
-        const SizedBox(height: 32),
+        SizedBox(height: 32.h),
         _FluffyTextField(
           controller: controller.nameController,
           label: 'Nom complet',
@@ -100,7 +99,9 @@ class _Step1BasicInfo extends GetView<RegisterStepController> {
           validator: (val) => controller.nameError.value,
           onChanged: controller.onNameChanged,
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 20.h),
+        _buildPhoneInput(context, theme),
+        SizedBox(height: 20.h),
         _FluffyTextField(
           controller: controller.emailController,
           label: 'Adresse email (optionnel)',
@@ -110,9 +111,114 @@ class _Step1BasicInfo extends GetView<RegisterStepController> {
           validator: (val) => controller.emailError.value,
           onChanged: controller.onEmailChanged,
         ),
-        const SizedBox(height: 24),
-        _ImagePickerButton(),
       ],
+    );
+  }
+
+  Widget _buildPhoneInput(BuildContext context, ThemeData theme) {
+    return Obx(
+      () => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'phone_label'.tr,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          AppSpacing.mediumHeightSpacerWidget,
+          TextFormField(
+            controller: controller.phoneController,
+            keyboardType: TextInputType.phone,
+            inputFormatters: [
+              PhoneInputFormatter(
+                defaultCountryCode:
+                    controller.selectedCountry.value.countryCode,
+              ),
+            ],
+            onChanged: controller.onPhoneChanged,
+            autofillHints: const [AutofillHints.telephoneNumber],
+            textInputAction: TextInputAction.done,
+            style: const TextStyle(fontSize: 18, letterSpacing: 1.5),
+            decoration: InputDecoration(
+              hintText: 'phone_hint'.tr,
+              errorText: controller.phoneError.value.isEmpty
+                  ? null
+                  : controller.phoneError.value,
+              filled: true,
+              fillColor: theme.colorScheme.primary.withOpacity(0.05),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 20.w,
+                vertical: 20.h,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18),
+                borderSide: BorderSide(
+                  color: theme.colorScheme.primary,
+                  width: 2,
+                ),
+              ),
+              prefixIcon: Obx(
+                () => Container(
+                  margin: EdgeInsets.only(left: 12.w, right: 8.w),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<Country>(
+                      value: controller.selectedCountry.value,
+                      icon: const Icon(Icons.arrow_drop_down, size: 20),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      dropdownColor: theme.colorScheme.background,
+                      borderRadius: BorderRadius.circular(18),
+                      items: controller.countries.map((country) {
+                        return DropdownMenuItem<Country>(
+                          value: country,
+                          child: Row(
+                            children: [
+                              Text(
+                                country.flagEmoji,
+                                style: TextStyle(
+                                  fontSize: AppFontSize.headlineMedium,
+                                ),
+                              ),
+                              AppSpacing.smallWidthSpacerWidget,
+                              Text(
+                                '+${country.phoneCode}',
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (country) {
+                        if (country != null)
+                          controller.onCountrySelected(country);
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            onTap: () => {
+              Scrollable.ensureVisible(
+                context,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              ),
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -130,6 +236,9 @@ class _Step2Location extends GetView<RegisterStepController> {
               'Ces informations nous aident à personnaliser votre expérience.',
         ),
         AppSpacing.extraLargeHeightSpacerWidget,
+
+        _CountryPickerField(),
+        AppSpacing.largeHeightSpacer,
         _FluffyTextField(
           controller: controller.cityController,
           label: 'Ville',
@@ -138,17 +247,6 @@ class _Step2Location extends GetView<RegisterStepController> {
           onChanged: controller.onCityChanged,
           validator: (val) => controller.cityError.value,
         ),
-        AppSpacing.largeHeightSpacer,
-        _FluffyTextField(
-          controller: controller.regionController,
-          label: 'Région',
-          hint: 'Ex: Dakar',
-          icon: CupertinoIcons.map_fill,
-          onChanged: controller.onRegionChanged,
-          validator: (val) => controller.regionError.value,
-        ),
-        AppSpacing.largeHeightSpacer,
-        _CountryPickerField(),
       ],
     );
   }
@@ -420,53 +518,6 @@ class _FluffyTextField extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ImagePickerButton extends GetView<RegisterStepController> {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: controller.onPickProfilePicture,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primary.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              CupertinoIcons.camera_fill,
-              color: theme.colorScheme.primary.withOpacity(0.8),
-            ),
-            AppSpacing.largeWidthSpacer,
-            Expanded(
-              child: Obx(
-                () => Text(
-                  controller.profilePicturePath.value.isEmpty
-                      ? 'Ajouter une photo (optionnel)'
-                      : 'Photo sélectionnée !',
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-            Obx(() {
-              if (controller.profilePicturePath.value.isNotEmpty) {
-                return const Icon(
-                  CupertinoIcons.check_mark_circled_solid,
-                  color: Colors.green,
-                );
-              }
-              return const Icon(CupertinoIcons.add_circled);
-            }),
-          ],
-        ),
-      ),
     );
   }
 }
