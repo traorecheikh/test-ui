@@ -44,10 +44,10 @@ class LoginScreen extends GetView<LoginController> {
           height: 320.h,
           width: double.infinity,
           fit: BoxFit.cover,
-          semanticLabel: 'Illustration de connexion',
+          semanticLabel: 'login_illustration'.tr,
         ),
         Text(
-          'Bienvenue !',
+          'welcome'.tr,
           style: theme.textTheme.displaySmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
@@ -55,7 +55,7 @@ class LoginScreen extends GetView<LoginController> {
         ),
         AppSpacing.smallHeightSpacerWidget,
         Text(
-          'Connectez-vous pour gérer vos tontines en toute simplicité.',
+          'login_subtitle'.tr,
           style: theme.textTheme.titleMedium?.copyWith(
             color: theme.colorScheme.onSurface.withOpacity(0.6),
             height: 1.5.sp,
@@ -71,7 +71,7 @@ class LoginScreen extends GetView<LoginController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Numéro de téléphone',
+            'phone_label'.tr,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -91,7 +91,7 @@ class LoginScreen extends GetView<LoginController> {
             textInputAction: TextInputAction.done,
             style: const TextStyle(fontSize: 18, letterSpacing: 1.5),
             decoration: InputDecoration(
-              hintText: 'Votre numéro',
+              hintText: 'phone_hint'.tr,
               errorText: controller.phoneError.value.isEmpty
                   ? null
                   : controller.phoneError.value,
@@ -116,50 +116,44 @@ class LoginScreen extends GetView<LoginController> {
                   width: 2,
                 ),
               ),
-              prefixIcon: GestureDetector(
-                onTap: () {
-                  showCountryPicker(
-                    context: context,
-                    showPhoneCode: true,
-                    onSelect: controller.onCountrySelected,
-                    countryListTheme: CountryListThemeData(
-                      borderRadius: BorderRadius.circular(18),
-                      backgroundColor: theme.colorScheme.background,
-                      inputDecoration: InputDecoration(
-                        labelText: 'Rechercher un pays',
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide(
-                            color: theme.colorScheme.primary.withOpacity(0.2),
-                          ),
-                        ),
+              prefixIcon: Obx(
+                () => Container(
+                  margin: EdgeInsets.only(left: 12.w, right: 8.w),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<Country>(
+                      value: controller.selectedCountry.value,
+                      icon: const Icon(Icons.arrow_drop_down, size: 20),
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
-                    ),
-                  );
-                },
-                child: Obx(
-                  () => Container(
-                    margin: EdgeInsets.only(left: 12.w),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          controller.selectedCountry.value.flagEmoji,
-                          style: TextStyle(
-                            fontSize: AppFontSize.headlineMedium,
+                      dropdownColor: theme.colorScheme.background,
+                      borderRadius: BorderRadius.circular(18),
+                      items: controller.countries.map((country) {
+                        return DropdownMenuItem<Country>(
+                          value: country,
+                          child: Row(
+                            children: [
+                              Text(
+                                country.flagEmoji,
+                                style: TextStyle(
+                                  fontSize: AppFontSize.headlineMedium,
+                                ),
+                              ),
+                              AppSpacing.smallWidthSpacerWidget,
+                              Text(
+                                '+${country.phoneCode}',
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        AppSpacing.smallWidthSpacerWidget,
-                        Text(
-                          '+${controller.selectedCountry.value.phoneCode}',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Icon(Icons.arrow_drop_down, size: 20),
-                        AppSpacing.smallWidthSpacerWidget,
-                      ],
+                        );
+                      }).toList(),
+                      onChanged: (country) {
+                        if (country != null)
+                          controller.onCountrySelected(country);
+                      },
                     ),
                   ),
                 ),
@@ -207,7 +201,7 @@ class LoginScreen extends GetView<LoginController> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Se Connecter',
+                      'login_button'.tr,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -226,7 +220,7 @@ class LoginScreen extends GetView<LoginController> {
     return Center(
       child: TextButton(
         onPressed: controller.onHelp,
-        child: const Text('Besoin d\'aide ?'),
+        child: Text('help'.tr),
         style: TextButton.styleFrom(
           foregroundColor: theme.colorScheme.onSurface.withOpacity(0.7),
           textStyle: TextStyle(

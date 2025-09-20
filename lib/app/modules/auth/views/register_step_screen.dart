@@ -236,7 +236,6 @@ class _Step2Location extends GetView<RegisterStepController> {
               'Ces informations nous aident à personnaliser votre expérience.',
         ),
         AppSpacing.extraLargeHeightSpacerWidget,
-
         _CountryPickerField(),
         AppSpacing.largeHeightSpacer,
         _FluffyTextField(
@@ -245,7 +244,13 @@ class _Step2Location extends GetView<RegisterStepController> {
           hint: 'Ex: Dakar',
           icon: CupertinoIcons.building_2_fill,
           onChanged: controller.onCityChanged,
-          validator: (val) => controller.cityError.value,
+          validator: (val) {
+            final value = val ?? '';
+            if (value.isEmpty) return 'Veuillez entrer une ville';
+            if (value.length < 2) return 'Le nom de la ville est trop court';
+            if (value.length > 50) return 'Le nom de la ville est trop long';
+            return controller.cityError.value;
+          },
         ),
       ],
     );
@@ -523,44 +528,120 @@ class _FluffyTextField extends StatelessWidget {
 }
 
 class _CountryPickerField extends GetView<RegisterStepController> {
+  static const List<String> uemoaCountryCodes = [
+    'BJ',
+    'BF',
+    'CI',
+    'GW',
+    'ML',
+    'NE',
+    'SN',
+    'TG',
+  ];
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: () {
-        showCountryPicker(
-          context: context,
-          showPhoneCode: false,
-          onSelect: (country) {
-            controller.countryController.text = country.name;
-            controller.onCountryChanged(country.name);
-          },
-          countryListTheme: CountryListThemeData(
-            borderRadius: BorderRadius.circular(18),
-            backgroundColor: theme.colorScheme.background,
-            inputDecoration: InputDecoration(
-              labelText: 'Rechercher un pays',
-              prefixIcon: const Icon(Icons.search),
+    final uemoaCountries = controller.countries
+        .where((country) => uemoaCountryCodes.contains(country.countryCode))
+        .toList();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Pays',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        AppSpacing.mediumHeightSpacerWidget,
+        Obx(
+          () => TextFormField(
+            controller: controller.countryController,
+            readOnly: true,
+            decoration: InputDecoration(
+              hintText: 'Sélectionnez votre pays',
+              errorText: controller.countryError.value.isEmpty
+                  ? null
+                  : controller.countryError.value,
+              prefixIcon: Icon(
+                CupertinoIcons.flag_fill,
+                color: theme.colorScheme.primary.withOpacity(0.6),
+              ),
+              filled: true,
+              fillColor: theme.colorScheme.primary.withOpacity(0.05),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 20.w,
+                vertical: 20.h,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(18),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(18),
                 borderSide: BorderSide(
-                  color: theme.colorScheme.primary.withOpacity(0.2),
+                  color: theme.colorScheme.primary,
+                  width: 2.w,
                 ),
               ),
             ),
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              showModalBottomSheet(
+                context: context,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+                ),
+                builder: (context) {
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.h,
+                      horizontal: 24.w,
+                    ),
+                    child: ListView.builder(
+                      itemCount: uemoaCountries.length,
+                      itemBuilder: (context, index) {
+                        final country = uemoaCountries[index];
+                        return ListTile(
+                          leading: Text(
+                            country.flagEmoji,
+                            style: TextStyle(
+                              fontSize: AppFontSize.headlineMedium,
+                            ),
+                          ),
+                          title: Text(
+                            country.name,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Text(
+                            '+${country.phoneCode}',
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          onTap: () {
+                            controller.countryController.text = country.name;
+                            controller.onCountryChanged(country.name);
+                            Navigator.pop(context);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
           ),
-        );
-      },
-      child: AbsorbPointer(
-        child: _FluffyTextField(
-          controller: controller.countryController,
-          label: 'Pays',
-          hint: 'Sélectionnez votre pays',
-          icon: CupertinoIcons.flag_fill,
-          onChanged: controller.onCountryChanged,
-          validator: (val) => controller.countryError.value,
         ),
-      ),
+      ],
     );
   }
 }
