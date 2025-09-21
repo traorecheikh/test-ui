@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:snt_ui_test/app/modules/settings/controllers/settings_controller.dart';
+import 'package:snt_ui_test/app/routes/app_pages.dart';
 
-import '../../../routes/app_pages.dart';
 import '../../../services/auth_service.dart';
 import '../../auth/views/pin_setup_screen.dart';
 
@@ -115,12 +115,6 @@ class SettingsScreen extends GetView<SettingsController> {
                 children: [
                   _buildSettingItem(
                     theme,
-                    Icons.person_outline,
-                    'my_account'.tr,
-                    onTap: () => Get.toNamed(Routes.profile),
-                  ),
-                  _buildSettingItem(
-                    theme,
                     Icons.info_outline,
                     'about'.tr,
                     onTap: controller.openAboutDialog,
@@ -178,46 +172,50 @@ class SettingsScreen extends GetView<SettingsController> {
   }
 
   Widget _buildProfileSection(ThemeData theme) {
-    return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 60.w,
-            height: 60.w,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30.r),
+    return GestureDetector(
+      onTap: () => Get.toNamed(Routes.profile),
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primary,
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 60.w,
+              height: 60.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.r),
+              ),
+              child: Icon(Icons.person, color: Colors.white, size: 30.sp),
             ),
-            child: Icon(Icons.person, color: Colors.white, size: 30.sp),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'my_account'.tr,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'my_account'.tr,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  'manage_your_info'.tr,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.8),
+                  SizedBox(height: 4.h),
+                  Text(
+                    'manage_your_info'.tr,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white.withOpacity(0.8),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16.sp),
-        ],
+            Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16.sp),
+          ],
+        ),
       ),
     );
   }

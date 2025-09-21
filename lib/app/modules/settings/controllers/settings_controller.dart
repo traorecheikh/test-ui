@@ -34,10 +34,17 @@ class SettingsController extends GetxController {
   }
 
   Future<void> _loadLanguage() async {
-    final langCode =
+    String langCode =
         await _secureStorage.read(key: _selectedLanguageKey) ??
         Get.locale?.languageCode ??
         'fr_FR';
+    // Map short codes to full codes
+    if (langCode == 'fr') langCode = 'fr_FR';
+    if (langCode == 'en') langCode = 'en_US';
+    if (langCode == 'wo') langCode = 'wo_SN';
+    // Fallback if not valid
+    const validCodes = ['fr_FR', 'en_US', 'wo_SN'];
+    if (!validCodes.contains(langCode)) langCode = 'fr_FR';
     selectedLanguage.value = langCode;
     Get.updateLocale(_localeFromCode(langCode));
   }

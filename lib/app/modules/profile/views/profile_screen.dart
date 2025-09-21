@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,7 @@ class ProfileScreen extends GetView<ProfileController> {
         return Scaffold(
           appBar: AppBar(
             toolbarHeight: 70.h,
+            leading: Icon(CupertinoIcons.back),
             backgroundColor: theme.colorScheme.background,
             elevation: 0,
             centerTitle: true,
@@ -41,7 +43,7 @@ class ProfileScreen extends GetView<ProfileController> {
           backgroundColor: theme.colorScheme.background,
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
+            icon: Icon(CupertinoIcons.back, color: theme.colorScheme.primary),
             onPressed: () => Get.back(),
           ),
           title: Text(
@@ -55,18 +57,18 @@ class ProfileScreen extends GetView<ProfileController> {
         backgroundColor: theme.colorScheme.background,
         body: SafeArea(
           child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
             children: [
               _buildHeaderSection(theme, user),
-              const SizedBox(height: 32),
+              SizedBox(height: 32.h),
               _buildPersonalInfoCard(theme, user),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
               _buildStatsCard(theme, user),
               if (user.achievements.isNotEmpty) ...[
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
                 _buildAchievementsCard(theme, user),
               ],
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
               _buildParticipationCard(theme, user),
             ],
           ),
@@ -89,7 +91,7 @@ class ProfileScreen extends GetView<ProfileController> {
           ),
           padding: const EdgeInsets.all(8),
           child: CircleAvatar(
-            radius: 44,
+            radius: 44.r,
             backgroundColor: theme.colorScheme.primary,
             backgroundImage:
                 user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty
@@ -111,7 +113,7 @@ class ProfileScreen extends GetView<ProfileController> {
                 : null,
           ),
         ),
-        const SizedBox(height: 18),
+        SizedBox(height: 18.h),
         Text(
           'Bonjour, ${user.name.split(' ').first}!',
           style: theme.textTheme.headlineMedium?.copyWith(
@@ -119,7 +121,7 @@ class ProfileScreen extends GetView<ProfileController> {
             color: theme.colorScheme.primary,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           decoration: BoxDecoration(
@@ -144,7 +146,7 @@ class ProfileScreen extends GetView<ProfileController> {
       elevation: 0,
       color: theme.colorScheme.surface,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -154,7 +156,7 @@ class ProfileScreen extends GetView<ProfileController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             ListTile(
               leading: const Icon(Icons.phone),
               title: Text('phone'.tr),
@@ -182,18 +184,18 @@ class ProfileScreen extends GetView<ProfileController> {
 
   Widget _buildStatsCard(ThemeData theme, AppUser user) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
       elevation: 0,
       color: theme.colorScheme.primary,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Column(
               children: [
-                Icon(Icons.star, color: Colors.white, size: 32),
-                const SizedBox(height: 8),
+                Icon(Icons.star, color: Colors.white, size: 32.sp),
+                SizedBox(height: 8.h),
                 Text(
                   '${user.sunuPoints}',
                   style: theme.textTheme.headlineSmall?.copyWith(
@@ -212,7 +214,7 @@ class ProfileScreen extends GetView<ProfileController> {
             Column(
               children: [
                 Icon(Icons.verified_user, color: Colors.white, size: 32),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Text(
                   user.reliabilityScore.toStringAsFixed(1),
                   style: theme.textTheme.headlineSmall?.copyWith(
@@ -240,7 +242,7 @@ class ProfileScreen extends GetView<ProfileController> {
       elevation: 0,
       color: theme.colorScheme.surface,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -250,10 +252,10 @@ class ProfileScreen extends GetView<ProfileController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Wrap(
-              spacing: 16,
-              runSpacing: 12,
+              spacing: 16.w,
+              runSpacing: 12.h,
               children: user.achievements
                   .map((a) => _buildAchievementChip(theme, a))
                   .toList(),
@@ -280,7 +282,7 @@ class ProfileScreen extends GetView<ProfileController> {
       elevation: 0,
       color: theme.colorScheme.surface,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -290,7 +292,7 @@ class ProfileScreen extends GetView<ProfileController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -299,9 +301,9 @@ class ProfileScreen extends GetView<ProfileController> {
                     Icon(
                       Icons.group,
                       color: theme.colorScheme.primary,
-                      size: 32,
+                      size: 32.sp,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.h),
                     Text(
                       '${user.tontineIds.length}',
                       style: theme.textTheme.headlineSmall?.copyWith(
@@ -320,9 +322,9 @@ class ProfileScreen extends GetView<ProfileController> {
                     Icon(
                       Icons.workspace_premium,
                       color: theme.colorScheme.secondary,
-                      size: 32,
+                      size: 32.sp,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8.h),
                     Text(
                       '${user.organizedTontineIds.length}',
                       style: theme.textTheme.headlineSmall?.copyWith(
