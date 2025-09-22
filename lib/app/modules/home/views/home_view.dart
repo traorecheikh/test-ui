@@ -91,7 +91,7 @@ class HomeView extends GetView<HomeController> {
                 ],
               ),
               AppSpacing.extraLargeHeightSpacerWidget,
-              _buildFinanceDataCardElevated(theme),
+              _buildFinanceDataCardElevatedTEST(theme),
               // _buildPrimaryTontineSection(theme),
               AppSpacing.extraLargeHeightSpacerWidget,
               _buildQuickActionsSection(theme),
@@ -102,6 +102,112 @@ class HomeView extends GetView<HomeController> {
         ),
       );
     });
+  }
+
+  Widget _buildFinanceDataCardElevatedTEST(ThemeData theme) {
+    final totalSavings = controller.getTotalSavings();
+    final tontinesCount = controller.userTontines.length;
+    final nextPaymentDate = tontinesCount > 0
+        ? controller.userTontines.first.formattedNextPaymentDate
+        : '--';
+    final nextPaymentAmount = tontinesCount > 0
+        ? Formatters.formatCurrency(
+            controller.userTontines.first.contributionAmount,
+          )
+        : '--';
+
+    return Card(
+      elevation: 8.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+      shadowColor: theme.colorScheme.primary.withOpacity(0.3),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24.r),
+          gradient: LinearGradient(
+            colors: [
+              theme.colorScheme.primary,
+              Color.lerp(
+                theme.colorScheme.primary,
+                theme.colorScheme.secondary,
+                0.4,
+              )!,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'total_savings'.tr.toUpperCase(),
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: theme.colorScheme.onPrimary.withOpacity(0.8),
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
+              ),
+            ),
+            AppSpacing.mediumHeightSpacer,
+            AutoSizeText(
+              totalSavings,
+              style: theme.textTheme.displayMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onPrimary,
+              ),
+              maxLines: 1,
+              textAlign: TextAlign.start,
+            ),
+            AppSpacing.largeHeightSpacer,
+            Divider(color: theme.colorScheme.onPrimary.withOpacity(0.2)),
+            AppSpacing.mediumHeightSpacer,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'next_payment'.tr,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onPrimary.withOpacity(0.8),
+                      ),
+                    ),
+                    AppSpacings.small,
+                    Text(
+                      nextPaymentDate,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'amount'.tr,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onPrimary.withOpacity(0.8),
+                      ),
+                    ),
+                    AppSpacings.small,
+                    Text(
+                      nextPaymentAmount,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildFinanceDataCardElevated(ThemeData theme) {
