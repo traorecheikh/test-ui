@@ -4,6 +4,7 @@
 
 import 'package:hive_ce/hive.dart';
 import 'package:snt_ui_test/app/data/models/contribution.dart';
+import 'package:snt_ui_test/app/data/models/faq_item.dart';
 import 'package:snt_ui_test/app/data/models/tontine.dart';
 import 'package:snt_ui_test/app/data/models/user.dart';
 
@@ -11,8 +12,13 @@ extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AchievementAdapter());
     registerAdapter(AppUserAdapter());
+    registerAdapter(ChatMessageAdapter());
+    registerAdapter(ChatMessageTypeAdapter());
     registerAdapter(ContributionAdapter());
     registerAdapter(ContributionStatusAdapter());
+    registerAdapter(FaqAnalyticsAdapter());
+    registerAdapter(FaqCategoryAdapter());
+    registerAdapter(FaqItemAdapter());
     registerAdapter(TontineAdapter());
     registerAdapter(TontineCategoryAdapter());
     registerAdapter(TontineDrawOrderAdapter());
@@ -27,8 +33,13 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AchievementAdapter());
     registerAdapter(AppUserAdapter());
+    registerAdapter(ChatMessageAdapter());
+    registerAdapter(ChatMessageTypeAdapter());
     registerAdapter(ContributionAdapter());
     registerAdapter(ContributionStatusAdapter());
+    registerAdapter(FaqAnalyticsAdapter());
+    registerAdapter(FaqCategoryAdapter());
+    registerAdapter(FaqItemAdapter());
     registerAdapter(TontineAdapter());
     registerAdapter(TontineCategoryAdapter());
     registerAdapter(TontineDrawOrderAdapter());
