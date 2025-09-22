@@ -103,6 +103,15 @@ class HomeController extends GetxController {
       },
     ),
     _ActionButtonData(
+      title: 'reminders'.tr,
+      icon: Icons.add_circle,
+      color: Color(0xFFFF6B6B), // Coral
+      onTap: () {
+        VibrationService.softVibrate();
+        Get.toNamed(Routes.REMINDERS);
+      },
+    ),
+    _ActionButtonData(
       title: 'join'.tr,
       icon: Icons.group_add,
       color: Color(0xFF4ECDC4), // Teal
@@ -143,7 +152,9 @@ class HomeController extends GetxController {
         );
       },
     ),
-    _ActionButtonData(
+    // REPORTS
+    /*
+    *  _ActionButtonData(
       title: 'reports'.tr,
       icon: Icons.trending_up,
       color: Color(0xFFFF9E80), // Peach
@@ -156,6 +167,11 @@ class HomeController extends GetxController {
         );
       },
     ),
+    *
+    *
+    *
+    * */
+
   ];
 }
 

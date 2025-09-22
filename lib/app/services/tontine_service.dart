@@ -34,6 +34,8 @@ class TontineService {
     _contributions = StorageService.getContributions();
     if (_currentUser != null) {
       await _generateSampleData();
+      await updateNextContributionDates();
+      _updateIsPaidByCurrentUser();
     }
   }
 
@@ -137,6 +139,7 @@ class TontineService {
       nextContributionDate: _calculateNextContributionDate(
         tontine.startDate,
         tontine.frequency,
+        currentRound: 1,
       ),
     );
 
@@ -228,20 +231,135 @@ class TontineService {
 
   static DateTime _calculateNextContributionDate(
     DateTime startDate,
-    TontineFrequency frequency,
-  ) {
+    TontineFrequency frequency, {
+    int currentRound = 1,
+  }) {
     switch (frequency) {
       case TontineFrequency.daily:
-        return startDate.add(const Duration(days: 1));
+        return startDate.add(Duration(days: currentRound - 1));
       case TontineFrequency.weekly:
-        return startDate.add(const Duration(days: 7));
+        return startDate.add(Duration(days: 7 * (currentRound - 1)));
       case TontineFrequency.biweekly:
-        return startDate.add(const Duration(days: 14));
+        return startDate.add(Duration(days: 14 * (currentRound - 1)));
       case TontineFrequency.monthly:
-        return DateTime(startDate.year, startDate.month + 1, startDate.day);
+        return DateTime(startDate.year, startDate.month + (currentRound - 1), startDate.day);
       case TontineFrequency.quarterly:
-        return DateTime(startDate.year, startDate.month + 3, startDate.day);
+        return DateTime(startDate.year, startDate.month + (3 * (currentRound - 1)), startDate.day);
     }
+  }
+
+  // Update nextContributionDate for active tontines
+  static Future<void> updateNextContributionDates() async {
+    bool hasChanges = false;
+
+    for (int i = 0; i < _tontines.length; i++) {
+      final tontine = _tontines[i];
+
+      // Only calculate nextContributionDate for pending or active tontines
+      if (tontine.status == TontineStatus.pending || tontine.status == TontineStatus.active) {
+        DateTime? newNextDate;
+
+        if (tontine.status == TontineStatus.pending) {
+          // For pending tontines, next date is the start date
+          newNextDate = tontine.startDate;
+        } else if (tontine.status == TontineStatus.active) {
+          // For active tontines, calculate based on current round
+          newNextDate = _calculateNextContributionDate(
+            tontine.startDate,
+            tontine.frequency,
+            currentRound: tontine.currentRound + 1,
+          );
+        }
+
+        if (newNextDate != tontine.nextContributionDate) {
+          _tontines[i] = tontine.copyWith(nextContributionDate: newNextDate);
+          hasChanges = true;
+        }
+      } else {
+        // For completed or cancelled tontines, nextContributionDate should be null
+        if (tontine.nextContributionDate != null) {
+          _tontines[i] = tontine.copyWith(nextContributionDate: null);
+          hasChanges = true;
+        }
+      }
+    }
+
+    if (hasChanges) {
+      await StorageService.saveTontines(_tontines);
+    }
+  }
+
+  // Update isPaidByCurrentUser field for all tontines
+  static void _updateIsPaidByCurrentUser() {
+    if (_currentUser == null) return;
+
+    for (int i = 0; i < _tontines.length; i++) {
+      final tontine = _tontines[i];
+
+      if (tontine.status == TontineStatus.active && tontine.participantIds.contains(_currentUser!.id)) {
+        // Check if current user has paid for current round
+        final userContribution = _contributions.firstWhere(
+          (c) => c.tontineId == tontine.id &&
+                 c.participantId == _currentUser!.id &&
+                 c.round == tontine.currentRound,
+          orElse: () => Contribution(
+            id: -1,
+            tontineId: tontine.id,
+            participantId: _currentUser!.id!,
+            round: tontine.currentRound,
+            amount: tontine.contributionAmount,
+            dueDate: tontine.nextContributionDate ?? DateTime.now(),
+            status: ContributionStatus.pending,
+          ),
+        );
+
+        _tontines[i].isPaidByCurrentUser = userContribution.status == ContributionStatus.paid;
+      } else {
+        _tontines[i].isPaidByCurrentUser = null;
+      }
+    }
+  }
+
+  // Get tontines with upcoming payment reminders (active/pending with nextContributionDate)
+  static List<Tontine> getTontinesWithReminders(int userId) {
+    final now = DateTime.now();
+
+    return _tontines.where((tontine) {
+      // User must be a participant
+      if (!tontine.participantIds.contains(userId)) return false;
+
+      // Only pending or active tontines can have reminders
+      if (tontine.status != TontineStatus.pending && tontine.status != TontineStatus.active) {
+        return false;
+      }
+
+      // Must have a nextContributionDate
+      if (tontine.nextContributionDate == null) return false;
+
+      // Check if user has already paid for current round
+      if (tontine.status == TontineStatus.active) {
+        final userContribution = _contributions.firstWhere(
+          (c) => c.tontineId == tontine.id &&
+                 c.participantId == userId &&
+                 c.round == tontine.currentRound,
+          orElse: () => Contribution(
+            id: -1,
+            tontineId: tontine.id,
+            participantId: userId,
+            round: tontine.currentRound,
+            amount: tontine.contributionAmount,
+            dueDate: tontine.nextContributionDate!,
+            status: ContributionStatus.pending,
+          ),
+        );
+
+        // Only show reminder if not paid yet
+        return userContribution.status != ContributionStatus.paid;
+      }
+
+      return true;
+    }).toList()
+      ..sort((a, b) => a.nextContributionDate!.compareTo(b.nextContributionDate!));
   }
 
   static Future<void> _generateContributionsForRound(

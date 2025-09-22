@@ -10,6 +10,7 @@ import 'package:snt_ui_test/app/modules/payment/payment_failed_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_history_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_receipt_screen.dart';
 import 'package:snt_ui_test/app/modules/payment/payment_status_screen.dart';
+import 'package:snt_ui_test/app/modules/reminders/views/reminders_screen.dart';
 import 'package:snt_ui_test/app/modules/tontine/bindings/create_cagnotte_binding.dart';
 import 'package:snt_ui_test/app/modules/tontine/bindings/create_tontine_options_binding.dart';
 import 'package:snt_ui_test/app/modules/tontine/views/create_cagnotte_screen.dart';
@@ -26,6 +27,7 @@ import '../modules/join/bindings/join_scanner_binding.dart';
 import '../modules/join/views/join_scanner_screen.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_screen.dart';
+import '../modules/reminders/bindings/reminders_binding.dart';
 import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/settings_screen.dart';
 import '../modules/tontine/bindings/create_tontine_binding.dart';
@@ -194,5 +196,12 @@ class AppPages {
       binding: FaqBinding(),
       transition: Transition.rightToLeft,
     ),
+    // Reminders Page
+    GetPage(
+       name: Routes.REMINDERS,
+       page: ()=> const RemindersScreen(),
+       binding: RemindersBinding(),
+      transition: Transition.fadeIn
+    )
   ];
 }

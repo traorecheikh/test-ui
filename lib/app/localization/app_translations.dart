@@ -165,6 +165,9 @@ class AppTranslations extends Translations {
       'browse_by_category': 'Browse by Category',
       'tap_to_read_full_answer': 'Tap to read full answer',
       'most_asked_by_users': 'Most asked by users',
+
+      // reminders
+      'reminders':'reminders'
     },
     'fr_FR': {
       'hello': 'Bonjour',
@@ -331,6 +334,9 @@ class AppTranslations extends Translations {
       'browse_by_category': 'Parcourir par Catégorie',
       'tap_to_read_full_answer': 'Toucher pour lire la réponse complète',
       'most_asked_by_users': 'Les plus demandées par les utilisateurs',
+      // rappelle de paiement
+      'reminders':'prochain paiement '
+
     },
     'wo_SN': {
       'hello': 'Jàmm',
@@ -406,6 +412,9 @@ class AppTranslations extends Translations {
       'login_phone_error_short': 'Nummëru gàtt',
       'login_button': 'Jëfandikoo',
       'login_help': 'So amee jafe-jafe?',
+
+      // FAQ
+      // reminders
     },
     // Add more languages here
   };
