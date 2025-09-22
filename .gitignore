@@ -45,3 +45,6 @@ app.*.map.json
 /android/app/release
 .fvm
 docs/
+/ANALYSE_ET_RECOMMANDATIONS_V1.md
+/lib/l10n/intl_en.arb
+/lib/l10n/intl_fr.arb
