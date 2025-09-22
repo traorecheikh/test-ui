@@ -68,6 +68,17 @@ class HomeView extends GetView<HomeController> {
                   Spacer(flex: 4),
                   IconButton(
                     icon: Icon(
+                      Icons.help_outline_rounded,
+                      color: theme.colorScheme.primary,
+                      size: AppIconSizes.large,
+                    ),
+                    onPressed: () {
+                      Get.toNamed(Routes.FAQ);
+                    },
+                    tooltip: 'help_support'.tr,
+                  ),
+                  IconButton(
+                    icon: Icon(
                       Icons.settings,
                       color: theme.colorScheme.primary,
                       size: AppIconSizes.large,

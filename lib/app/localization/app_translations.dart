@@ -89,6 +89,82 @@ class AppTranslations extends Translations {
       'help': 'Need help?',
       'help_title': 'Help',
       'help_message': 'Contact support if you have login issues.',
+      'help_support': 'Help & Support',
+
+      // FAQ System - English
+      'faq_chat_title': 'FAQ Assistant',
+      'faq_search_title': 'Search FAQ',
+      'switch_to_search': 'Switch to search',
+      'switch_to_chat': 'Switch to chat',
+      'reset_chat': 'Reset chat',
+      'loading_faq': 'Loading FAQ...',
+      'faq_error_title': 'FAQ Error',
+      'faq_error_message': 'Unable to load FAQ system. Please check your connection.',
+      'retry': 'Retry',
+      'sunu_assistant': 'SunuTontine Assistant',
+      'assistant_status': 'Online - Ready to help',
+      'search_faqs_hint': 'Search your questions...',
+      'all_categories': 'All Categories',
+      'security_category': 'Security & Trust',
+      'how_it_works_category': 'How It Works',
+      'money_payments_category': 'Money & Payments',
+      'social_features_category': 'Social Features',
+      'technical_support_category': 'Technical Support',
+      'legal_compliance_category': 'Legal & Compliance',
+      'popular': 'Popular',
+      'no_results_title': 'No Results Found',
+      'no_results_message': 'Try different keywords or browse categories',
+      'popular_questions': 'Popular Questions',
+
+      // Bot messages - English
+      'bot_welcome_message': 'Hello! I\'m your SunuTontine assistant. How can I help you today?',
+      'bot_quick_actions': 'Here are the most frequently asked questions:',
+      'related_questions': 'Related questions:',
+      'no_results_message': 'I couldn\'t find answers for that. Here are some popular questions:',
+      'alternative_suggestions': 'Here are some alternative suggestions:',
+      'feedback_helpful': 'Thank you for your feedback! 😊',
+      'feedback_not_helpful': 'Thanks for letting us know. We\'ll improve this answer.',
+
+      // FAQ Questions & Answers - English
+      'faq_money_safety_question': 'Is my money safe? Can this app steal my money?',
+      'faq_money_safety_answer': 'Absolutely! Your money NEVER goes through our app. It stays in your Wave/Orange Money account. We only facilitate coordination between members.',
+
+      'faq_money_flow_question': 'Where does my money go when I pay my contribution?',
+      'faq_money_flow_answer': 'Your money goes directly from payer to winner via Wave/Orange Money. The app just organizes who pays whom and when.',
+
+      'faq_receive_money_question': 'How do I receive my money when it\'s my turn?',
+      'faq_receive_money_answer': 'When it\'s your turn, all other members send their contribution directly to you via Wave/Orange Money. The app coordinates the process.',
+
+      'faq_member_not_pay_question': 'What happens if someone in my tontine doesn\'t pay?',
+      'faq_member_not_pay_answer': 'The app sends automatic reminders and applies penalties according to your group\'s rules. Everything is transparent to all members.',
+
+      'faq_fair_selection_question': 'How does the app choose who wins? Is it fair and transparent?',
+      'faq_fair_selection_answer': 'According to the chosen method: fixed order, transparent random draw, or merit-based on punctuality. Everything is verifiable by all.',
+
+      'faq_vs_whatsapp_question': 'What\'s the difference between this app and our WhatsApp groups?',
+      'faq_vs_whatsapp_answer': 'SunuTontine provides total transparency, automatic reminders, precise calculations, and legal proof that WhatsApp cannot offer.',
+
+      'faq_tech_skills_question': 'Do I need to be tech-savvy to use this app?',
+      'faq_tech_skills_answer': 'Not at all! If you know how to use WhatsApp, you know how to use SunuTontine. The interface is simple and intuitive.',
+
+      'faq_demo_mode_question': 'Can I try this without risking real money?',
+      'faq_demo_mode_answer': 'Yes! The app has a demo mode with fake tontines so you can learn without risking real money.',
+
+      'faq_app_disappears_question': 'What if the app disappears or stops working?',
+      'faq_app_disappears_answer': 'Your data is backed up locally. Even without the app, your tontine agreements remain valid and legally binding.',
+
+      'faq_invite_friends_question': 'How do I invite my family and friends?',
+      'faq_invite_friends_answer': 'Generate a QR code or sharing link from your tontine. It\'s as simple as sharing a WhatsApp photo.',
+
+      // Enhanced UI Keys - English
+      'chat_with_assistant': 'Chat with AI Assistant',
+      'browse_questions': 'Browse Questions',
+      'smart_ai': 'Smart AI',
+      'search_knowledge_base': 'Search Knowledge Base',
+      'searching_intelligent': 'Searching intelligently...',
+      'browse_by_category': 'Browse by Category',
+      'tap_to_read_full_answer': 'Tap to read full answer',
+      'most_asked_by_users': 'Most asked by users',
     },
     'fr_FR': {
       'hello': 'Bonjour',
@@ -179,6 +255,82 @@ class AppTranslations extends Translations {
       'help_title': 'Aide',
       'help_message':
           'Contactez le support si vous avez des problèmes de connexion.',
+      'help_support': 'Aide et Support',
+
+      // FAQ System - French
+      'faq_chat_title': 'Assistant FAQ',
+      'faq_search_title': 'Rechercher FAQ',
+      'switch_to_search': 'Passer à la recherche',
+      'switch_to_chat': 'Passer au chat',
+      'reset_chat': 'Nouveau chat',
+      'loading_faq': 'Chargement FAQ...',
+      'faq_error_title': 'Erreur FAQ',
+      'faq_error_message': 'Impossible de charger le système FAQ. Vérifiez votre connexion.',
+      'retry': 'Réessayer',
+      'sunu_assistant': 'Assistant SunuTontine',
+      'assistant_status': 'En ligne - Prêt à vous aider',
+      'search_faqs_hint': 'Recherchez vos questions...',
+      'all_categories': 'Toutes les catégories',
+      'security_category': 'Sécurité et Confiance',
+      'how_it_works_category': 'Comment ça marche',
+      'money_payments_category': 'Argent et Paiements',
+      'social_features_category': 'Fonctions sociales',
+      'technical_support_category': 'Support technique',
+      'legal_compliance_category': 'Légal et Conformité',
+      'popular': 'Populaire',
+      'no_results_title': 'Aucun résultat trouvé',
+      'no_results_message': 'Essayez d\'autres mots-clés ou parcourez les catégories',
+      'popular_questions': 'Questions populaires',
+
+      // Bot messages - French
+      'bot_welcome_message': 'Bonjour ! Je suis votre assistant SunuTontine. Comment puis-je vous aider aujourd\'hui ?',
+      'bot_quick_actions': 'Voici les questions les plus fréquentes :',
+      'related_questions': 'Questions connexes :',
+      'no_results_message': 'Je n\'ai pas trouvé de réponses pour ça. Voici quelques questions populaires :',
+      'alternative_suggestions': 'Voici quelques suggestions alternatives :',
+      'feedback_helpful': 'Merci pour votre retour ! 😊',
+      'feedback_not_helpful': 'Merci de nous l\'avoir fait savoir. Nous améliorerons cette réponse.',
+
+      // FAQ Questions & Answers - French
+      'faq_money_safety_question': 'Est-ce que mon argent est en sécurité ? L\'application peut-elle voler mon argent ?',
+      'faq_money_safety_answer': 'Absolument ! Votre argent ne passe JAMAIS par notre application. Il reste dans votre compte Wave/Orange Money. Nous facilitons juste la coordination entre les membres.',
+
+      'faq_money_flow_question': 'Où va exactement mon argent quand je paie ma cotisation ?',
+      'faq_money_flow_answer': 'Votre argent va directement du payeur vers le gagnant via Wave/Orange Money. L\'app organise juste qui paie à qui et quand.',
+
+      'faq_receive_money_question': 'Comment je reçois mon argent quand c\'est mon tour ?',
+      'faq_receive_money_answer': 'Quand c\'est votre tour, tous les autres membres vous envoient leur cotisation directement via Wave/Orange Money. L\'app coordonne le processus.',
+
+      'faq_member_not_pay_question': 'Qu\'est-ce qui se passe si quelqu\'un dans ma tontine ne paie pas ?',
+      'faq_member_not_pay_answer': 'L\'app envoie des rappels automatiques et applique les pénalités selon les règles de votre groupe. Tout est transparent pour tous les membres.',
+
+      'faq_fair_selection_question': 'Comment l\'application choisit qui gagne ? Est-ce que c\'est juste et transparent ?',
+      'faq_fair_selection_answer': 'Selon la méthode choisie : ordre fixe, tirage aléatoire transparent, ou au mérite basé sur la ponctualité. Tout est vérifiable par tous.',
+
+      'faq_vs_whatsapp_question': 'Quelle est la différence entre cette app et nos groupes WhatsApp ?',
+      'faq_vs_whatsapp_answer': 'SunuTontine apporte la transparence totale, les rappels automatiques, les calculs précis, et des preuves légales que WhatsApp ne peut pas offrir.',
+
+      'faq_tech_skills_question': 'Est-ce que je dois être doué en technologie pour utiliser cette app ?',
+      'faq_tech_skills_answer': 'Pas du tout ! Si vous savez utiliser WhatsApp, vous savez utiliser SunuTontine. L\'interface est simple et intuitive.',
+
+      'faq_demo_mode_question': 'Est-ce que je peux essayer l\'app sans risquer de l\'argent réel ?',
+      'faq_demo_mode_answer': 'Oui ! L\'app a un mode démo avec de fausses tontines pour que vous puissiez apprendre sans risquer d\'argent réel.',
+
+      'faq_app_disappears_question': 'Que se passe-t-il si l\'application disparaît ou arrête de fonctionner ?',
+      'faq_app_disappears_answer': 'Vos données sont sauvegardées localement. Même sans l\'app, vos accords de tontine restent valides et légalement contraignants.',
+
+      'faq_invite_friends_question': 'Comment j\'invite ma famille et mes amis à rejoindre ma tontine ?',
+      'faq_invite_friends_answer': 'Générez un QR code ou un lien de partage depuis votre tontine. C\'est aussi simple que partager une photo WhatsApp.',
+
+      // Enhanced UI Keys - French
+      'chat_with_assistant': 'Discuter avec l\'Assistant IA',
+      'browse_questions': 'Parcourir les Questions',
+      'smart_ai': 'IA Intelligente',
+      'search_knowledge_base': 'Rechercher dans la Base de Connaissances',
+      'searching_intelligent': 'Recherche intelligente...',
+      'browse_by_category': 'Parcourir par Catégorie',
+      'tap_to_read_full_answer': 'Toucher pour lire la réponse complète',
+      'most_asked_by_users': 'Les plus demandées par les utilisateurs',
     },
     'wo_SN': {
       'hello': 'Jàmm',

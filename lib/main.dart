@@ -10,6 +10,7 @@ import 'app/modules/settings/controllers/settings_controller.dart';
 import 'app/observers/app_lifecycle_observer.dart';
 import 'app/routes/app_pages.dart';
 import 'app/services/auth_service.dart';
+import 'app/services/faq_service.dart';
 import 'app/services/storage_service.dart';
 import 'app/services/tontine_service.dart';
 import 'app/theme.dart';
@@ -25,6 +26,11 @@ void main() async {
   // Initialize authentication service
   final authService = await AuthService.init();
   Get.put(authService);
+
+  // Initialize FAQ service
+  final faqService = FaqService();
+  Get.put(faqService, permanent: true);
+
   Get.put(SettingsController());
 
   runApp(const MyApp());

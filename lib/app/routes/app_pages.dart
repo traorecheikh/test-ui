@@ -35,6 +35,8 @@ import '../modules/tontine/bindings/tontine_detail_binding.dart';
 import '../modules/tontine/views/create_tontine_screen.dart';
 import '../modules/tontine/views/join_tontine_screen.dart';
 import '../modules/tontine/views/pot_visual_screen.dart';
+import '../modules/faq/bindings/faq_binding.dart';
+import '../modules/faq/views/faq_screen.dart';
 
 part 'app_routes.dart';
 
@@ -182,6 +184,14 @@ class AppPages {
       name: Routes.PIN_SETUP,
       page: () => const PinSetupScreen(),
       binding: AuthBinding(),
+      transition: Transition.rightToLeft,
+    ),
+
+    // FAQ route
+    GetPage(
+      name: Routes.FAQ,
+      page: () => const FaqScreen(),
+      binding: FaqBinding(),
       transition: Transition.rightToLeft,
     ),
   ];

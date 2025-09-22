@@ -30,6 +30,7 @@ abstract class Routes {
   static const PIN_AUTH = _Paths.PIN_AUTH;
   static const PIN_SETUP = _Paths.PIN_SETUP;
   static const SPLASH = _Paths.SPLASH;
+  static const FAQ = _Paths.FAQ;
 }
 
 abstract class _Paths {
@@ -61,4 +62,5 @@ abstract class _Paths {
   static const PIN_AUTH = '/pin-auth';
   static const PIN_SETUP = '/pin-setup';
   static const SPLASH = '/splash';
+  static const FAQ = '/faq';
 }
