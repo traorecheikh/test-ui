@@ -21,7 +21,7 @@ class TontineService {
         createdAt: DateTime.now(),
         level: UserLevel.regular,
         sunuPoints: 0,
-        reliabilityScore: 1.0,
+        reliabilityScore: 500, // Start at mid-range (Silver tier)
         tontineIds: [],
         organizedTontineIds: [],
         preferences: UserPreferences(),

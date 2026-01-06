@@ -21,7 +21,7 @@ class AppUser {
   @HiveField(7)
   final int sunuPoints;
   @HiveField(8)
-  final double reliabilityScore;
+  final int reliabilityScore; // 0-1000 scale matching backend
   @HiveField(9)
   final List<int> tontineIds;
   @HiveField(10)
@@ -40,7 +40,7 @@ class AppUser {
     required this.createdAt,
     this.level = UserLevel.novice,
     this.sunuPoints = 0,
-    this.reliabilityScore = 5.0,
+    this.reliabilityScore = 0, // New users start at 0
     this.tontineIds = const [],
     this.organizedTontineIds = const [],
     required this.preferences,
@@ -60,7 +60,7 @@ class AppUser {
     DateTime? createdAt,
     UserLevel? level,
     int? sunuPoints,
-    double? reliabilityScore,
+    int? reliabilityScore,
     List<int>? tontineIds,
     List<int>? organizedTontineIds,
     UserPreferences? preferences,
